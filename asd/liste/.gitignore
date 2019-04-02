@@ -2,3 +2,4 @@
 **/obj/
 *.depend
 *.layout
+ValgrindOut.xml

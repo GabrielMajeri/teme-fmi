@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<CodeBlocks_workspace_file>
+	<Workspace title="Workspace">
+		<Project filename="MaiMulteListe/MaiMulteListe.cbp" />
+		<Project filename="MatriceRara/MatriceRara.cbp" />
+		<Project filename="Majoritar/Majoritar.cbp" />
+	</Workspace>
+</CodeBlocks_workspace_file>
