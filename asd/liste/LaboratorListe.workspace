@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<CodeBlocks_workspace_file>
+	<Workspace title="Workspace">
+		<Project filename="ListaOrdonata/ListaOrdonata.cbp" />
+		<Project filename="ListaSimpla/ListaSimpla.cbp" />
+		<Project filename="Polinom/Polinom.cbp" />
+		<Project filename="VectorRar/VectorRar.cbp" />
+	</Workspace>
+</CodeBlocks_workspace_file>
