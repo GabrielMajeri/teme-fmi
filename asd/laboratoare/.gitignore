@@ -2,6 +2,7 @@
 *
 !/**/
 !*.*
+!Makefile
 *.o
 *.pdf
 *.layout
