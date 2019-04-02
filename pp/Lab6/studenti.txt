@@ -1,0 +1,4 @@
+5 Popescu Ionel 8.900000
+22 Y maria 9.200000
+3 X vlad 7.500000
+13 Z Vasile 6.700000

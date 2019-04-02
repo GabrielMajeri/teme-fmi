@@ -8,3 +8,4 @@ la [Facultatea de Matematică și Informatică](http://fmi.unibuc.ro/ro/),
 
 - [asd](asd): Algoritmi și Structuri de Date (în mare parte în C)
 - [lfa](lfa): Limbaje Formale și Automate Finite (în Python)
+- [pp](pp): Programare Procedurală (în C)

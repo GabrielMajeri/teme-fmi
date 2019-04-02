@@ -1,0 +1,19 @@
+3
+
+Strada1
+80.7
+garsoniera
+2
+1
+
+AdresaAbcd
+35.4
+apartament
+5
+D
+
+Strada5
+100
+casa
+4
+nr etaje

@@ -1,0 +1,14 @@
+Away in a pointer, the bits in a row.
+A little dereference to see where they go.
+I look down upon thee, and what do I see?
+A segfault and core dump, right there just for me.
+
+I saw thy init there, a reaping away
+My process, from its address space, so sorry to say.
+I thought I had saved thee, from void pointers all,
+But maybe I missed one, and doomed you to fall.
+
+Be near me, debugger, I ask thee to stay
+Close by my terminal, and help me, I pray;
+To find all the bugs and the void pointers too,
+And if my kernel oopses, help me reboot for you.

@@ -1,0 +1,9 @@
+*
+!/**/
+!*.*
+!Makefile
+*.layout
+*.depend
+*.pdf
+*.o
+**/.vscode/
