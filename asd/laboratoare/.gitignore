@@ -1,0 +1,11 @@
+# Ignore Linux binaries (files with no extension)
+*
+!/**/
+!*.*
+*.o
+*.pdf
+*.layout
+*.depend
+**/bin/
+**/obj/
+**/.vscode/
