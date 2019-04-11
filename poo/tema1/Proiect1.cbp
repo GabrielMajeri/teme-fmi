@@ -2,13 +2,13 @@
 <CodeBlocks_project_file>
 	<FileVersion major="1" minor="6" />
 	<Project>
-		<Option title="Proiect1POO" />
+		<Option title="Proiect1" />
 		<Option pch_mode="2" />
 		<Option compiler="gcc" />
 		<Build>
 			<Target title="Debug">
-				<Option output="build/bin/Debug/Proiect1POO" prefix_auto="1" extension_auto="1" />
-				<Option object_output="build/obj/Debug/" />
+				<Option output="bin/Debug/Proiect1" prefix_auto="1" extension_auto="1" />
+				<Option object_output="obj/Debug/" />
 				<Option type="1" />
 				<Option compiler="gcc" />
 				<Compiler>
@@ -16,8 +16,8 @@
 				</Compiler>
 			</Target>
 			<Target title="Release">
-				<Option output="build/bin/Release/Proiect1POO" prefix_auto="1" extension_auto="1" />
-				<Option object_output="build/obj/Release/" />
+				<Option output="bin/Release/Proiect1" prefix_auto="1" extension_auto="1" />
+				<Option object_output="obj/Release/" />
 				<Option type="1" />
 				<Option compiler="gcc" />
 				<Compiler>
@@ -29,13 +29,9 @@
 			</Target>
 		</Build>
 		<Compiler>
-			<Add option="-Weffc++" />
-			<Add option="-pedantic-errors" />
-			<Add option="-Wfatal-errors" />
 			<Add option="-Wextra" />
 			<Add option="-Wall" />
-			<Add option="-std=c++14" />
-			<Add option="-fexceptions" />
+			<Add option="-std=c++11" />
 		</Compiler>
 		<Unit filename="complex.cpp" />
 		<Unit filename="complex.hpp" />
@@ -43,11 +39,10 @@
 		<Unit filename="main.cpp" />
 		<Unit filename="matrix.cpp" />
 		<Unit filename="matrix.hpp" />
+		<Unit filename="matrix.in" />
 		<Extensions>
-			<envvars />
 			<code_completion />
 			<debugger />
-			<lib_finder disable_auto="1" />
 		</Extensions>
 	</Project>
 </CodeBlocks_project_file>

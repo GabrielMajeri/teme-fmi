@@ -5,6 +5,7 @@
 
 class Complex {
     double re, im;
+
 public:
     /// Constructor pentru un nr. complex
     Complex(double real = 0.0, double imag = 0.0);

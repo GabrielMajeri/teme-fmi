@@ -1,18 +1,11 @@
 #ifndef MATRIX_HPP
 #define MATRIX_HPP
 
-/*
-clasa matrice sa fie prietena a clasei numar complex si sa contina metode pentru:
-
-- determinantul unei matrici patratice, implementat tot cu ajutorul
-sumei si produsului de numere complexe (cele care supraincarca + si * in clasa numar complex);
-
-- inversa unei matrici patratice cu determinantul nenul, care sa foloseasca functiile descrise anterior;
-*/
-
 #include "complex.hpp"
 #include "list.hpp"
 
+/// Matrice rara de numere complexe implementata folosind
+/// liste simplu inlantuite.
 class Matrix {
     using Row = SortedList<Complex>;
     SortedList<Row> rows;
@@ -31,11 +24,26 @@ public:
     /// Construieste o noua matrice rara cu dimensiunile date
     Matrix(int rowCount = 0, int columnCount = 0);
 
-    const Complex* getElement(int row, int column) const;
+    bool operator==(const Matrix& rhs) const;
+    bool operator!=(const Matrix& rhs) const;
+
+    Complex getElement(int row, int column) const;
     void setElement(int row, int column, Complex value);
+
+    /// Verifica daca matricea este patratica
+    bool isSquare() const;
 
     /// Construieste matricea transpusa
     Matrix transpose() const;
+
+    /// Returneaza un minor al matricei
+    Matrix minor(int row, int column) const;
+
+    /// Calculeaza determinantul matricei
+    Complex determinant() const;
+
+    /// Calculeaza inversul matricei
+    Matrix inverse() const;
 
     Matrix operator+(const Matrix& rhs) const;
     Matrix operator*(const Matrix& rhs) const;

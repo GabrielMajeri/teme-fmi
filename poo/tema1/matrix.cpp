@@ -7,25 +7,44 @@ Matrix::Matrix(int rowCount, int columnCount)
     }
 }
 
-const Complex* Matrix::getElement(int row, int column) const {
+bool Matrix::operator==(const Matrix& rhs) const {
+    return rowCount == rhs.rowCount &&
+        columnCount == rhs.columnCount &&
+        rows == rhs.rows;
+}
+
+bool Matrix::operator!=(const Matrix& rhs) const {
+    return !(*this == rhs);
+}
+
+Complex Matrix::getElement(int row, int column) const {
     if (row >= rowCount || column >= columnCount) {
-        throw std::runtime_error("Element index out of bounds");
+        throw std::out_of_range("Element index out of bounds");
     }
 
     const Row* r = getRow(row);
 
-    return r ? r->get(column) : nullptr;
+    if (r) {
+        const Complex* elem = r->get(column);
+
+        if (elem) {
+            return *elem;
+        }
+    }
+
+    return Complex(0, 0);
 }
 
 void Matrix::setElement(int row, int column, Complex value) {
     if (row >= rowCount || column >= columnCount) {
-        throw std::runtime_error("Element index out of bounds");
+        throw std::out_of_range("Element index out of bounds");
     }
 
     Row* r = getRow(row);
 
     if (r == nullptr) {
-        r = &rows.set(row, SortedList<Complex>());
+        rows.set(row, SortedList<Complex>());
+        r = getRow(row);
     }
 
     if (value.isZero()) {
@@ -39,6 +58,10 @@ void Matrix::setElement(int row, int column, Complex value) {
     }
 }
 
+bool Matrix::isSquare() const {
+    return rowCount == columnCount;
+}
+
 Matrix Matrix::transpose() const {
     Matrix result(columnCount, rowCount);
 
@@ -49,6 +72,94 @@ Matrix Matrix::transpose() const {
     }
 
     return result;
+}
+
+Matrix Matrix::minor(int row, int column) const {
+    if (!isSquare()) {
+        throw std::logic_error("Non square matrix minor");
+    }
+
+    Matrix result(rowCount - 1, columnCount - 1);
+
+    for (const Node<Row>* rowPtr = rows.cbegin(); rowPtr != nullptr; rowPtr = rowPtr->nextNode()) {
+        for (const Node<Complex>* colPtr = rowPtr->getValue().cbegin(); colPtr != nullptr; colPtr = colPtr->nextNode()) {
+            int currentRow = rowPtr->getKey(), currentCol = colPtr->getKey();
+            Complex currentValue = colPtr->getValue();
+            if (currentRow < row) {
+                if (currentCol < column) {
+                    result.setElement(currentRow, currentCol, currentValue);
+                } else if (column < currentCol) {
+                    result.setElement(currentRow, currentCol - 1, currentValue);
+                }
+            } else if (row < currentRow) {
+                if (currentCol < column) {
+                    result.setElement(currentRow - 1, currentCol, currentValue);
+                } else if (column < currentCol) {
+                    result.setElement(currentRow - 1, currentCol - 1, currentValue);
+                }
+            }
+        }
+    }
+
+    return result;
+}
+
+Complex Matrix::determinant() const {
+    if (!isSquare()) {
+        throw std::logic_error("Non square matrix determinant");
+    }
+
+    // Cazuri de baza
+    if (rowCount == 0) {
+        return Complex(0, 0);
+    } else if (rowCount == 1) {
+        return getElement(0, 0);
+    } else if (rowCount == 2) {
+        return getElement(0, 0) * getElement(1, 1) - getElement(0, 1) * getElement(1, 0);
+    }
+
+    const Row* first = getRow(0);
+
+    if (first == nullptr) {
+        return Complex(0, 0);
+    }
+
+    Complex det;
+
+    for (const Node<Complex>* elem = first->cbegin(); elem != nullptr; elem = elem->nextNode()) {
+        int column = elem->getKey();
+        double sign = (column % 2 == 0) ? +1 : -1;
+
+        det = det + elem->getValue() * sign * minor(0, column).determinant();
+    }
+
+    return det;
+}
+
+Matrix Matrix::inverse() const {
+    if (!isSquare()) {
+        throw std::logic_error("Non square matrix inverse");
+    }
+
+    Complex det = determinant();
+
+    if (det.isZero()) {
+        throw std::logic_error("Non invertible matrix");
+    }
+
+    Matrix result(rowCount, columnCount);
+
+    for (int i = 0; i < rowCount; ++i) {
+        for (int j = 0; j < columnCount; ++j) {
+            double sign = ((i + j) % 2 == 0) ? 1 : -1;
+
+            Complex z = minor(i, j).determinant() * sign;
+
+            result.setElement(i, j, z);
+        }
+    }
+
+    return result.transpose() * (Complex(1) / det);
 }
 
 Matrix Matrix::operator+(const Matrix& rhs) const {
@@ -102,6 +213,8 @@ Matrix Matrix::operator+(const Matrix& rhs) const {
                 result.setElement(row, pcb->getKey(), pcb->getValue());
                 pcb = pcb->nextNode();
             }
+
+
 
             pa = pa->nextNode();
             pb = pb->nextNode();
