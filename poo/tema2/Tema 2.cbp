@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<CodeBlocks_project_file>
+	<FileVersion major="1" minor="6" />
+	<Project>
+		<Option title="Tema 2" />
+		<Option pch_mode="2" />
+		<Option compiler="gcc" />
+		<Build>
+			<Target title="Debug">
+				<Option output="Build/Bin/Debug/Tema 2" prefix_auto="1" extension_auto="1" />
+				<Option object_output="Build/Obj/Debug/" />
+				<Option type="1" />
+				<Option compiler="gcc" />
+				<Compiler>
+					<Add option="-g" />
+				</Compiler>
+			</Target>
+			<Target title="Release">
+				<Option output="Build/Bin/Release/Tema 2" prefix_auto="1" extension_auto="1" />
+				<Option object_output="Build/Obj/Release/" />
+				<Option type="1" />
+				<Option compiler="gcc" />
+				<Compiler>
+					<Add option="-O2" />
+				</Compiler>
+				<Linker>
+					<Add option="-s" />
+				</Linker>
+			</Target>
+		</Build>
+		<Compiler>
+			<Add option="-Weffc++" />
+			<Add option="-Wextra" />
+			<Add option="-Wall" />
+			<Add option="-fexceptions" />
+			<Add option="-Werror" />
+		</Compiler>
+		<Unit filename="abc.cpp" />
+		<Unit filename="abc.hpp" />
+		<Unit filename="arbore.cpp" />
+		<Unit filename="arbore.hpp" />
+		<Unit filename="arbore.in" />
+		<Unit filename="arbore_oarecare.cpp" />
+		<Unit filename="arbore_oarecare.hpp" />
+		<Unit filename="main.cpp" />
+		<Unit filename="nod.cpp" />
+		<Unit filename="nod.hpp" />
+		<Unit filename="nod_abc.cpp" />
+		<Unit filename="nod_abc.hpp" />
+		<Unit filename="nod_fiu_frate.cpp" />
+		<Unit filename="nod_fiu_frate.hpp" />
+		<Extensions>
+			<code_completion />
+			<debugger />
+		</Extensions>
+	</Project>
+</CodeBlocks_project_file>
