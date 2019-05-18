@@ -1,0 +1,6 @@
+# Build directory
+/Build/
+
+# Temporary CodeBlocks files
+*.layout
+*.depends
