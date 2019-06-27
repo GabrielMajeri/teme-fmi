@@ -1,0 +1,45 @@
+1
+1
+Universitate
+Maria 23 4
+3
+66 70 400
+
+1
+1
+VatraLuminoasa
+Ion 1 2
+3
+70 143 5
+
+1
+2
+Voluntari
+Principala 1 1
+1
+400
+
+2
+1
+Universitate
+
+2
+2
+Ion 1 2
+
+3
+70
+
+4
+Universitate
+VatraLuminoasa
+
+4
+VatraLuminoasa
+Voluntari
+
+4
+Voluntari
+Universitate
+
+-1
