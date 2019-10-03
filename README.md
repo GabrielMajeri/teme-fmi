@@ -10,3 +10,4 @@ la [Facultatea de Matematică și Informatică](http://fmi.unibuc.ro/ro/),
 - [lfa](lfa): Limbaje Formale și Automate Finite (în Python)
 - [poo](poo): Programare Orientată pe Obiecte (în C++)
 - [pp](pp): Programare Procedurală (în C)
+- [tap](tap): Tehnici Avansate de Programare (în Python)
