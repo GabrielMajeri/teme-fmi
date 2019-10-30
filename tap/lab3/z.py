@@ -21,8 +21,12 @@ linia i, coloana j.
 
 Complexitate: din teorema master
 
+T(2^n) = T(2^n/4) + O(1)
 
+a = 1
+b = 4
 
+log2 2^n = O(n)
 """
 
 fin = open('z.in')
