@@ -2,11 +2,13 @@
 #include <stdio.h>
 #include <pthread.h>
 
+/// Integer matrix structure, storing data in a row-major format
 typedef struct {
     int rows, columns;
     int** data;
 } Matrix;
 
+/// Allocate a new N by M matrix
 Matrix alloc_matrix(int rows, int columns) {
     Matrix m = {
         .rows = rows,
@@ -21,6 +23,7 @@ Matrix alloc_matrix(int rows, int columns) {
     return m;
 }
 
+/// Reads and allocates a matrix of numbers from a file
 Matrix read_matrix(FILE* fin) {
     Matrix m = {};
 
@@ -38,6 +41,7 @@ Matrix read_matrix(FILE* fin) {
     return m;
 }
 
+/// Releases the memory used by a matrix
 void free_matrix(Matrix* m) {
     for (int i = 0; i < m->rows; ++i) {
         free(m->data[i]);
@@ -46,11 +50,13 @@ void free_matrix(Matrix* m) {
     m->data = NULL;
 }
 
+/// Structure containing input data for a worker thread
 typedef struct {
     Matrix* ms;
     int row, column;
 } MatMulInput;
 
+/// Worker thread routine which multiplies a row with a column
 void* multiply_row_col(void* input) {
     MatMulInput* mm = input;
     int n = mm->ms[0].columns;
@@ -69,6 +75,7 @@ void* multiply_row_col(void* input) {
 }
 
 int main() {
+	// Read the input
     FILE* fin = fopen("matmul.txt", "rt");
     if (!fin) {
         perror("Failed to open input file");
@@ -82,13 +89,14 @@ int main() {
 
     fclose(fin);
 
+	// Allocate space for the output
     Matrix result = alloc_matrix(ms[0].rows, ms[1].columns);
 
     int num_threads = result.rows * result.columns;
     MatMulInput* inputs = malloc(sizeof(MatMulInput) * num_threads);
     pthread_t* worker_ids = malloc(sizeof(pthread_t) * num_threads);
 
-
+	// Launch the worker threads
     for (int i = 0; i < result.rows; ++i) {
         for (int j = 0; j < result.columns; ++j) {
             int index = i * result.columns + j;
@@ -97,6 +105,7 @@ int main() {
         }
     }
 
+	// Collect the dot products from the workers
     for (int i = 0; i < result.rows; ++i) {
         for (int j = 0; j < result.columns; ++j) {
             void* result_ptr;

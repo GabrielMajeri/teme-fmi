@@ -1,8 +1,9 @@
 LDFLAGS += -pthread
 
 .SILENT:
+.PHONY: test
 
-run: strrev matmul
+test:
 	./strrev "hello world"
 	printf "\n"
 	./matmul

@@ -9,23 +9,27 @@
 
 const char COLLATZ_SHM_NAME[] = "/collatz_shm";
 
+// Macro for common cleanup code
 #define CLEANUP_SHM \
     close(shm_fd); \
     shm_unlink(COLLATZ_SHM_NAME);
 
 int main(int argc, char* argv[]) {
+	// Check if we got the right number of arguments
     if (argc < 2) {
         printf("Expected at least one number");
         printf("Usage: %s n_1 ... n_k\n", argv[0]);
         return 1;
     }
 
+	// Open the shared memory object
     int shm_fd = shm_open(COLLATZ_SHM_NAME, O_RDWR | O_CREAT | O_EXCL, S_IRWXU);
     if (shm_fd < 0) {
         perror("Failed to open shared memory handle");
         return 1;
     }
 
+	// Allocate a page for each worker
     const int k = argc - 1;
     const size_t page_size = getpagesize();
 
@@ -38,6 +42,7 @@ int main(int argc, char* argv[]) {
     int parent_pid = getpid();
     printf("Starting parent %d\n", parent_pid);
 
+	// Map the data for the children
     int* results = mmap(NULL, k * page_size, PROT_READ | PROT_WRITE, MAP_SHARED, shm_fd, 0);
 
     for (int i = 0; i < k; ++i) {
@@ -63,6 +68,7 @@ int main(int argc, char* argv[]) {
                 return 1;
             }
 
+			// Compute the Collatz sequence
             do {
                 buf[len++] = value;
                 if (value % 2 == 0) {

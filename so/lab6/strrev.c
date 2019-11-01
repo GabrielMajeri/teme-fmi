@@ -3,6 +3,7 @@
 #include <string.h>
 #include <pthread.h>
 
+/// Worker routine which reverses the string received as input
 void* reverse_string(void* input) {
     char* input_str = input;
     size_t input_len = strlen(input_str);
@@ -26,6 +27,7 @@ int main(int argc, char* argv[]) {
 
     char* input_string = argv[1];
 
+    // Launch a new worker thread
     pthread_t worker_id = 0;
 
     if (pthread_create(&worker_id, NULL, reverse_string, input_string) != 0) {
@@ -33,6 +35,7 @@ int main(int argc, char* argv[]) {
         return 1;
     }
 
+    // Wait for the worker to finish its job
     char* reversed = NULL;
     pthread_join(worker_id, (void**)&reversed);
 
