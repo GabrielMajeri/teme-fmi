@@ -61,10 +61,13 @@ def find_intersection(p1, p2, p3, p4):
 
         if approx_eq(d1, 0.0) and approx_eq(d2, 0.0):
             # rang 1
+            p1, p2 = sorted((p1, p2))
+            p3, p4 = sorted((p3, p4))
+            print(p1, p2, p3, p4)
 
             if (check_point_in_segment(p3, p1, p2)
                     and check_point_in_segment(p2, p3, p4)):
-                return p1, p2
+                return p2, p3
 
         # rang 2
         return tuple()
