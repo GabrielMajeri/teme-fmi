@@ -1,11 +1,14 @@
-with open('robot.txt') as fin:
+# Read input data
+with open('v1p2.txt') as fin:
     n, m = map(int, next(fin).split())
 
     mat = [[int(x) for x in next(fin).split()] for _ in range(n)]
 
+# Initialize vectors and matrices for dynamic programming
 sum_max = [[0 for _ in range(m)] for _ in range(n)]
 preds = [[(-1, -1) for _ in range(m)] for _ in range(n)]
 
+# The robot starts in the upper left corner
 sum_max[0][0] = mat[0][0]
 preds[0][0] = (-1, -1)
 
@@ -20,6 +23,7 @@ for i in range(n):
             sum_max[i][j] = mat[i][j] + left
             preds[i][j] = (i, j - 1)
 
+# Print the solution
 print(sum_max[-1][-1])
 
 current = (n - 1, m - 1)
