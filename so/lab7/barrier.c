@@ -4,47 +4,47 @@
 #include <sys/syscall.h>
 #include <sys/types.h>
 #include <unistd.h>
+#include <semaphore.h>
 
-int max_threads = 0;
-int current = 0;
+int current, max_threads;
 pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;
-pthread_cond_t cond_var = PTHREAD_COND_INITIALIZER;
-
-pid_t gettid() {
-    return syscall(SYS_gettid);
-}
+sem_t barrier;
 
 void init(int n) {
     max_threads = n;
     current = 0;
+    sem_init(&barrier, 0, 0);
 }
 
 void barrier_point() {
-    printf("Thread %d is entering the barrier\n", gettid());
-
     pthread_mutex_lock(&mutex);
+    current += 1;
+    pthread_mutex_unlock(&mutex);
 
-    current++;
-    printf("Now there are %d threads at the barrier\n", current);
-
-    while (current < max_threads) {
-        pthread_cond_wait(&cond_var, &mutex);
+    if (current == max_threads) {
+        sem_post(&barrier);
     }
 
-    pthread_cond_broadcast(&cond_var);
-    pthread_mutex_unlock(&mutex);
+    // Turnstile
+    sem_wait(&barrier);
+    sem_post(&barrier);
 }
 
 void* worker_thread(void* input) {
+    const pid_t tid = syscall(SYS_gettid);
+
+    printf("Thread %d reached the barrier\n", tid);
+
     barrier_point();
-    printf("Thread %d finished\n", gettid());
+
+    printf("Thread %d passed the barrier\n", tid);
 
     return NULL;
 }
 
 int main() {
     int num_threads = 4;
-    init(5);
+    init(num_threads);
 
     pthread_t* worker_ids = malloc(sizeof(pthread_t) * num_threads);
 
@@ -52,11 +52,12 @@ int main() {
         pthread_create(&worker_ids[i], NULL, worker_thread, NULL);
     }
 
-    barrier_point();
-
     for (int i = 0; i < num_threads; ++i) {
         pthread_join(worker_ids[i], NULL);
     }
+
+    // Clean up
+    sem_destroy(&barrier);
 
     printf("Main thread finished\n");
 }
