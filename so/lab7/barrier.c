@@ -19,15 +19,19 @@ void init(int n) {
 void barrier_point() {
     pthread_mutex_lock(&mutex);
     current += 1;
-    pthread_mutex_unlock(&mutex);
 
     if (current == max_threads) {
-        sem_post(&barrier);
-    }
+        pthread_mutex_unlock(&mutex);
 
-    // Turnstile
-    sem_wait(&barrier);
-    sem_post(&barrier);
+        for (int i = 0; i < current - 1; ++i) {
+            sem_post(&barrier);
+        }
+    } else {
+        pthread_mutex_unlock(&mutex);
+
+        // Turnstile
+        sem_wait(&barrier);
+    }
 }
 
 void* worker_thread(void* input) {
