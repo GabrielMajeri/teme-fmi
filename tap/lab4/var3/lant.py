@@ -1,4 +1,4 @@
-with open('v3p1.txt') as fin:
+with open('lant.txt') as fin:
     words = list(next(fin).split())
 
 # We build a look-up table where we index by the last two characters of the word,

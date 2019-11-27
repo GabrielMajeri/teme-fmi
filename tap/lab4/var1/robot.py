@@ -1,5 +1,5 @@
 # Read input data
-with open('v1p2.txt') as fin:
+with open('robot.txt') as fin:
     n, m = map(int, next(fin).split())
 
     mat = [[int(x) for x in next(fin).split()] for _ in range(n)]

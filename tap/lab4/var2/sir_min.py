@@ -1,5 +1,5 @@
 d = ['0', '1']
-with open('v2p3.txt') as fin:
+with open('sir_min.txt') as fin:
     m = int(next(fin))
     d += [next(fin).strip() for _ in range(m)]
     s = next(fin).strip()
