@@ -23,3 +23,5 @@ with open('joculet.out', 'w') as fout:
     score_diff = player1_score - player2_score
 
     print(score_diff, file=fout)
+
+# TODO: afișare mutări
