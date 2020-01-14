@@ -1,0 +1,36 @@
+@media all and (min-width: 900px) {
+  div#parinte {
+    height: 800px;
+    width: 800px;
+    border: 1px solid black;
+  }
+}
+
+.celula {
+  background-color: pink;
+}
+
+div.celula:nth-of-type(odd) {
+  border: 1px solid red;
+}
+
+div.celula:nth-of-type(even) {
+  border: 1px solid purple;
+}
+
+div.celula:hover {
+  transition: background-color 1s;
+  background-color: blue;
+}
+
+@media all and (max-width: 900px) {
+  .celula {
+    display: none;
+  }
+
+  div#parinte {
+    width: 100%;
+    border: none;
+    background-color: green;
+  }
+}
