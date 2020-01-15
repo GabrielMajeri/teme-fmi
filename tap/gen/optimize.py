@@ -6,16 +6,24 @@ import copy
 import math
 import random
 
-# Parametrii configurabili
+## Parametrii configurabili
+
+# Numărul de cromozomi dintr-o populație
 POPULATION_SIZE = 10
+
+# Intervalul pe care încercăm să maximizăm funcția
 FUNCTION_RANGE = (-1, 2)
 
+# Numărul de zecimale de precizie
 PRECISION = 5
 
+# Probabilitatea ca un cromozom să fie ales pentru recombinare genetică (cross over)
 RECOMBINATION_PROBA = 0.5
+# Probabilitatea ca un cromozom să fie ales pentru o mutație
 MUTATION_PROBA = 0.25
 
-STEPS = 15
+# Pași pentru care executăm algoritmul
+STEPS = 50
 
 
 DECIMAL_RANGE = 10 ** PRECISION
@@ -23,25 +31,27 @@ DECIMAL_RANGE = 10 ** PRECISION
 left, right = FUNCTION_RANGE
 RANGE_LEN = right - left
 
+# Numărul de biți în care reprezentăm genomul
 GENOME_LENGTH = math.ceil(math.log2(RANGE_LEN * DECIMAL_RANGE))
 
 
+# Funcția pe care vrem să o maximizăm
 def objective(x):
     return -x ** 2 + x + 2
 
-
+# Un individ din populație cu o serie de gene
 class Chromosome:
     def __init__(self):
         self.bits = [False] * GENOME_LENGTH
 
-    def to_float(self):
+    def __float__(self):
         value = 0
         for bit in self.bits:
             value = (value << 1) | bit
         return RANGE_LEN * value / (2 ** GENOME_LENGTH - 1)
 
     def fitness(self):
-        return objective(self.to_float())
+        return objective(float(self))
 
     def flip(self, index):
         self.bits[index] = not self.bits[index]
@@ -58,7 +68,7 @@ class Chromosome:
         return chromo
 
     def __repr__(self):
-        return f'Chromo(x={self.to_float():.4f})'
+        return f'Chromo(x={float(self):.4f})'
 
 
 def selection(population):
@@ -113,4 +123,4 @@ for step in range(STEPS):
 
 
     best = max(population, key=Chromosome.fitness)
-    print(f"Step #{step + 1} = {best.fitness():.4f} for x = {best.to_float():.4f}")
+    print(f"Step #{step + 1} = {best.fitness():.4f} for x = {float(best):.4f}")
