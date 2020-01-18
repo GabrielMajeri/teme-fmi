@@ -1,0 +1,10 @@
+html{
+	font-size:20px;
+}
+
+
+*[class]::after{
+	content: " (" attr(class) ")";
+}
+
+

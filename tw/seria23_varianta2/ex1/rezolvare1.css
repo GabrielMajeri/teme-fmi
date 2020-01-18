@@ -1,0 +1,24 @@
+:not(li) > p {
+    text-decoration: line-through;
+}
+
+
+li:nth-of-type(3n).x {
+    font-size: 1.5em;
+}
+
+
+*:first-child:before {
+    content: "Eu sunt primul!!";
+    font-style: italic;
+    color: red;
+}
+
+
+ol:hover li {
+    background-color: red;
+}
+
+ol li:hover ~ li {
+    background-color: blue;
+}

@@ -1,0 +1,23 @@
+#container {
+    display: grid;
+    grid-template-rows: 1fr 1fr;
+    grid-template-columns: repeat(5, 1fr);
+}
+
+#d1, #d5 {
+    grid-row: 1 / -1;
+}
+
+#d2, #d3, #d4 {
+    grid-row: 1 / 2;
+}
+
+@media all and (min-width: 250px) and (max-width: 550px) {
+    #d2, #d3, #d4 {
+        display: none;
+    }
+
+    #container {
+        grid-template-columns: 1fr 1fr;
+    }
+}

@@ -1,0 +1,9 @@
+#container{
+	border:1px solid black;
+	width:70%;
+	padding:2px;
+	height:200px;
+}
+#container div{
+	border:1px solid blue;
+}
