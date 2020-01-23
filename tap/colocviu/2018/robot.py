@@ -21,7 +21,7 @@ Rezolvare:
 """
 
 # Citesc datele
-with open("date.in") as fin:
+with open("robot.in") as fin:
     line = fin.readline()
     n, m, sfinal = map(int, line.split())
 

@@ -40,8 +40,9 @@ def find(dim, k):
         return i + half, j
 
 
-# Acestea ar fi citite din fișier
-n, k = 2, 12
+with open("tabla.in") as fin:
+    line = next(fin)
+    n, k = map(int, line.split())
 
 dim = 2 ** n
 i, j = find(dim, k)

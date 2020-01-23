@@ -1,5 +1,7 @@
 # Probleme rezolvate la Tehnici Avansate de Programare
 
+- [Exerciții de colocviu/examen rezolvate](colocviu)
+
 - [Algoritmi diverși](algo) de la primul laborator
   - Problema [3-SUM](algo/3sum.py)
   - [Distanța cosinus dintre texte](algo/cosine.py)
