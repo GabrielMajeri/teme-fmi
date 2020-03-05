@@ -9,6 +9,7 @@ la [Facultatea de Matematică și Informatică](http://fmi.unibuc.ro/ro/),
 - [asd](asd): Algoritmi și Structuri de Date (în mare parte în C)
 - [geocomp](geocomp): Geometrie Computațională (în Python)
 - [lfa](lfa): Limbaje Formale și Automate Finite (în Python)
+- [pao](pao): Programare Avansată pe Obiecte (în Java)
 - [poo](poo): Programare Orientată pe Obiecte (în C++)
 - [pp](pp): Programare Procedurală (în C)
 - [pl](pl): Programare Logică (în Prolog)
