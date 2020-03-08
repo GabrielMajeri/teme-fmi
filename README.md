@@ -7,6 +7,7 @@ la [Facultatea de Matematică și Informatică](http://fmi.unibuc.ro/ro/),
 ## Conținut
 
 - [asd](asd): Algoritmi și Structuri de Date (în mare parte în C)
+- [bd](bd): Baze de Date (în Oracle SQL)
 - [geocomp](geocomp): Geometrie Computațională (în Python)
 - [lfa](lfa): Limbaje Formale și Automate Finite (în Python)
 - [pao](pao): Programare Avansată pe Obiecte (în Java)
