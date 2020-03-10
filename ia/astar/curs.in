@@ -1,0 +1,28 @@
+10
+a inf
+b 9
+c 10
+d 11
+e 6
+f 10
+g 6
+h 0
+i 4
+j 3
+15
+a b 7
+a c 4
+a d 5
+b f 6
+b g 3
+c b 2
+c e 8
+c f 5
+d h 11
+d e 5
+e f 4
+e h 6
+f h 10
+g i 2
+g j 3
+a h
