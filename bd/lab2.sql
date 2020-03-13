@@ -114,3 +114,130 @@ Exercițiul 15
 SELECT last_name, salary, commission_pct
 FROM employees
 WHERE salary * (1 + NVL(commission_pct, 0)) >= 10000;
+
+
+Exercițiul 16
+
+SELECT first_name || ' ' || last_name "Nume",  job_id, salary,
+    salary * (1 + DECODE(job_id,
+                    'IT_PROG', 0.2,
+                    'SA_REP', 0.25,
+                    'SA_MAN', 0.35,
+                    0)) "Salariu renegociat"
+FROM employees;
+
+
+Exercițiul 17
+
+SELECT first_name, t2.department_id, t2.department_name
+FROM employees t1
+INNER JOIN departments t2
+ON t1.department_id = t2.department_id;
+
+
+Exercițiul 18
+
+SELECT job_id
+FROM employees t1
+INNER JOIN departments t2
+ON t1.department_id = t2.department_id
+WHERE t1.department_id = 30;
+
+
+Exercițiul 19
+
+SELECT first_name, last_name, department_name, location_id
+FROM employees t1
+INNER JOIN departments t2
+ON t1.department_id = t2.department_id
+WHERE commission_pct > 0;
+
+
+Exercițiul 20
+
+SELECT last_name, department_name
+FROM employees t1
+INNER JOIN departments t2
+ON t1.department_id = t2.department_id
+WHERE LOWER(last_name) NOT LIKE '%a%';
+
+
+Exercițiul 21
+
+SELECT last_name, job_id, t2.department_id, t2.department_name
+FROM employees t1
+INNER JOIN departments t2
+ON t1.department_id = t2.department_id
+WHERE t2.location_id = (
+    SELECT location_id
+    FROM locations
+    WHERE city LIKE '%Oxford%'
+);
+
+
+Exercițiul 22
+
+SELECT
+    t1.employee_id Ang#,
+    t1.first_name || ' ' || t1.last_name Angajat,
+    t2.employee_id Mgr#,
+    t2.first_name || ' ' || t2.last_name Manager
+FROM employees t1
+INNER JOIN employees t2
+ON t1.manager_id = t2.employee_id;
+
+
+Exercițiul 23
+
+SELECT
+    t1.employee_id Ang#,
+    t1.first_name || ' ' || t1.last_name Angajat,
+    t2.employee_id Mgr#,
+    t2.first_name || ' ' || t2.last_name Manager
+FROM employees t1
+LEFT OUTER JOIN employees t2
+ON t1.manager_id = t2.employee_id;
+
+
+Exercițiul 24
+
+SELECT t1.last_name "Nume angajat", t1.department_id Departament, t2.last_name "Nume coleg"
+FROM employees t1
+JOIN employees t2
+ON t1.department_id = t2.department_id;
+
+
+Exercițiul 25
+
+SELECT t1.first_name || ' ' || t1.last_name name,
+    t2.job_id,
+    t2.job_title,
+    t1.department_id,
+    t1.salary
+FROM employees t1
+INNER JOIN jobs t2
+ON t1.job_id = t2.job_id;
+
+
+Exercițiul 26
+
+SELECT first_name || ' ' || last_name name, hire_date
+FROM employees
+WHERE hire_date > (
+    SELECT hire_date
+    FROM employees
+    WHERE last_name = 'Gates'
+);
+
+
+Exercițiul 27
+
+SELECT
+    t1.first_name || ' ' || t2.last_name Angajat,
+    t1.hire_date Data_ang,
+    t2.first_name || ' ' || t2.last_name Manager,
+    t2.hire_date Data_mgr
+FROM employees t1
+INNER JOIN employees t2
+ON t1.manager_id = t2.employee_id
+WHERE t1.hire_date < t2.hire_date;
