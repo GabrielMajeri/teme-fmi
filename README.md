@@ -16,6 +16,7 @@ la [Facultatea de Matematică și Informatică](http://fmi.unibuc.ro/ro/),
 - [pp](pp): Programare Procedurală (în C)
 - [pl](pl): Programare Logică (în Prolog)
 - [ps](ps): Probabilități și Statistică (în R)
+- [retele](retele): Rețele (în Python și Docker)
 - [so](so): Sisteme de Operare (Linux/UNIX, în C și Python)
 - [tap](tap): Tehnici Avansate de Programare (în Python)
 - [tw](tw): Tehnici Web (HTML/CSS/JavaScript + NodeJS)
