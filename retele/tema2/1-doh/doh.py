@@ -1,6 +1,9 @@
 import requests
 
+
 def dns_query(name):
+    "Returns the IP address for a given domain"
+
     headers = {
         "Accept": "application/dns-json",
     }
@@ -9,7 +12,8 @@ def dns_query(name):
         "type": "A"
     }
 
-    response = requests.get(f"https://1.1.1.1/dns-query", headers=headers, params=params)
+    response = requests.get(f"https://1.1.1.1/dns-query",
+                            headers=headers, params=params)
 
     result = response.json()
 
@@ -20,4 +24,5 @@ def dns_query(name):
     return ip_addr
 
 
-print(dns_query("fmi.unibuc.ro"))
+domain = "fmi.unibuc.ro"
+print(domain, "has the IP address", dns_query(domain))
