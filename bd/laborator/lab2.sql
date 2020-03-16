@@ -137,7 +137,7 @@ ON t1.department_id = t2.department_id;
 
 Exercițiul 18
 
-SELECT job_id
+SELECT DISTINCT(job_id)
 FROM employees t1
 INNER JOIN departments t2
 ON t1.department_id = t2.department_id
@@ -150,7 +150,7 @@ SELECT first_name, last_name, department_name, location_id
 FROM employees t1
 INNER JOIN departments t2
 ON t1.department_id = t2.department_id
-WHERE commission_pct > 0;
+WHERE commission_pct IS NOT NULL;
 
 
 Exercițiul 20
@@ -159,7 +159,7 @@ SELECT last_name, department_name
 FROM employees t1
 INNER JOIN departments t2
 ON t1.department_id = t2.department_id
-WHERE LOWER(last_name) NOT LIKE '%a%';
+WHERE LOWER(last_name) LIKE '%a%';
 
 
 Exercițiul 21
@@ -204,7 +204,8 @@ Exercițiul 24
 SELECT t1.last_name "Nume angajat", t1.department_id Departament, t2.last_name "Nume coleg"
 FROM employees t1
 JOIN employees t2
-ON t1.department_id = t2.department_id;
+ON (t1.department_id = t2.department_id)
+    AND (t1.employee_id <> t2.employee_id);
 
 
 Exercițiul 25
