@@ -1,3 +1,4 @@
+"""A* bazat pe codul doamnei profesoare, cu comentarii și completări."""
 
 
 """ definirea problemei """
