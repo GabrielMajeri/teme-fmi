@@ -206,6 +206,7 @@ def a_star():
 				if g_nou < nod_open.g:
 					nod_open.g = g_nou
 					nod_open.f = g_nou + nod_open.nod_graf.h
+					nod_open.parinte = nod_curent
 
 			elif nod_closed:
 				f_nou = g_nou + nod_closed.nod_graf.h
@@ -213,6 +214,7 @@ def a_star():
 				if f_nou < nod_closed.f:
 					nod_closed.g = g_nou
 					nod_closed.f = f_nou + nod_closed.nod_graf.h
+					nod_closed.parinte = nod_curent
 
 					# dacă l-am actualizat, se mută înapoi în open,
 					# ca să îi re-explorez vecini
