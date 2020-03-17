@@ -1,4 +1,4 @@
-pozitii_finale = {}
+"Rezolvare pentru problema cu cuburile așezate pe stive folosind A*"
 
 class Configuratie:
 	def __init__(self, stive):
@@ -13,10 +13,15 @@ class Configuratie:
 		return pozitii
 
 	def euristica(self):
+		# dicționar în care am reținut pozițiile din configurația finală
+		global pozitii_finale
+
 		# calculez euristica pentru acest nod
 		distanta = 0
 
+		# văd pe ce poziții se află cuburile din această configurație
 		pozitii = self.pozitii()
+
 		# trec prin toate cuburile
 		for cub in cuburi:
 			if pozitii[cub] != pozitii_finale[cub]:
@@ -24,24 +29,33 @@ class Configuratie:
 
 		return distanta
 
+	# trebuie să pot compara pentru egalitate configurațiile ca să pot folosi
+	# funcția `cauta_nod_nume`
 	def __eq__(self, other):
 		return self.stive == other.stive
 
 	def __repr__(self):
 		return f'{self.stive}'
 
-# Hardcodez datele de intrare
-M = 4
+### datele de intrare
+
+# numărul de stive
 N = 3
 
+# etichetele cuburilor
 cuburi = ['a', 'b', 'c', 'd']
 
+# numărul de cuburi
+M = len(cuburi)
+
+# configurația inițială a cuburilor
 configuratie_initiala = Configuratie([
 	['a'],
 	['b', 'c'],
 	['d'],
 ])
 
+# configurația țintă
 configuratie_finala = Configuratie([
 	['b', 'c'],
 	[],
