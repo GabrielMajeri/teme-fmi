@@ -6,6 +6,7 @@ Codul este scris în [Python](https://www.python.org/) și poate fi rulat cu [Do
 ## Teme
 
 - [Tema 1](tema1)
+- [Tema 2](tema2)
 
 ## Resurse
 
