@@ -270,7 +270,12 @@ def a_star():
 		if nod_curent.test_scop(): # am ajuns la țintă
 			break
 
+		drum = nod_curent.drum_arbore()
+
 		for succesor, cost in nod_curent.expandeaza():
+			if in_lista(drum, succesor):
+				continue
+
 			nod_open = in_lista(open, succesor) # îl caut în lista open
 			nod_closed = in_lista(closed, succesor) # îl caut în lista closed
 
