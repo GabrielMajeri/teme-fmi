@@ -1,41 +1,14 @@
 "Rezolvare pentru problema cu cuburile așezate pe stive folosind A*"
 
-class Configuratie:
-	def __init__(self, stive):
-		self.stive = stive
 
-	def pozitii(self):
-		# dictionar în care rețin că litera X se află pe stiva i poziția j
-		pozitii = {}
-		for i, stiva in enumerate(self.stive):
-			for j, cub in enumerate(stiva):
-				pozitii[cub] = (i, j)
-		return pozitii
+def extrage_pozitii(stive):
+	# dictionar în care rețin că litera X se află pe stiva i poziția j
+	pozitii = {}
+	for i, stiva in enumerate(stive):
+		for j, cub in enumerate(stiva):
+			pozitii[cub] = (i, j)
+	return pozitii
 
-	def euristica(self):
-		# dicționar în care am reținut pozițiile din configurația finală
-		global pozitii_finale
-
-		# calculez euristica pentru acest nod
-		distanta = 0
-
-		# văd pe ce poziții se află cuburile din această configurație
-		pozitii = self.pozitii()
-
-		# trec prin toate cuburile
-		for cub in cuburi:
-			if pozitii[cub] != pozitii_finale[cub]:
-				distanta += 1
-
-		return distanta
-
-	# trebuie să pot compara pentru egalitate configurațiile ca să pot folosi
-	# funcția `cauta_nod_nume`
-	def __eq__(self, other):
-		return self.stive == other.stive
-
-	def __repr__(self):
-		return f'{self.stive}'
 
 ### datele de intrare
 
@@ -49,26 +22,38 @@ cuburi = ['a', 'b', 'c', 'd']
 M = len(cuburi)
 
 # configurația inițială a cuburilor
-configuratie_initiala = Configuratie([
+configuratie_initiala = [
 	['a'],
 	['b', 'c'],
 	['d'],
-])
+]
 
 # configurația țintă
-configuratie_finala = Configuratie([
+configuratie_finala = [
 	['b', 'c'],
 	[],
 	['d', 'a'],
-])
+]
 
-pozitii_finale = configuratie_finala.pozitii()
+pozitii_finale = extrage_pozitii(configuratie_finala)
 
 """ definirea problemei """
 class Nod:
-	def __init__(self, configuratie):
-		self.info = configuratie
-		self.h = configuratie.euristica()
+	def __init__(self, stive):
+		self.info = stive
+
+		# calculez euristica pentru acest nod
+		self.h = 0
+
+		distanta = 0
+
+		# văd pe ce poziții se află cuburile din această configurație
+		pozitii = extrage_pozitii(stive)
+
+		# trec prin toate cuburile
+		for cub in cuburi:
+			if pozitii[cub] != pozitii_finale[cub]:
+				distanta += 1
 
 	def __str__ (self):
 		return "({}, h={})".format(self.info, self.h)
@@ -165,7 +150,7 @@ class NodParcurgere:
 		sau lista vida, daca nu exista niciunul.
 		(Fiecare tuplu contine un obiect de tip Nod si un numar.)
 		"""
-		configuratie = self.nod_graf.info
+		stive = self.nod_graf.info
 		succesori = []
 		# pot obține o nouă poziție mutând un cub de pe o stivă nevidă pe o altă stivă
 		for stiva_sursa in range(N):
@@ -173,32 +158,30 @@ class NodParcurgere:
 				if stiva_sursa == stiva_destinatie:
 					continue # ignor mutarea unui cub pe aceeași stivă
 
-				if not configuratie.stive[stiva_sursa]:
+				if not stive[stiva_sursa]:
 					continue # nu pot să mut de pe o stivă vidă
 
 				# rețin ultimul bloc
-				cub_de_mutat = configuratie.stive[stiva_sursa][-1]
+				cub_de_mutat = stive[stiva_sursa][-1]
 
 				stive_noi = []
 				for i in range(N):
 					if i == stiva_sursa:
 						# nu copiez și cubul din vârf
-						stiva_noua = configuratie.stive[i][:-1]
+						stiva_noua = stive[i][:-1]
 					elif i == stiva_destinatie:
 						# adaug cubul mutat
-						stiva_noua = configuratie.stive[i] + [cub_de_mutat]
+						stiva_noua = stive[i] + [cub_de_mutat]
 					else:
-						stiva_noua = configuratie.stive[i]
+						stiva_noua = stive[i]
 
 					stive_noi.append(stiva_noua)
 
-				configuratie_noua = Configuratie(stive_noi)
-
 				# văd dacă nu cumva am explorat deja această configurație
-				succesor = problema.cauta_nod_nume(configuratie_noua)
+				succesor = problema.cauta_nod_nume(stive_noi)
 
 				if not succesor:
-					nod_nou = Nod(configuratie_noua)
+					nod_nou = Nod(stive_noi)
 					problema.noduri.append(nod_nou)
 					succesor = nod_nou
 
