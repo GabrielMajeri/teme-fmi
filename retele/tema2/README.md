@@ -42,3 +42,23 @@ de la Cloudflare pentru a afla adresa IP a unui domeniu.
 ![Un mesaj transmis de pe host pe container și înapoi](udp/7-local.png)
 
 ## Exerciții TCP
+
+Exercițiile 1-3 au mers la UDP.
+
+### Mesaj transmis prin TCP
+
+![Transmiterea unui mesaj de la client la server prin TCP](tcp/4-comunicare.png)
+
+### 3-way Handshake
+
+```
+IP 172.21.0.2.59128 > 172.21.0.3.10000: Flags [S], seq 2472923734, win 64240, options [mss 1460,sackOK,TS val 3722954303 ecr 0,nop,wscale 7], length 0
+IP 172.21.0.3.10000 > 172.21.0.2.59128: Flags [S.], seq 3967639458, ack 2472923735, win 65160, options [mss 1460,sackOK,TS val 4044896210 ecr 3722954303,nop,wscale 7], length 0
+IP 172.21.0.2.59128 > 172.21.0.3.10000: Flags [.], ack 3967639459, win 502, options [nop,nop,TS val 3722954303 ecr 4044896210], length 0
+IP 172.21.0.2.59128 > 172.21.0.3.10000: Flags [P.], seq 2472923735:2472923736, ack 3967639459, win 502, options [nop,nop,TS val 3722955304 ecr 4044896210], length 1
+IP 172.21.0.3.10000 > 172.21.0.2.59128: Flags [.], ack 2472923736, win 510, options [nop,nop,TS val 4044897211 ecr 3722955304], length 0
+IP 172.21.0.2.59128 > 172.21.0.3.10000: Flags [F.], seq 2472923736, ack 3967639459, win 502, options [nop,nop,TS val 3722955304 ecr 4044897211], length 0
+IP 172.21.0.3.10000 > 172.21.0.2.59128: Flags [.], ack 2472923737, win 510, options [nop,nop,TS val 4044897251 ecr 3722955304], length 0
+IP 172.21.0.3.10000 > 172.21.0.2.59128: Flags [F.], seq 3967639459, ack 2472923737, win 510, options [nop,nop,TS val 4044898212 ecr 3722955304], length 0
+IP 172.21.0.2.59128 > 172.21.0.3.10000: Flags [.], ack 3967639460, win 502, options [nop,nop,TS val 3722956305 ecr 4044898212], length 0
+```
