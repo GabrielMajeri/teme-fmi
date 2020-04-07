@@ -34,6 +34,12 @@ public class DatabaseAudit implements JobDatabase {
     }
 
     @Override
+    public List<Company> getCompanies() {
+        logAction("getCompanies");
+        return db.getCompanies();
+    }
+
+    @Override
     public Company findCompanyByName(String name) {
         logAction("findCompanyByName");
         return db.findCompanyByName(name);

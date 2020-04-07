@@ -17,6 +17,11 @@ public final class InMemoryJobDatabase implements JobDatabase {
     }
 
     @Override
+    public List<Company> getCompanies() {
+        return companyList;
+    }
+
+    @Override
     public Company findCompanyByName(String name) {
         for (Company company : companyList) {
             if (company.getName().equals(name)) {

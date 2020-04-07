@@ -7,6 +7,7 @@ import java.util.List;
 
 public interface JobDatabase {
     void addCompany(Company company);
+    List<Company> getCompanies();
 
     Company findCompanyByName(String name);
 
