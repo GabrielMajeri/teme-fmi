@@ -144,8 +144,8 @@ class Configuration:
 
         return Configuration(new_board)
 
-    def heuristic(self, color):
-        "Computes a heuristic value for this position, for a given player"
+    def count_stones(self, color):
+        "Counts the number of stones on the board, for a given player"
         count = 0
 
         for row in self.board:
@@ -175,7 +175,7 @@ def minimax(config, player, depth, alpha=-INFINITY, beta=+INFINITY):
 
     # terminal / leaf node: return the estimated value of this position
     if depth == 0:
-        return config.heuristic(player)
+        return config.count_stones(player)
 
     other_player = player.opposite()
 
@@ -227,14 +227,26 @@ while True:
 
     if not moves:
         print("Game over")
-        print(f"Player {current_player.opposite()} won!")
+
+        human_pieces = current_config.count_stones(human_player)
+        computer_pieces = current_config.count_stones(computer_player)
+
+        if human_pieces > computer_pieces:
+            print(f"Player {human_player} won!")
+        else:
+            print(f"Sorry, {computer_player} won.")
+
         break
 
     if current_player == human_player:
         print(current_config)
 
         print("Enter move:")
-        row, column = map(int, input("row column = ").split())
+        try:
+            row, column = map(int, input("row column = ").split())
+        except ValueError:
+            print("Invalid row/column combination!")
+            continue
 
         ends = current_config.is_valid(human_player, row, column)
 
@@ -244,10 +256,6 @@ while True:
 
         current_config = current_config.make_move(human_player, row, column, ends)
     else:
-        if not moves:
-            print("Game over")
-            break
-
         configs = [
             current_config.make_move(computer_player, row, column, ends)
             for (row, column), ends in moves
