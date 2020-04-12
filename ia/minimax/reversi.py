@@ -266,7 +266,12 @@ while True:
             _, config = params
             return minimax(config, computer_player, MAX_DEPTH)
 
-        best_move, best_config = max(moves_and_configs, key=score_move_and_config)
+        if computer_player.is_maximizing():
+            func = max
+        else:
+            func = min
+
+        best_move, best_config = func(moves_and_configs, key=score_move_and_config)
 
         position, _ = best_move
         print(f"Computer places piece at {position}")
