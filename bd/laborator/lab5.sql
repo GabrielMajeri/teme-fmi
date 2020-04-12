@@ -200,11 +200,11 @@ SELECT department_id, last_name
 FROM employees
 WHERE department_id IN (
     SELECT DISTINCT department_id
-    FROM employees
+    FROM employees e
     WHERE EXISTS (
         SELECT 1
         FROM employees
-        WHERE salary = (
+        WHERE department_id = e.department_id AND salary = (
             SELECT MAX(salary)
             FROM employees
             WHERE department_id = 30
