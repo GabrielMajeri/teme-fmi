@@ -22,3 +22,7 @@ Acest director conține programe Python scrise pentru cursul de IA.
 - [X și 0](minimax/tictactoe.py)
 
 - [Connect 4](minimax/connect4.py)
+
+- [Reversi](minimax/reversi.py)
+
+- [Hares & hounds](minimax/hares.py)
