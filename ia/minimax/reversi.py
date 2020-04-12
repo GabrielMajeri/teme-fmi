@@ -175,7 +175,7 @@ def minimax(config, player, depth, alpha=-INFINITY, beta=+INFINITY):
 
     # terminal / leaf node: return the estimated value of this position
     if depth == 0:
-        return config.count_stones(player)
+        return config.count_stones(Square.BLACK)
 
     other_player = player.opposite()
 
