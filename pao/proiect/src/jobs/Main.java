@@ -2,8 +2,10 @@ package jobs;
 
 import jobs.db.JobDatabase;
 import jobs.db.impl.InMemoryJobDatabase;
+import jobs.db.impl.SqliteDatabase;
 
 import java.io.IOException;
+import java.sql.SQLException;
 
 public class Main {
     public static void main(String[] args) {
@@ -11,6 +13,12 @@ public class Main {
 
         DatabaseTest test = new DatabaseTest(inMemoryDb);
         test.runAllTests();
+
+        try {
+            JobDatabase sqliteDb = new SqliteDatabase();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
 
         try {
             CsvTest.writeToFile(inMemoryDb);
