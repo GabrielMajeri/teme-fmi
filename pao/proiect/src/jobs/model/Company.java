@@ -17,6 +17,7 @@ public class Company implements CsvSerializable {
     public String getName() {
         return name;
     }
+    public int getId() { return id; }
 
     @Override
     public String toString() {

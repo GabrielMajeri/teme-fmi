@@ -7,13 +7,16 @@ import java.security.NoSuchAlgorithmException;
 import java.util.Random;
 
 public abstract class User {
+    private int id;
     private String name;
     private String saltedPassword;
     private String salt;
 
     private final static int SALT_LENGTH_BYTES = 32;
+    private static int userCounter;
 
     protected User(String name) {
+        this.id = ++userCounter;
         this.name = name;
     }
 
@@ -44,4 +47,8 @@ public abstract class User {
         }
     }
 
+    @Override
+    public String toString() {
+        return name;
+    }
 }

@@ -4,18 +4,23 @@ import jobs.db.JobDatabase;
 import jobs.db.impl.InMemoryJobDatabase;
 import jobs.db.impl.SqliteDatabase;
 
+import java.io.File;
 import java.io.IOException;
 import java.sql.SQLException;
 
 public class Main {
     public static void main(String[] args) {
         JobDatabase inMemoryDb = new InMemoryJobDatabase();
-
-        DatabaseTest test = new DatabaseTest(inMemoryDb);
-        test.runAllTests();
+        new DatabaseTest(inMemoryDb).runAllTests();
 
         try {
+            File dbFile = new File("jobs.db");
+            if (dbFile.exists()) {
+                dbFile.delete();
+            }
+
             JobDatabase sqliteDb = new SqliteDatabase();
+            new DatabaseTest(sqliteDb).runAllTests();
         } catch (SQLException e) {
             e.printStackTrace();
         }
