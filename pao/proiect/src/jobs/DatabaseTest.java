@@ -3,7 +3,7 @@ package jobs;
 import jobs.db.JobDatabase;
 import jobs.model.Category;
 import jobs.model.Company;
-import jobs.model.Job;
+import jobs.model.JobPosting;
 
 import java.util.Date;
 

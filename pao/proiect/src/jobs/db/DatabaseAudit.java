@@ -1,7 +1,7 @@
 package jobs.db;
 
 import jobs.model.Company;
-import jobs.model.Job;
+import jobs.model.JobPosting;
 
 import java.io.BufferedWriter;
 import java.io.IOException;
@@ -46,13 +46,13 @@ public class DatabaseAudit implements JobDatabase {
     }
 
     @Override
-    public void addJob(Job job) {
+    public void addJob(JobPosting jobPosting) {
         logAction("addJob");
-        db.addJob(job);
+        db.addJob(jobPosting);
     }
 
     @Override
-    public List<Job> getJobPostings() {
+    public List<JobPosting> getJobPostings() {
         logAction("getJobPostings");
         return db.getJobPostings();
     }

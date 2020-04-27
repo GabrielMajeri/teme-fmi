@@ -1,7 +1,7 @@
 package jobs.db;
 
 import jobs.model.Company;
-import jobs.model.Job;
+import jobs.model.JobPosting;
 
 import java.util.List;
 
@@ -11,7 +11,7 @@ public interface JobDatabase {
 
     Company findCompanyByName(String name);
 
-    void addJob(Job job);
+    void addJob(JobPosting jobPosting);
 
-    List<Job> getJobPostings();
+    List<JobPosting> getJobPostings();
 }

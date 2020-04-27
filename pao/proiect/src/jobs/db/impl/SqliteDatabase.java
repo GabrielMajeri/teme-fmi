@@ -2,9 +2,8 @@ package jobs.db.impl;
 
 import jobs.db.JobDatabase;
 import jobs.model.Company;
-import jobs.model.Job;
+import jobs.model.JobPosting;
 
-import javax.swing.plaf.nimbus.State;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -76,11 +75,11 @@ public final class SqliteDatabase implements JobDatabase {
     }
 
     @Override
-    public void addJob(Job job) {
+    public void addJob(JobPosting jobPosting) {
     }
 
     @Override
-    public List<Job> getJobPostings() {
+    public List<JobPosting> getJobPostings() {
         return null;
     }
 }

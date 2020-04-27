@@ -2,14 +2,14 @@ package jobs.db.impl;
 
 import jobs.model.Company;
 import jobs.db.JobDatabase;
-import jobs.model.Job;
+import jobs.model.JobPosting;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public final class InMemoryJobDatabase implements JobDatabase {
     private final List<Company> companyList = new ArrayList<>();
-    private final List<Job> jobList = new ArrayList<>();
+    private final List<JobPosting> jobPostingList = new ArrayList<>();
 
     @Override
     public void addCompany(Company company) {
@@ -32,13 +32,13 @@ public final class InMemoryJobDatabase implements JobDatabase {
     }
 
     @Override
-    public void addJob(Job job) {
-        jobList.add(job);
+    public void addJob(JobPosting jobPosting) {
+        jobPostingList.add(jobPosting);
     }
 
     @Override
-    public List<Job> getJobPostings() {
-        return jobList;
+    public List<JobPosting> getJobPostings() {
+        return jobPostingList;
     }
 
     @Override
