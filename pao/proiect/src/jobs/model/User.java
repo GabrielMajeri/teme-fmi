@@ -20,9 +20,22 @@ public abstract class User {
         this.name = name;
     }
 
+    /**
+     * Sets a new password for this user.
+     * @param plainText the input password, in plain text
+     */
     public void setPassword(String plainText) {
         salt = generateRandomString(SALT_LENGTH_BYTES);
         saltedPassword = hashPassword(plainText + salt);
+    }
+
+    /**
+     * Checks if a given password is correct for this user.
+     * @param plainText the input password, in plain text
+     * @return whether the given password is correct
+     */
+    public boolean checkPassword(String plainText) {
+        return hashPassword(plainText + salt).equals(saltedPassword);
     }
 
     private static String generateRandomString(int length) {
@@ -39,16 +52,16 @@ public abstract class User {
             BigInteger passwordInteger = new BigInteger(1, passwordDigest);
             return passwordInteger.toString(16);
         } catch (NoSuchAlgorithmException e) {
-            System.err.println("Your system does not support" +
+            throw new RuntimeException("Your system does not support " +
                     "the required cryptographic hashing function.");
-            e.printStackTrace();
-            System.exit(1);
-            return null;
         }
     }
 
     @Override
     public String toString() {
-        return name;
+        return "User{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                '}';
     }
 }

@@ -1,6 +1,7 @@
 package jobs.ui;
 
 import jobs.DatabaseTest;
+import jobs.MockUtil;
 import jobs.db.DatabaseAudit;
 import jobs.db.JobDatabase;
 import jobs.db.impl.InMemoryJobDatabase;
@@ -40,7 +41,7 @@ public class MainWindow extends JFrame {
             System.err.println("No logging will be performed");
         }
 
-        DatabaseTest.fillDatabaseWithMockData(db);
+        MockUtil.fillDatabaseWithMockData(db, 7);
 
         new MainWindow(db);
     }

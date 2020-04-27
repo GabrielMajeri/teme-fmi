@@ -12,7 +12,7 @@ public class DatabaseTest {
 
     public DatabaseTest(JobDatabase db) {
         this.db = db;
-        fillDatabaseWithMockData(db);
+        MockUtil.fillDatabaseWithMockData(db, 7);
     }
 
     public void runAllTests() {
@@ -20,21 +20,5 @@ public class DatabaseTest {
         if (megaImage == null) {
             throw new RuntimeException("Test failed: cannot find previously inserted company");
         }
-    }
-
-    public static void fillDatabaseWithMockData(JobDatabase db) {
-        Company endava = new Company("Endava", 9533457);
-        db.addCompany(endava);
-        Company megaImage = new Company("Mega Image", 6719278);
-        db.addCompany(megaImage);
-
-        Job storeClerk = new Job("Store clerk", new Date(), Category.Sales, megaImage);
-        db.addJob(storeClerk);
-
-        Job juniorJavaDeveloper = new Job("Junior Java Developer", new Date(), Category.IT, endava);
-        db.addJob(juniorJavaDeveloper);
-
-        Job seniorFullStackEngineer = new Job("Senior Full-stack Engineer", new Date(), Category.IT, endava);
-        db.addJob(seniorFullStackEngineer);
     }
 }
