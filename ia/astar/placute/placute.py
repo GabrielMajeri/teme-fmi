@@ -2,7 +2,7 @@ from collections import defaultdict
 from copy import deepcopy
 from heapq import heappush, heappop
 from math import inf
-
+import time
 
 EMPTY_SYMBOL = '#'
 INFINITY = +inf
@@ -115,15 +115,6 @@ def remove_zone(board, zone):
         else:
             row += 1
 
-
-def trivial_heuristic(_board):
-    "Trivial heuristic, which is the same for every node."
-    return 0
-
-def zone_count_heuristic(board):
-    "Counts how many contiguous zones there are still left."
-    return len(get_zones(board))
-
 def cell_count_heuristic(board):
     "Counts how many non-empty cells the board has."
     count = 0
@@ -134,8 +125,39 @@ def cell_count_heuristic(board):
 
     return count
 
-# Modify this variable to change the chosen heuristic
-heuristic = cell_count_heuristic
+def zone_count_heuristic(board):
+    """Counts how many colors are there left.
+
+    Admissible because we have to use a move for at least each color.
+    """
+    colors = set()
+    for zone_color, _ in get_zones(board):
+        colors.add(zone_color)
+    return len(colors)
+
+def fragmentation_heuristic(board):
+    """Estimates how fragmented the board is.
+
+    This works because we'd get the same total cost if
+    we would remove each zone individually.
+    """
+    zones = get_zones(board)
+    num_zones = len(zones)
+
+    if num_zones == 0:
+        return 0
+
+    color_counts = defaultdict(int)
+    for zone_color, zone in zones:
+        color_counts[zone_color] += len(zone)
+
+    cost = 0
+    for zone_color, zone in zones:
+        cost += 1 - len(zone)/color_counts[zone_color]
+
+    return cost
+
+heuristic = None
 
 
 class Node:
@@ -196,14 +218,12 @@ class Node:
         while node.predecessor:
             node = node.predecessor
             path.append(node)
-        return reversed(path)
+        return list(reversed(path))
 
-def main():
-    input_path = 'example_input.txt'
+def astar(initial_board, output_path=None):
+    start_time = time.perf_counter()
 
-    board = read_input(input_path)
-
-    initial_node = Node(board, distance=0)
+    initial_node = Node(initial_board, distance=0)
 
     open_nodes = [initial_node]
     minimum_distances = defaultdict(lambda: INFINITY)
@@ -222,16 +242,61 @@ def main():
 
         num_steps += 1
 
-    print("A* finished in", num_steps, "steps")
+    end_time = time.perf_counter()
+
+    total_time = end_time - start_time
+
+    print(f"A* finished in {num_steps} steps = {total_time:.2f} seconds")
 
     if current_node.is_goal():
         print("Found solution")
-
         path = current_node.recreate_path()
 
-        print(*path, sep='\n\n')
+        total_cost = 0
+        for node in path[1:]:
+            cost = node.distance - node.predecessor.distance
+            total_cost += cost
+        print(f"Total cost: {total_cost:.2f}")
+
+        if output_path:
+            with open(output_path, "w") as fout:
+                print(path[0], file=fout)
+                print(file=fout)
+
+                for node in path[1:]:
+                    cost = node.distance - node.predecessor.distance
+
+                    print(node, file=fout)
+                    print(f"Cost: {cost:.2f}", file=fout)
+                    print(file=fout)
+
     else:
         print("Not solvable")
+
+def main():
+    for index in range(1, 5):
+        print(f"\tInput #{index}")
+
+        input_path = f'input_{index}.txt'
+        output_path = f'output_{index}.txt'
+
+        initial_board = read_input(input_path)
+
+        global heuristic
+        print("Using cell count heuristic (not admissible)")
+        heuristic = cell_count_heuristic
+        astar(initial_board)
+        print()
+
+        print("Using zone count heuristic")
+        heuristic = zone_count_heuristic
+        astar(initial_board)
+        print()
+
+        print("Using fragmentation heuristic")
+        heuristic = fragmentation_heuristic
+        astar(initial_board, output_path)
+        print()
 
 
 if __name__ == '__main__':

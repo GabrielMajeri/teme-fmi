@@ -1,0 +1,18 @@
+aaaa
+bbbb
+aaaa
+aaaa
+bbbb
+
+aaaa
+bbbb
+bbbb
+Cost: 1.33
+
+bbbb
+bbbb
+Cost: 1.00
+
+
+Cost: 1.00
+

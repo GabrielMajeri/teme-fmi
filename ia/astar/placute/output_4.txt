@@ -1,0 +1,36 @@
+aaaa
+bbbd
+aaad
+cccd
+bbbb
+aaaa
+
+aaa#
+bbb#
+aaa#
+ccca
+bbbb
+aaaa
+Cost: 1.00
+
+aaa#
+bbb#
+aaa#
+ccca
+aaaa
+Cost: 1.43
+
+aaa#
+bbb#
+aaaa
+aaaa
+Cost: 1.00
+
+aaa#
+aaaa
+aaaa
+Cost: 1.00
+
+
+Cost: 1.00
+
