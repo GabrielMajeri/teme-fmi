@@ -16,6 +16,8 @@ Acest director conține programe Python scrise pentru cursul de IA.
 
 - [Problema „Evadarea lui Mormocel”](astar/a_star_pb7.py)
 
+- [Problema cu eliminarea plăcuțelor](astar/placute/placute.py)
+
 
 ### Jocuri rezolvate cu minimax și alfa-beta retezare
 
@@ -26,3 +28,5 @@ Acest director conține programe Python scrise pentru cursul de IA.
 - [Reversi](minimax/reversi.py)
 
 - [Hares & hounds](minimax/hares.py)
+
+- [Checkers](minimax/checkers/main.py)
