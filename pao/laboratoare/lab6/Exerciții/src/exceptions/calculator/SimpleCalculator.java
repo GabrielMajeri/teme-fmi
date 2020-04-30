@@ -1,4 +1,4 @@
-package calculator;
+package exceptions.calculator;
 
 public class SimpleCalculator implements Calculator {
     @Override

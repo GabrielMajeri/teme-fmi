@@ -1,6 +1,4 @@
-package calculator;
-
-import java.util.Collection;
+package exceptions.calculator;
 
 public interface Calculator {
     /**

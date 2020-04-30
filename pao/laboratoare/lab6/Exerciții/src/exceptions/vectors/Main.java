@@ -1,11 +1,11 @@
-package vectors;
+package exceptions.vectors;
 
 import java.io.*;
 import java.util.*;
 
 public class Main {
     public static void main(String[] args) {
-        String testFilePath = "vectors.txt";
+        String testFilePath = "exceptions.vectors.txt";
 
         try {
             createTestFile(testFilePath);

@@ -1,4 +1,4 @@
-package calculator;
+package exceptions.calculator;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
