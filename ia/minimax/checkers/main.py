@@ -85,9 +85,14 @@ def main():
         print("Black's score:", current_config.score())
         ui.render(current_config)
 
-        if not current_config.has_pieces(current_player):
+        if not current_config.has_pieces(computer_player):
             # the other player won
-            winner = current_player.opposite()
+            winner = human_player
+            break
+
+        if not current_config.has_pieces(human_player):
+            # the other player won
+            winner = computer_player
             break
 
         possible_moves = current_config.possible_moves(current_player)
