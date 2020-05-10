@@ -2,7 +2,7 @@ package jobs.db.impl;
 
 import jobs.db.JobDatabase;
 import jobs.model.Company;
-import jobs.model.JobPosting;
+import jobs.model.Job;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -75,11 +75,12 @@ public final class SqliteDatabase implements JobDatabase {
     }
 
     @Override
-    public void addJob(JobPosting jobPosting) {
+    public void addJob(Job job) {
+        throw new UnsupportedOperationException();
     }
 
     @Override
-    public List<JobPosting> getJobPostings() {
+    public List<Job> getJobs() {
         return null;
     }
 }

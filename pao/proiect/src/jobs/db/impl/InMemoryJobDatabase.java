@@ -2,49 +2,47 @@ package jobs.db.impl;
 
 import jobs.model.Company;
 import jobs.db.JobDatabase;
-import jobs.model.JobPosting;
+import jobs.model.Job;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 public final class InMemoryJobDatabase implements JobDatabase {
-    private final List<Company> companyList = new ArrayList<>();
-    private final List<JobPosting> jobPostingList = new ArrayList<>();
+    private final SortedMap<String, Company> companies = new TreeMap<>();
+    private final List<Job> jobs = new ArrayList<>();
 
     @Override
     public void addCompany(Company company) {
-        companyList.add(company);
+        String companyName = company.getName();
+        if (companies.containsKey(companyName)) {
+            throw new IllegalArgumentException("Cannot add company to DB twice");
+        }
+        companies.put(companyName, company);
     }
 
     @Override
-    public List<Company> getCompanies() {
-        return companyList;
+    public Collection<Company> getCompanies() {
+        return companies.values();
     }
 
     @Override
     public Company findCompanyByName(String name) {
-        for (Company company : companyList) {
-            if (company.getName().equals(name)) {
-                return company;
-            }
-        }
-        return null;
+        return companies.get(name);
     }
 
     @Override
-    public void addJob(JobPosting jobPosting) {
-        jobPostingList.add(jobPosting);
+    public void addJob(Job job) {
+        jobs.add(job);
     }
 
     @Override
-    public List<JobPosting> getJobPostings() {
-        return jobPostingList;
+    public Collection<Job> getJobs() {
+        return jobs;
     }
 
     @Override
     public String toString() {
         return "InMemoryJobDatabase{" +
-                "companyList=" + companyList +
+                "companies=" + companies.values() +
                 '}';
     }
 }

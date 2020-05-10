@@ -1,15 +1,15 @@
 package jobs.db;
 
 import jobs.model.Company;
-import jobs.model.JobPosting;
+import jobs.model.Job;
 
 import java.io.BufferedWriter;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Collection;
 import java.util.Date;
-import java.util.List;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
 
@@ -34,7 +34,7 @@ public class DatabaseAudit implements JobDatabase {
     }
 
     @Override
-    public List<Company> getCompanies() {
+    public Collection<Company> getCompanies() {
         logAction("getCompanies");
         return db.getCompanies();
     }
@@ -46,15 +46,15 @@ public class DatabaseAudit implements JobDatabase {
     }
 
     @Override
-    public void addJob(JobPosting jobPosting) {
+    public void addJob(Job job) {
         logAction("addJob");
-        db.addJob(jobPosting);
+        db.addJob(job);
     }
 
     @Override
-    public List<JobPosting> getJobPostings() {
-        logAction("getJobPostings");
-        return db.getJobPostings();
+    public Collection<Job> getJobs() {
+        logAction("getJobs");
+        return db.getJobs();
     }
 
     private void logAction(String actionName) {

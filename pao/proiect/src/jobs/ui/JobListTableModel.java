@@ -1,13 +1,12 @@
 package jobs.ui;
 
 import jobs.db.JobDatabase;
-import jobs.model.JobPosting;
+import jobs.model.Job;
 
 import javax.swing.table.AbstractTableModel;
-import java.util.List;
 
 public class JobListTableModel extends AbstractTableModel {
-    private List<JobPosting> jobPostingList;
+    private Job[] jobs;
 
     private final static String COLUMN_NAMES[] = {
             "Category",
@@ -17,7 +16,7 @@ public class JobListTableModel extends AbstractTableModel {
     };
 
     public JobListTableModel(JobDatabase db) {
-        this.jobPostingList = db.getJobPostings();
+        this.jobs = (Job[]) db.getJobs().toArray();
     }
 
     @Override
@@ -32,22 +31,22 @@ public class JobListTableModel extends AbstractTableModel {
 
     @Override
     public int getRowCount() {
-        return jobPostingList.size();
+        return jobs.length;
     }
 
     @Override
     public Object getValueAt(int row, int column) {
-        JobPosting jobPosting = jobPostingList.get(row);
+        Job job = jobs[row];
 
         switch (COLUMN_NAMES[column]) {
             case "Job title":
-                return jobPosting.getTitle();
+                return job.getTitle();
             case "Date posted":
-                return jobPosting.getDatePosted();
+                return job.getDatePosted();
             case "Company":
-                return jobPosting.getCompany().getName();
+                return job.getCompany().getName();
             case "Category":
-                return jobPosting.getCategory();
+                return job.getCategory();
             default:
                 throw new RuntimeException("Unknown column requested");
         }

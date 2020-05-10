@@ -2,7 +2,7 @@ package jobs.model;
 
 import csv.CsvSerializable;
 
-public class Company implements CsvSerializable {
+public class Company implements Comparable<Company>, CsvSerializable {
     private String name;
     private int id;
 
@@ -41,5 +41,15 @@ public class Company implements CsvSerializable {
     public void fromStringArray(String[] data) {
         id = Integer.parseInt(data[0]);
         name = data[1];
+    }
+
+    @Override
+    public int hashCode() {
+        return id;
+    }
+
+    @Override
+    public int compareTo(Company company) {
+        return this.name.compareTo(company.name);
     }
 }

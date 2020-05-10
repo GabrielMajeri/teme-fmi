@@ -3,7 +3,7 @@ package jobs;
 import jobs.db.JobDatabase;
 import jobs.model.Category;
 import jobs.model.Company;
-import jobs.model.JobPosting;
+import jobs.model.Job;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -13,9 +13,12 @@ import java.util.Random;
 public class MockUtil {
     private final static String[] COMPANY_NAMES = {
             "Bitdefender",
-            "Endava",
+            "Avira",
             "Mega Image",
             "Microsoft",
+            "Endava",
+            "Google",
+            "Facebook",
     };
 
     private final static String[] JOB_TITLE_PREFIXES = {
@@ -23,6 +26,8 @@ public class MockUtil {
             "Junior",
             "Senior",
             "Remote",
+            "Assistant",
+            "Manager",
     };
 
     private final static String[] JOB_TITLES = {
@@ -32,7 +37,7 @@ public class MockUtil {
     };
 
     private final static int NUM_COMPANIES = COMPANY_NAMES.length;
-    private final static int NUM_JOB_POSTINGS = 15;
+    private final static int NUM_JOBS = 15;
 
 
     private MockUtil() {}
@@ -53,7 +58,7 @@ public class MockUtil {
             db.addCompany(company);
         }
 
-        for (int i = 0; i < NUM_JOB_POSTINGS; ++i) {
+        for (int i = 0; i < NUM_JOBS; ++i) {
             String prefix = JOB_TITLE_PREFIXES[rng.nextInt(JOB_TITLE_PREFIXES.length)];
             String title = JOB_TITLES[rng.nextInt(JOB_TITLES.length)];
             title = prefix + " " + title;
@@ -64,9 +69,9 @@ public class MockUtil {
 
             Company company = companies.get(rng.nextInt(NUM_COMPANIES));
 
-            JobPosting jobPosting = new JobPosting(title, postingDate, category, company);
+            Job job = new Job(title, postingDate, category, company);
 
-            db.addJob(jobPosting);
+            db.addJob(job);
         }
     }
 

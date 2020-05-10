@@ -1,11 +1,7 @@
 package jobs;
 
 import jobs.db.JobDatabase;
-import jobs.model.Category;
 import jobs.model.Company;
-import jobs.model.JobPosting;
-
-import java.util.Date;
 
 public class DatabaseTest {
     private JobDatabase db;

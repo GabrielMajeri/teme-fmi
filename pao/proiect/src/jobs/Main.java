@@ -11,7 +11,10 @@ import java.sql.SQLException;
 public class Main {
     public static void main(String[] args) {
         JobDatabase inMemoryDb = new InMemoryJobDatabase();
-        new DatabaseTest(inMemoryDb).runAllTests();
+
+        MockUtil.fillDatabaseWithMockData(inMemoryDb, 7);
+
+        System.out.println(inMemoryDb);
 
         try {
             File dbFile = new File("jobs.db");

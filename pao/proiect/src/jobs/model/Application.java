@@ -1,6 +1,6 @@
 package jobs.model;
 
 public class Application {
-    JobPosting jobPosting;
+    Job job;
     CV cv;
 }
