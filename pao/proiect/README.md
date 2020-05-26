@@ -11,4 +11,4 @@ It is a data management system for a job searching platform.
 
 - `jobs.model`: data model implemented as Plain Old Java Objects.
 
-- `jobs.ui`: Swing graphical user interface for interacting with the database.
+- `jobs.gui`: Swing graphical user interface for interacting with the database.

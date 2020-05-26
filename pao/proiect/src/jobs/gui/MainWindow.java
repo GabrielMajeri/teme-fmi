@@ -1,6 +1,5 @@
-package jobs.ui;
+package jobs.gui;
 
-import jobs.DatabaseTest;
 import jobs.MockUtil;
 import jobs.db.DatabaseAudit;
 import jobs.db.JobDatabase;
@@ -9,23 +8,21 @@ import jobs.db.impl.InMemoryJobDatabase;
 import java.awt.*;
 import java.io.IOException;
 import javax.swing.*;
-import javax.swing.table.AbstractTableModel;
 
 public class MainWindow extends JFrame {
     public MainWindow(JobDatabase db) {
-        super("Get a Job");
+        super("Job Platform Manager");
 
         setDefaultCloseOperation(EXIT_ON_CLOSE);
 
-        JLabel textLabel = new JLabel("Hello world!");
+        JTabbedPane tabbedPane = new JTabbedPane();
+        tabbedPane.addTab("Companies", new CompaniesPanel(db));
+        tabbedPane.addTab("Job Postings", new JobPostingsPanel(db));
 
-        //getContentPane().add(textLabel, BorderLayout.WEST);
+        setContentPane(tabbedPane);
 
-        JTable jobListTable = new JTable(new JobListTableModel(db));
-
-        getContentPane().add(jobListTable, BorderLayout.CENTER);
-
-        setSize(800, 600);
+        setMinimumSize(new Dimension(400, 300));
+        setSize(new Dimension(800, 600));
 
         setVisible(true);
     }
@@ -42,6 +39,14 @@ public class MainWindow extends JFrame {
         }
 
         MockUtil.fillDatabaseWithMockData(db, 7);
+
+        // Use the Metal look and feel
+        try {
+            UIManager.setLookAndFeel(UIManager.getCrossPlatformLookAndFeelClassName());
+        } catch (Exception e) {
+            System.err.println("Unable to use Metal cross-platform L&F, falling back to default");
+            e.printStackTrace();
+        }
 
         new MainWindow(db);
     }

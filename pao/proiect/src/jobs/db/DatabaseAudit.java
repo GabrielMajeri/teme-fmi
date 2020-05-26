@@ -14,7 +14,7 @@ import java.util.Date;
 import static java.nio.charset.StandardCharsets.UTF_8;
 
 /**
- * Wrapper providing audit & logging capabilities for an existing JobDatabase.
+ * Wrapper providing audit and logging capabilities for an existing JobDatabase.
  */
 public class DatabaseAudit implements JobDatabase {
     private JobDatabase db;
