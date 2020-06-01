@@ -15,7 +15,7 @@ public class CsvTest {
 
     public static void writeToFile(JobDatabase db) throws IOException {
         BufferedWriter companyWriter = new BufferedWriter(new FileWriter(COMPANY_CSV_PATH));
-        CsvWriter<Company> companyCsv = new CsvWriter<>(companyWriter, new Company());
+        CsvWriter<Company> companyCsv = new CsvWriter<>(companyWriter, Company.FACTORY);
 
         for (Company company : db.getCompanies()) {
             companyCsv.writeObject(company);
@@ -26,13 +26,11 @@ public class CsvTest {
 
     public static InMemoryJobDatabase readFromFile() throws IOException {
         BufferedReader companyReader = new BufferedReader(new FileReader(COMPANY_CSV_PATH));
-        CsvReader<Company> companyCsv = new CsvReader<>(companyReader, new Company());
+        CsvReader<Company> companyCsv = new CsvReader<>(companyReader, Company.FACTORY);
         InMemoryJobDatabase db = new InMemoryJobDatabase();
 
         while (companyCsv.hasMoreObjects()) {
-            Company company = new Company();
-            companyCsv.readObject(company);
-            db.addCompany(company);
+            db.addCompany(companyCsv.readObject());
         }
 
         return db;

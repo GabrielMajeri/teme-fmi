@@ -1,6 +1,6 @@
 package csv;
 
-public interface CsvSerializable {
+public interface CsvTypeFactory<T> {
     /**
      * Get the names of the columns of the CSV files.
      *
@@ -16,7 +16,7 @@ public interface CsvSerializable {
      *
      * @return array of strings containing the object's current state
      */
-    String[] toStringArray();
+    String[] toStringArray(T object);
 
     /**
      * Updates the object's values from an array of strings.
@@ -26,5 +26,5 @@ public interface CsvSerializable {
      *
      * @param data the state of the current object, as a string array
      */
-    void fromStringArray(String[] data);
+    T fromStringArray(String[] data);
 }

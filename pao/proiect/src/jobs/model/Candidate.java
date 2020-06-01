@@ -1,11 +1,15 @@
 package jobs.model;
 
-public final class Candidate extends User {
-    private String firstName, lastName;
+import jobs.utils.IdAllocator;
 
-    public Candidate(String userName, String firstName, String lastName) {
-        super(userName);
-        this.firstName = firstName;
-        this.lastName = lastName;
+public final class Candidate extends User {
+    private final static IdAllocator candidateIds = new IdAllocator(1000, 20_000);
+
+    public Candidate(int id, Name name) {
+        super(id, name);
+    }
+
+    public Candidate(Name name) {
+        this(candidateIds.next(), name);
     }
 }

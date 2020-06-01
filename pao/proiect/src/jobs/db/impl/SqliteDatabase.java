@@ -1,19 +1,16 @@
 package jobs.db.impl;
 
 import jobs.db.JobDatabase;
-import jobs.model.Company;
-import jobs.model.Job;
+import jobs.model.*;
 
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
 public final class SqliteDatabase implements JobDatabase {
-    private Connection conn = null;
+    private final Connection conn = DriverManager.getConnection("jdbc:sqlite:jobs.db");
 
     public SqliteDatabase() throws SQLException {
-        conn = DriverManager.getConnection("jdbc:sqlite:jobs.db");
-
         String createCompaniesTableSql =
                 "CREATE TABLE IF NOT EXISTS companies (" +
                     "id INTEGER PRIMARY KEY, " +
@@ -81,6 +78,21 @@ public final class SqliteDatabase implements JobDatabase {
 
     @Override
     public List<Job> getJobs() {
-        return null;
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public void addUser(User user) {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public void addCV(CV cv) {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public void addApplication(Application application) {
+        throw new UnsupportedOperationException();
     }
 }

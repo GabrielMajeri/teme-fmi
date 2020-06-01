@@ -1,13 +1,11 @@
 package jobs.model;
 
+import jobs.utils.IdAllocator;
+
 public final class Admin extends User {
-    private final Admin admin = new Admin();
+    private static final IdAllocator adminIds = new IdAllocator(1, 8);
 
-    private Admin() {
-        super("admin");
-    }
-
-    public Admin getAdminAccount() {
-        return admin;
+    public Admin(Name name) {
+        super(adminIds.next(), name);
     }
 }

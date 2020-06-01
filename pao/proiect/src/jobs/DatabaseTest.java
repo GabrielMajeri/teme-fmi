@@ -2,9 +2,10 @@ package jobs;
 
 import jobs.db.JobDatabase;
 import jobs.model.Company;
+import jobs.utils.MockUtil;
 
 public class DatabaseTest {
-    private JobDatabase db;
+    private final JobDatabase db;
 
     public DatabaseTest(JobDatabase db) {
         this.db = db;

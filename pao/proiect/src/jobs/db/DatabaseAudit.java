@@ -1,7 +1,6 @@
 package jobs.db;
 
-import jobs.model.Company;
-import jobs.model.Job;
+import jobs.model.*;
 
 import java.io.BufferedWriter;
 import java.io.IOException;
@@ -17,8 +16,8 @@ import static java.nio.charset.StandardCharsets.UTF_8;
  * Wrapper providing audit and logging capabilities for an existing JobDatabase.
  */
 public class DatabaseAudit implements JobDatabase {
-    private JobDatabase db;
-    private BufferedWriter logWriter;
+    private final JobDatabase db;
+    private final BufferedWriter logWriter;
 
     public DatabaseAudit(JobDatabase db, String logFilePath) throws IOException {
         this.db = db;
@@ -57,6 +56,24 @@ public class DatabaseAudit implements JobDatabase {
         return db.getJobs();
     }
 
+    @Override
+    public void addUser(User user) {
+        logAction("addUser");
+        db.addUser(user);
+    }
+
+    @Override
+    public void addCV(CV cv) {
+        logAction("addCV");
+        db.addCV(cv);
+    }
+
+    @Override
+    public void addApplication(Application application) {
+        logAction("addApplication");
+        db.addApplication(application);
+    }
+
     private void logAction(String actionName) {
         Date timestamp = new Date();
         String currentThreadName = Thread.currentThread().getName();
@@ -68,5 +85,10 @@ public class DatabaseAudit implements JobDatabase {
             System.err.print("Unable to write to log file");
             e.printStackTrace();
         }
+    }
+
+    @Override
+    public String toString() {
+        return "DatabaseAudit{" + db.toString() + "}";
     }
 }

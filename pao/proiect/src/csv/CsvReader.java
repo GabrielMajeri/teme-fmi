@@ -4,18 +4,19 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.util.Arrays;
 
-public class CsvReader<T extends CsvSerializable> {
-    private BufferedReader reader;
+public class CsvReader<T> {
+    private final BufferedReader reader;
+    private final CsvTypeFactory<T> factory;
 
-    public CsvReader(BufferedReader reader, T object) throws IOException {
+    public CsvReader(BufferedReader reader, CsvTypeFactory<T> factory) throws IOException {
         this.reader = reader;
-        if (object != null) {
-            String header = reader.readLine();
-            String[] columns = header.split(",");
-            boolean headersMatch = Arrays.equals(columns, object.getColumnNames());
-            if (!headersMatch) {
-                throw new RuntimeException("headers of CSV file do not match");
-            }
+        this.factory = factory;
+
+        String header = reader.readLine();
+        String[] columns = header.split(",");
+        boolean headersMatch = Arrays.equals(columns, factory.getColumnNames());
+        if (!headersMatch) {
+            throw new RuntimeException("headers of CSV file do not match");
         }
     }
 
@@ -23,9 +24,9 @@ public class CsvReader<T extends CsvSerializable> {
         return reader.ready();
     }
 
-    public void readObject(T object) throws IOException {
+    public T readObject() throws IOException {
         String line = reader.readLine();
         String[] values = line.split(",");
-        object.fromStringArray(values);
+        return factory.fromStringArray(values);
     }
 }

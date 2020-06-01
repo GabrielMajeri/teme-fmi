@@ -3,29 +3,34 @@ package csv;
 import java.io.BufferedWriter;
 import java.io.IOException;
 
-public class CsvWriter<T extends CsvSerializable> {
-    private BufferedWriter writer;
+public class CsvWriter<T> {
+    private final BufferedWriter writer;
+    private final CsvTypeFactory<T> factory;
+    private final int numColumns;
 
     /**
      * Constructs a new CSV file writer.
      *
      * @param writer destination of CSV file
-     * @param object if not null, will be used to extract the column headers
+     * @param factory factory describing type metadata
      * @throws IOException if there was any error with writing the object to file
      */
-    public CsvWriter(BufferedWriter writer, T object) throws IOException {
+    public CsvWriter(BufferedWriter writer, CsvTypeFactory<T> factory) throws IOException {
         this.writer = writer;
+        this.factory = factory;
 
-        if (object != null) {
-            String[] columns = object.getColumnNames();
-            String header = String.join(",", columns) + '\n';
-            writer.write(header);
-            writer.flush();
-        }
+        String[] columnNames = factory.getColumnNames();
+        this.numColumns = columnNames.length;
+        writeLine(columnNames);
     }
 
     public void writeObject(T object) throws IOException {
-        String[] strings = object.toStringArray();
+        String[] strings = factory.toStringArray(object);
+        assert strings.length == numColumns : "Invalid number of columns";
+        writeLine(strings);
+    }
+
+    private void writeLine(String[] strings) throws IOException {
         String line = String.join(",", strings) + '\n';
         writer.write(line);
     }

@@ -1,7 +1,6 @@
 package jobs.db;
 
-import jobs.model.Company;
-import jobs.model.Job;
+import jobs.model.*;
 
 import java.util.Collection;
 
@@ -12,4 +11,9 @@ public interface JobDatabase {
 
     void addJob(Job job);
     Collection<Job> getJobs();
+
+    void addUser(User user);
+    void addCV(CV cv);
+
+    void addApplication(Application application);
 }

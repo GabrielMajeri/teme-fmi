@@ -1,13 +1,27 @@
 package jobs.model;
 
-import csv.CsvSerializable;
+import csv.CsvTypeFactory;
 
-public class Company implements Comparable<Company>, CsvSerializable {
-    private String name;
-    private int id;
+public class Company implements Comparable<Company> {
+    private final String name;
+    private final int id;
 
-    public Company() {
-    }
+    public final static CsvTypeFactory<Company> FACTORY = new CsvTypeFactory<Company>() {
+        @Override
+        public String[] getColumnNames() {
+            return new String[]{"name", "id"};
+        }
+
+        @Override
+        public String[] toStringArray(Company company) {
+            return new String[]{company.name, Integer.toString(company.id)};
+        }
+
+        @Override
+        public Company fromStringArray(String[] data) {
+            return new Company(data[0], Integer.parseInt(data[1]));
+        }
+    };
 
     public Company(String name, int id) {
         this.name = name;
@@ -25,22 +39,6 @@ public class Company implements Comparable<Company>, CsvSerializable {
                 "name='" + name + "', " +
                 "cui=" + id +
                 "}";
-    }
-
-    @Override
-    public String[] getColumnNames() {
-        return new String[]{ "id", "name" };
-    }
-
-    @Override
-    public String[] toStringArray() {
-        return new String[]{ Integer.toString(id) , name };
-    }
-
-    @Override
-    public void fromStringArray(String[] data) {
-        id = Integer.parseInt(data[0]);
-        name = data[1];
     }
 
     @Override

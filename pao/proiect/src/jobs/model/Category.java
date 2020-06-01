@@ -5,9 +5,12 @@ package jobs.model;
  */
 public enum Category {
     Business,
+    Design,
+    Engineering,
     Executive,
     HR,
     Marketing,
+    Management,
     IT,
     Sales,
 }

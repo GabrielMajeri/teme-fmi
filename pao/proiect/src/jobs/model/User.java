@@ -4,20 +4,32 @@ import java.math.BigInteger;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.Objects;
 import java.util.Random;
 
 public abstract class User {
-    private int id;
-    private String name;
+    private final int id;
+    private final Name name;
     private String saltedPassword;
     private String salt;
 
     private final static int SALT_LENGTH_BYTES = 32;
-    private static int userCounter;
 
-    protected User(String name) {
-        this.id = ++userCounter;
+    protected User(int id, Name name) {
+        if (id == 0) {
+            throw new IllegalArgumentException("user ID cannot be 0");
+        }
+        Objects.requireNonNull(name);
+
+        this.id = id;
         this.name = name;
+        // Initially the user has an invalid password
+        this.saltedPassword = null;
+        this.salt = null;
+    }
+
+    public int getId() {
+        return id;
     }
 
     /**
@@ -35,6 +47,10 @@ public abstract class User {
      * @return whether the given password is correct
      */
     public boolean checkPassword(String plainText) {
+        if (saltedPassword == null) {
+            // Password hasn't been set yet, user is not allowed to login.
+            return false;
+        }
         return hashPassword(plainText + salt).equals(saltedPassword);
     }
 

@@ -1,6 +1,6 @@
 package jobs.gui;
 
-import jobs.MockUtil;
+import jobs.utils.MockUtil;
 import jobs.db.DatabaseAudit;
 import jobs.db.JobDatabase;
 import jobs.db.impl.InMemoryJobDatabase;
