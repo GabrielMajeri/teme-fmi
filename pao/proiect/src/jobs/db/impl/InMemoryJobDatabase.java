@@ -4,21 +4,31 @@ import jobs.model.*;
 import jobs.db.JobDatabase;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 public final class InMemoryJobDatabase implements JobDatabase {
     private final SortedMap<String, Company> companies = new TreeMap<>();
     private final List<Job> jobs = new ArrayList<>();
     private final AbstractMap<Integer, User> users = new HashMap<>();
-    private final AbstractMap<Integer, CV> cvs = new HashMap<>();
+    private final AbstractMap<Integer, List<CV>> cvs = new HashMap<>();
     private final List<Application> applications = new ArrayList<>();
 
     @Override
     public void addCompany(Company company) {
         String companyName = company.getName();
         if (companies.containsKey(companyName)) {
-            throw new IllegalArgumentException("Cannot add company to DB twice");
+            throw new IllegalArgumentException("cannot add company to DB twice");
         }
         companies.put(companyName, company);
+    }
+
+    @Override
+    public void removeCompany(Company company) {
+        String name = company.getName();
+        if (!companies.containsKey(name)) {
+            throw new IllegalArgumentException("cannot remove non-existing company");
+        }
+        companies.remove(name);
     }
 
     @Override
@@ -51,12 +61,25 @@ public final class InMemoryJobDatabase implements JobDatabase {
     }
 
     @Override
+    public Collection<User> getUsers() {
+        return users.values();
+    }
+
+    @Override
     public void addCV(CV cv) {
         int candidateId = cv.getCandidateUserId();
         if (!users.containsKey(candidateId)) {
             throw new IllegalArgumentException("CV's candidate not found");
         }
-        cvs.put(candidateId, cv);
+        if (!cvs.containsKey(candidateId)) {
+            cvs.put(candidateId, new ArrayList<>());
+        }
+        cvs.get(candidateId).add(cv);
+    }
+
+    @Override
+    public Collection<CV> getCVs(Candidate candidate) {
+        return cvs.get(candidate.getId());
     }
 
     @Override
@@ -64,10 +87,23 @@ public final class InMemoryJobDatabase implements JobDatabase {
         if (!jobs.contains(application.job)) {
             throw new IllegalArgumentException("application's job not found");
         }
-        if (!cvs.containsValue(application.cv)) {
-            throw new IllegalArgumentException("application's CV not found");
+        int candidateId = application.cv.getCandidateUserId();
+        if (!cvs.get(candidateId).contains(application.cv)) {
+            throw new IllegalArgumentException("applicant's CV not found");
         }
         applications.add(application);
+    }
+
+    @Override
+    public void removeApplication(Application application) {
+        applications.remove(application);
+    }
+
+    @Override
+    public Collection<Application> getApplications(Job job) {
+        return applications.stream()
+                .filter(application -> application.job.equals(job))
+                .collect(Collectors.toUnmodifiableList());
     }
 
     @Override

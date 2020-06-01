@@ -5,6 +5,7 @@ import jobs.model.*;
 
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 public final class SqliteDatabase implements JobDatabase {
@@ -37,6 +38,11 @@ public final class SqliteDatabase implements JobDatabase {
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    @Override
+    public void removeCompany(Company company) {
+        throw new UnsupportedOperationException();
     }
 
     @Override
@@ -87,12 +93,32 @@ public final class SqliteDatabase implements JobDatabase {
     }
 
     @Override
+    public Collection<User> getUsers() {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
     public void addCV(CV cv) {
         throw new UnsupportedOperationException();
     }
 
     @Override
+    public Collection<CV> getCVs(Candidate user) {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
     public void addApplication(Application application) {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public void removeApplication(Application application) {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public Collection<Application> getApplications(Job job) {
         throw new UnsupportedOperationException();
     }
 }

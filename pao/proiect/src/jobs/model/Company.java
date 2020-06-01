@@ -42,6 +42,14 @@ public class Company implements Comparable<Company> {
     }
 
     @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Company company = (Company) o;
+        return id == company.id;
+    }
+
+    @Override
     public int hashCode() {
         return id;
     }
