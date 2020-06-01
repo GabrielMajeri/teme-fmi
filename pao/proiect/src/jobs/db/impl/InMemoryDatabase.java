@@ -6,7 +6,7 @@ import jobs.db.JobDatabase;
 import java.util.*;
 import java.util.stream.Collectors;
 
-public final class InMemoryJobDatabase implements JobDatabase {
+public final class InMemoryDatabase implements JobDatabase {
     private final SortedMap<String, Company> companies = new TreeMap<>();
     private final List<Job> jobs = new ArrayList<>();
     private final AbstractMap<Integer, User> users = new HashMap<>();

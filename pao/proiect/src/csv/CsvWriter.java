@@ -2,6 +2,7 @@ package csv;
 
 import java.io.BufferedWriter;
 import java.io.IOException;
+import java.util.Collection;
 
 public class CsvWriter<T> {
     private final BufferedWriter writer;
@@ -26,8 +27,16 @@ public class CsvWriter<T> {
 
     public void writeObject(T object) throws IOException {
         String[] strings = factory.toStringArray(object);
-        assert strings.length == numColumns : "Invalid number of columns";
+        if (strings.length != numColumns) {
+            throw CsvError.wrongNumberOfColumns();
+        }
         writeLine(strings);
+    }
+
+    public void writeAll(Collection<T> objects) throws IOException {
+        for (T object : objects) {
+            writeObject(object);
+        }
     }
 
     private void writeLine(String[] strings) throws IOException {

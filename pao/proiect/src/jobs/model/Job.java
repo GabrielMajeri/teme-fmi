@@ -1,5 +1,7 @@
 package jobs.model;
 
+import csv.CsvTypeFactory;
+
 import java.util.Date;
 import java.util.Objects;
 

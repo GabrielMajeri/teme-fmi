@@ -3,7 +3,7 @@ package jobs.gui;
 import jobs.utils.MockUtil;
 import jobs.db.DatabaseAudit;
 import jobs.db.JobDatabase;
-import jobs.db.impl.InMemoryJobDatabase;
+import jobs.db.impl.InMemoryDatabase;
 
 import java.awt.*;
 import java.io.IOException;
@@ -28,7 +28,7 @@ public class MainWindow extends JFrame {
     }
 
     public static void main(String[] args) {
-        JobDatabase db = new InMemoryJobDatabase();
+        JobDatabase db = new InMemoryDatabase();
 
         try {
             db = new DatabaseAudit(db, "audit.txt");

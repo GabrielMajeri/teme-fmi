@@ -2,21 +2,28 @@ package csv;
 
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 
 public class CsvReader<T> {
     private final BufferedReader reader;
     private final CsvTypeFactory<T> factory;
+    private final int numColumns;
 
     public CsvReader(BufferedReader reader, CsvTypeFactory<T> factory) throws IOException {
         this.reader = reader;
         this.factory = factory;
 
-        String header = reader.readLine();
-        String[] columns = header.split(",");
-        boolean headersMatch = Arrays.equals(columns, factory.getColumnNames());
+        String[] headerColumns = readLine();
+        String[] columnNames = factory.getColumnNames();
+        if (headerColumns.length != columnNames.length) {
+            throw CsvError.wrongNumberOfColumns();
+        }
+        numColumns = headerColumns.length;
+        boolean headersMatch = Arrays.equals(headerColumns, columnNames);
         if (!headersMatch) {
-            throw new RuntimeException("headers of CSV file do not match");
+            throw new CsvError("header does not have same columns");
         }
     }
 
@@ -25,8 +32,23 @@ public class CsvReader<T> {
     }
 
     public T readObject() throws IOException {
-        String line = reader.readLine();
-        String[] values = line.split(",");
+        String[] values = readLine();
+        if (values.length != numColumns) {
+            throw CsvError.wrongNumberOfColumns();
+        }
         return factory.fromStringArray(values);
+    }
+
+    public Collection<T> readAll() throws IOException {
+        Collection<T> objects = new ArrayList<>();
+        while (hasMoreObjects()) {
+            objects.add(readObject());
+        }
+        return objects;
+    }
+
+    private String[] readLine() throws IOException {
+        String line = reader.readLine();
+        return line.split(",");
     }
 }
