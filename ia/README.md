@@ -2,7 +2,7 @@
 
 Acest director conține programe Python scrise pentru cursul de IA.
 
-## Algoritmi
+## Algoritmi pentru partea de Reprezentarea Cunoștințelor
 
 ### Algoritmul de căutare A*
 
@@ -30,3 +30,8 @@ Acest director conține programe Python scrise pentru cursul de IA.
 - [Hares & hounds](minimax/hares.py)
 
 - [Checkers](minimax/checkers/main.py)
+
+## Partea de Machine Learning
+
+- [Laboratoare](ml-labs)
+- [Proiect](surgical-mask-audio-classification)
