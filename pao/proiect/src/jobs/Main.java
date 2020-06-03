@@ -1,35 +1,51 @@
 package jobs;
 
 import jobs.db.JobDatabase;
-import jobs.db.impl.CsvDatabase;
-import jobs.db.impl.InMemoryDatabase;
-import jobs.db.impl.SqliteDatabase;
 import jobs.utils.MockUtil;
 
 import java.io.File;
 import java.io.IOException;
-import java.sql.SQLException;
+import java.nio.file.*;
+import java.util.ServiceLoader;
+import java.util.function.Consumer;
+import java.util.function.Function;
+import java.util.function.Predicate;
 
 public class Main {
     public static void main(String[] args) {
-        JobDatabase inMemoryDb = new InMemoryDatabase();
+        ServiceLoader<JobDatabase> loader = ServiceLoader.load(JobDatabase.class);
 
-        MockUtil.fillDatabaseWithMockData(inMemoryDb, 7);
-
-        CsvDatabase csvDatabase = CsvDatabase.INSTANCE;
-        csvDatabase.reset();
-        MockUtil.fillDatabaseWithMockData(csvDatabase, 3);
+        FileSystem fs = FileSystems.getDefault();
 
         try {
-            File dbFile = new File("jobs.db");
-            if (dbFile.exists()) {
-                dbFile.delete();
+            Consumer<Path> deleteFile = path -> {
+                try {
+                    Files.delete(path);
+                } catch (IOException e) {
+                    System.err.println("Unable to delete file " + path);
+                }
+            };
+
+            // Clean up .csv and .db files
+            Predicate<Path> csvPredicate = fs.getPathMatcher("glob:*.csv")::matches;
+            Predicate<Path> dbPredicate = fs.getPathMatcher("glob:*.db")::matches;
+            Predicate<Path> fileExtPredicate = csvPredicate.or(dbPredicate);
+
+            Files.walk(Paths.get("."), 0).filter(fileExtPredicate).forEach(deleteFile);
+        } catch (IOException e) {
+            System.err.println("Unable to clean up data files");
+            e.printStackTrace();
+            System.exit(1);
+        }
+
+        for (JobDatabase db : loader) {
+            if (!db.getClass().getSimpleName().equals("InMemoryDatabase")) {
+                continue;
             }
 
-            JobDatabase sqliteDb = new SqliteDatabase();
-            new DatabaseTest(sqliteDb).runAllTests();
-        } catch (SQLException e) {
-            e.printStackTrace();
+            MockUtil.fillDatabaseWithMockData(db, 7);
+
+            new DatabaseTest(db).runAllTests();
         }
     }
 }

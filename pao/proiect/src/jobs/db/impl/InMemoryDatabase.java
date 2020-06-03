@@ -8,27 +8,26 @@ import java.util.stream.Collectors;
 
 public final class InMemoryDatabase implements JobDatabase {
     private final SortedMap<String, Company> companies = new TreeMap<>();
-    private final List<Job> jobs = new ArrayList<>();
+    private final AbstractMap<Integer, Job> jobs = new HashMap<>();
     private final AbstractMap<Integer, User> users = new HashMap<>();
-    private final AbstractMap<Integer, List<CV>> cvs = new HashMap<>();
-    private final List<Application> applications = new ArrayList<>();
+    private final AbstractMap<Integer, List<CV>> cvsByCandidate = new HashMap<>();
+    private final AbstractMap<Integer, CV> cvsById = new HashMap<>();
+    private final AbstractMap<Integer, List<Application>> applicationsByJobId = new HashMap<>();
 
     @Override
     public void addCompany(Company company) {
-        String companyName = company.getName();
-        if (companies.containsKey(companyName)) {
+        if (companies.containsKey(company.name)) {
             throw new IllegalArgumentException("cannot add company to DB twice");
         }
-        companies.put(companyName, company);
+        companies.put(company.name, company);
     }
 
     @Override
     public void removeCompany(Company company) {
-        String name = company.getName();
-        if (!companies.containsKey(name)) {
+        if (!companies.containsKey(company.name)) {
             throw new IllegalArgumentException("cannot remove non-existing company");
         }
-        companies.remove(name);
+        companies.remove(company.name);
     }
 
     @Override
@@ -37,27 +36,24 @@ public final class InMemoryDatabase implements JobDatabase {
     }
 
     @Override
-    public Company findCompanyByName(String name) {
-        return companies.get(name);
-    }
-
-    @Override
     public void addJob(Job job) {
-        jobs.add(job);
+        if (jobs.containsKey(job.id)) {
+            throw new IllegalArgumentException("job with duplicate IDs are not allowed");
+        }
+        jobs.put(job.id, job);
     }
 
     @Override
     public Collection<Job> getJobs() {
-        return jobs;
+        return jobs.values();
     }
 
     @Override
     public void addUser(User user) {
-        int userId = user.getId();
-        if (users.containsKey(userId)) {
+        if (users.containsKey(user.id)) {
             throw new IllegalArgumentException("users with duplicate IDs are not allowed");
         }
-        users.put(userId, user);
+        users.put(user.id, user);
     }
 
     @Override
@@ -67,43 +63,47 @@ public final class InMemoryDatabase implements JobDatabase {
 
     @Override
     public void addCV(CV cv) {
-        int candidateId = cv.getCandidateUserId();
+        int candidateId = cv.candidateId;
         if (!users.containsKey(candidateId)) {
             throw new IllegalArgumentException("CV's candidate not found");
         }
-        if (!cvs.containsKey(candidateId)) {
-            cvs.put(candidateId, new ArrayList<>());
+        if (cvsById.containsKey(cv.id)) {
+            throw new IllegalArgumentException("CV with same ID already in database");
         }
-        cvs.get(candidateId).add(cv);
+        cvsById.put(cv.id, cv);
+        if (!cvsByCandidate.containsKey(candidateId)) {
+            cvsByCandidate.put(candidateId, new ArrayList<>());
+        }
+        cvsByCandidate.get(candidateId).add(cv);
     }
 
     @Override
     public Collection<CV> getCVs(Candidate candidate) {
-        return cvs.get(candidate.getId());
+        return cvsByCandidate.get(candidate.id);
     }
 
     @Override
     public void addApplication(Application application) {
-        if (!jobs.contains(application.job)) {
+        if (!jobs.containsKey(application.jobId)) {
             throw new IllegalArgumentException("application's job not found");
         }
-        int candidateId = application.cv.getCandidateUserId();
-        if (!cvs.get(candidateId).contains(application.cv)) {
-            throw new IllegalArgumentException("applicant's CV not found");
+        if (!cvsById.containsKey(application.cvId)) {
+            throw new IllegalArgumentException("application's CV not found");
         }
-        applications.add(application);
+        if (!applicationsByJobId.containsKey(application.jobId)) {
+            applicationsByJobId.put(application.jobId, new ArrayList<>());
+        }
+        applicationsByJobId.get(application.jobId).add(application);
     }
 
     @Override
     public void removeApplication(Application application) {
-        applications.remove(application);
+        applicationsByJobId.remove(application.jobId);
     }
 
     @Override
     public Collection<Application> getApplications(Job job) {
-        return applications.stream()
-                .filter(application -> application.job.equals(job))
-                .collect(Collectors.toUnmodifiableList());
+        return applicationsByJobId.get(job.id);
     }
 
     @Override

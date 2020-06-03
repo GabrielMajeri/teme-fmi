@@ -9,18 +9,11 @@ import java.util.Collection;
 import java.util.List;
 
 public final class SqliteDatabase implements JobDatabase {
-    private final Connection conn = DriverManager.getConnection("jdbc:sqlite:jobs.db");
+    private final static String DATABASE_FILE = "jobs.db";
+    private final Connection conn = DriverManager.getConnection("jdbc:sqlite:" + DATABASE_FILE);
 
     public SqliteDatabase() throws SQLException {
-        String createCompaniesTableSql =
-                "CREATE TABLE IF NOT EXISTS companies (" +
-                    "id INTEGER PRIMARY KEY, " +
-                    "name VARCHAR(32) NOT NULL" +
-                ")";
-
-        try (Statement stmt = conn.createStatement()) {
-            stmt.execute(createCompaniesTableSql);
-        }
+        ensureTablesCreated();
     }
 
     @Override
@@ -29,7 +22,7 @@ public final class SqliteDatabase implements JobDatabase {
                 "INSERT INTO companies " +
                 "(id, name) " +
                 "VALUES " +
-                "('" + company.getId() + "', '" + company.getName() + "')";
+                "('" + company.id + "', '" + company.name + "')";
         try (Statement stmt = conn.createStatement()) {
             int insertedRows = stmt.executeUpdate(insertCompanySql);
             if (insertedRows != 1) {
@@ -56,22 +49,6 @@ public final class SqliteDatabase implements JobDatabase {
                 companies.add(company);
             }
             return companies;
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    @Override
-    public Company findCompanyByName(String name) {
-        String getCompanyByNameSql =
-                "SELECT name, id FROM companies " +
-                "WHERE name = '" + name + "'";
-        try (Statement stmt = conn.createStatement()) {
-            ResultSet result = stmt.executeQuery(getCompanyByNameSql);
-            if (result.next()) {
-                return new Company(result.getString("name"), result.getInt("id"));
-            }
-            return null;
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
@@ -120,5 +97,71 @@ public final class SqliteDatabase implements JobDatabase {
     @Override
     public Collection<Application> getApplications(Job job) {
         throw new UnsupportedOperationException();
+    }
+
+    private void ensureTablesCreated() throws SQLException {
+        String createCompaniesTableSql =
+                "CREATE TABLE IF NOT EXISTS companies (" +
+                        "id INTEGER PRIMARY KEY, " +
+                        "name TEXT NOT NULL" +
+                        ")";
+
+        String createUsersTableSql =
+                "CREATE TABLE IF NOT EXISTS users (" +
+                        "id INTEGER PRIMARY KEY, " +
+                        "firstName TEXT NOT NULL, " +
+                        "initial TEXT NOT NULL, " +
+                        "lastName TEXT NOT NULL" +
+                        ")";
+
+        String createRecruitersTableSql =
+                "CREATE TABLE IF NOT EXISTS recruiters (" +
+                        "userId INTEGER PRIMARY KEY, " +
+                        "companyId INTEGER NOT NULL, " +
+                        "FOREIGN KEY (userId) REFERENCES users(id), " +
+                        "FOREIGN KEY (companyId) REFERENCES companies(id)" +
+                        ")";
+
+        String createCandidatesTableSql =
+                "CREATE TABLE IF NOT EXISTS candidates (" +
+                        "userId INTEGER PRIMARY KEY, " +
+                        "FOREIGN KEY (userId) REFERENCES users(id)" +
+                        ")";
+
+        String createCvsTableSql =
+                "CREATE TABLE IF NOT EXISTS cvs (" +
+                        "id INTEGER PRIMARY KEY, " +
+                        "userId INTEGER NOT NULL, " +
+                        "description TEXT NOT NULL, " +
+                        "FOREIGN KEY (userId) REFERENCES users(id)" +
+                        ")";
+
+        String createJobsTableSql =
+                "CREATE TABLE IF NOT EXISTS jobs (" +
+                        "id INTEGER PRIMARY KEY, " +
+                        "title TEXT NOT NULL, " +
+                        "timePosted TEXT NOT NULL, " +
+                        "category TEXT NOT NULL, " +
+                        "companyId INTEGER NOT NULL, " +
+                        "FOREIGN KEY (companyId) REFERENCES companies(id)" +
+                        ")";
+
+        String createApplicationsTableSql =
+                "CREATE TABLE IF NOT EXISTS applications (" +
+                        "jobId INTEGER NOT NULL, " +
+                        "cvId INTEGER NOT NULL, " +
+                        "FOREIGN KEY (jobId) REFERENCES jobs(id), " +
+                        "FOREIGN KEY (cvId) REFERENCES cvs(id)" +
+                        ")";
+
+        try (Statement stmt = conn.createStatement()) {
+            stmt.execute(createCompaniesTableSql);
+            stmt.execute(createUsersTableSql);
+            stmt.execute(createRecruitersTableSql);
+            stmt.execute(createCandidatesTableSql);
+            stmt.execute(createCvsTableSql);
+            stmt.execute(createJobsTableSql);
+            stmt.execute(createApplicationsTableSql);
+        }
     }
 }

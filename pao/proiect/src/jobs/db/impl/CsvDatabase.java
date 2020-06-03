@@ -11,8 +11,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 
 public final class CsvDatabase implements JobDatabase {
-    public final static CsvDatabase INSTANCE = new CsvDatabase();
-
     private static <T> Collection<T> read(String path, CsvTypeFactory<T> factory) {
         try (FileReader fileReader = new FileReader(path);
              BufferedReader bufferedReader = new BufferedReader(fileReader)) {
@@ -36,16 +34,9 @@ public final class CsvDatabase implements JobDatabase {
         }
     }
 
-    private CsvDatabase() {}
+    public CsvDatabase() {}
 
     private final static String COMPANIES_FILE = "companies.csv";
-
-    /**
-     * Clears out the whole database, resets each file.
-     */
-    public void reset() {
-        write(COMPANIES_FILE, Company.FACTORY, new ArrayList<>());
-    }
 
     @Override
     public void addCompany(Company company) {
@@ -64,15 +55,6 @@ public final class CsvDatabase implements JobDatabase {
     @Override
     public Collection<Company> getCompanies() {
         return read(COMPANIES_FILE, Company.FACTORY);
-    }
-
-    @Override
-    public Company findCompanyByName(String name) {
-        return read(COMPANIES_FILE, Company.FACTORY)
-                .stream()
-                .filter(company -> company.getName().equals(name))
-                .findAny()
-                .orElse(null);
     }
 
     @Override
