@@ -2,9 +2,11 @@ package jobs.model;
 
 import csv.CsvTypeFactory;
 
+import java.util.Objects;
+
 public class Company implements Comparable<Company> {
-    private final String name;
-    private final int id;
+    public final String name;
+    public final int id;
 
     public final static CsvTypeFactory<Company> FACTORY = new CsvTypeFactory<Company>() {
         @Override
@@ -24,14 +26,10 @@ public class Company implements Comparable<Company> {
     };
 
     public Company(String name, int id) {
+        Objects.requireNonNull(name);
         this.name = name;
         this.id = id;
     }
-
-    public String getName() {
-        return name;
-    }
-    public int getId() { return id; }
 
     @Override
     public String toString() {

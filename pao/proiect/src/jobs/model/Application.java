@@ -3,15 +3,16 @@ package jobs.model;
 import java.util.Objects;
 
 public class Application {
-    public final Job job;
-    public final CV cv;
+    public final int jobId;
+    public final int cvId;
+
+    public Application(int jobId, int cvId) {
+        this.jobId = jobId;
+        this.cvId = cvId;
+    }
 
     public Application(Job job, CV cv) {
-        Objects.requireNonNull(job);
-        Objects.requireNonNull(cv);
-
-        this.job = job;
-        this.cv = cv;
+        this(Objects.requireNonNull(job).id, Objects.requireNonNull(cv).id);
     }
 
     @Override
@@ -19,12 +20,11 @@ public class Application {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Application that = (Application) o;
-        return job.equals(that.job) &&
-                cv.equals(that.cv);
+        return jobId == that.jobId && cvId == that.cvId;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(job, cv);
+        return Objects.hash(jobId, cvId);
     }
 }

@@ -12,11 +12,11 @@ public class JobPostingsTableModel extends AbstractTableModel {
             "Category",
             "Job title",
             "Company",
-            "Date posted",
+            "Time posted",
     };
 
     public JobPostingsTableModel(JobDatabase db) {
-        this.jobs = db.getJobs().toArray(Job[]::new);
+        this.jobs = db.getJobs().toArray(new Job[0]);
     }
 
     @Override
@@ -40,13 +40,13 @@ public class JobPostingsTableModel extends AbstractTableModel {
 
         switch (column) {
             case 0:
-                return job.getTitle();
+                return job.title;
             case 1:
-                return job.getDatePosted();
+                return job.timePosted;
             case 2:
-                return job.getCompany().getName();
+                return job.companyId;
             case 3:
-                return job.getCategory();
+                return job.category;
             default:
                 return null;
         }

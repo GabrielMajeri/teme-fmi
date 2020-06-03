@@ -1,20 +1,24 @@
 package jobs.model;
 
+import jobs.utils.IdAllocator;
+
 import java.util.Objects;
 
 public class CV {
-    private final Candidate candidate;
-    private final String description;
+    public final int id;
+    public final int candidateId;
+    public final String description;
 
-    public CV(Candidate candidate, String description) {
-        Objects.requireNonNull(candidate);
-        Objects.requireNonNull(description);
-        this.candidate = candidate;
-        this.description = description;
+    private final static IdAllocator cvIds = new IdAllocator(1, 30000);
+
+    public CV(int id, int candidateId, String description) {
+        this.id = id;
+        this.candidateId = candidateId;
+        this.description = Objects.requireNonNull(description);
     }
 
-    public int getCandidateUserId() {
-        return candidate.getId();
+    public CV(Candidate candidate, String description) {
+        this(cvIds.next(), Objects.requireNonNull(candidate).id, description);
     }
 
     @Override
@@ -22,19 +26,19 @@ public class CV {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         CV cv = (CV) o;
-        return candidate.equals(cv.candidate) &&
+        return candidateId == cv.candidateId &&
                 description.equals(cv.description);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(candidate, description);
+        return Objects.hash(candidateId, description);
     }
 
     @Override
     public String toString() {
         return "CV{" +
-                "candidate=" + candidate + ", " +
+                "candidateId=" + candidateId + ", " +
                 "description='" + description + '\'' +
                 '}';
     }

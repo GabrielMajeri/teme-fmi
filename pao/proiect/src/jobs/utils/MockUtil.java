@@ -3,6 +3,7 @@ package jobs.utils;
 import jobs.db.JobDatabase;
 import jobs.model.*;
 
+import java.time.Instant;
 import java.util.*;
 
 public final class MockUtil {
@@ -98,13 +99,11 @@ public final class MockUtil {
             String title = JOB_TITLES[rng.nextInt(JOB_TITLES.length)];
             title = prefix + title;
 
-            Date postingDate = new Date();
-
             Category category = JOB_CATEGORIES[rng.nextInt(JOB_CATEGORIES.length)];
 
             Company company = companies.get(rng.nextInt(NUM_COMPANIES));
 
-            Job job = new Job(title, postingDate, category, company);
+            Job job = new Job(title, category, company);
 
             jobs.add(job);
             db.addJob(job);

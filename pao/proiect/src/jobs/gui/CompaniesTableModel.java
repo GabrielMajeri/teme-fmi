@@ -9,12 +9,12 @@ public class CompaniesTableModel extends AbstractTableModel {
     private final Company[] companies;
 
     public final static String NAME_COLUMN = "Name";
-    public final static String ID_COLUMN = "Unique ID";
+    public final static String ID_COLUMN = "ID";
 
     private final static String[] COLUMN_NAMES = { NAME_COLUMN, ID_COLUMN };
 
     public CompaniesTableModel(JobDatabase db) {
-        this.companies = db.getCompanies().toArray(Company[]::new);
+        this.companies = db.getCompanies().toArray(new Company[0]);
     }
 
     @Override
@@ -38,9 +38,9 @@ public class CompaniesTableModel extends AbstractTableModel {
 
         switch (column) {
             case 0:
-                return company.getName();
+                return company.name;
             case 1:
-                return company.getId();
+                return company.id;
             default:
                 return null;
         }
