@@ -37,6 +37,7 @@ public final class CsvDatabase implements JobDatabase {
     public CsvDatabase() {}
 
     private final static String COMPANIES_FILE = "companies.csv";
+    private final static String JOBS_FILE = "jobs.csv";
 
     @Override
     public void addCompany(Company company) {
@@ -59,11 +60,14 @@ public final class CsvDatabase implements JobDatabase {
 
     @Override
     public void addJob(Job job) {
+        Collection<Job> jobs = read(JOBS_FILE, Job.FACTORY);
+        jobs.add(job);
+        write(JOBS_FILE, Job.FACTORY, jobs);
     }
 
     @Override
     public Collection<Job> getJobs() {
-        return null;
+        return read(JOBS_FILE, Job.FACTORY);
     }
 
     @Override

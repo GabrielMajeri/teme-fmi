@@ -4,30 +4,54 @@ import jobs.db.JobDatabase;
 import jobs.model.*;
 
 import java.sql.*;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
 
 public final class SqliteDatabase implements JobDatabase {
     private final static String DATABASE_FILE = "jobs.db";
     private final Connection conn = DriverManager.getConnection("jdbc:sqlite:" + DATABASE_FILE);
 
+    private final PreparedStatement insertCompanyStatement;
+    private final PreparedStatement deleteCompanyStatement;
+
+    private final PreparedStatement insertJobStatement;
+
+    private final PreparedStatement insertUserStatement;
+    private final PreparedStatement insertCandidateStatement;
+    private final PreparedStatement insertRecruiterStatement;
+
+    private final PreparedStatement insertCVStatement;
+
+    private final PreparedStatement insertApplicationStatement;
+
     public SqliteDatabase() throws SQLException {
         ensureTablesCreated();
+
+        insertCompanyStatement = conn.prepareStatement("INSERT INTO companies (id, name) VALUES (?, ?)");
+        deleteCompanyStatement = conn.prepareStatement("DELETE FROM companies WHERE id = ?");
+
+        insertJobStatement = conn.prepareStatement("INSERT INTO jobs" +
+                "(id, title, timePosted, category, companyId) " +
+                "VALUES (?, ?, ?, ?, ?)");
+
+        insertUserStatement = conn.prepareStatement("INSERT INTO users" +
+                "(id, firstName, initial, lastName)" +
+                "VALUES (?, ?, ?, ?)");
+        insertCandidateStatement = conn.prepareStatement("INSERT INTO candidates (userId) VALUES (?)");
+        insertRecruiterStatement = conn.prepareStatement("INSERT INTO recruiters (userId, companyId) VALUES (?, ?)");
+
+        insertCVStatement = conn.prepareStatement("INSERT INTO cvs (id, userId, description) VALUES (?, ?, ?)");
+
+        insertApplicationStatement = conn.prepareStatement("INSERT INTO applications (jobId, cvId) VALUES (?, ?)");
     }
 
     @Override
     public void addCompany(Company company) {
-        String insertCompanySql =
-                "INSERT INTO companies " +
-                "(id, name) " +
-                "VALUES " +
-                "('" + company.id + "', '" + company.name + "')";
-        try (Statement stmt = conn.createStatement()) {
-            int insertedRows = stmt.executeUpdate(insertCompanySql);
-            if (insertedRows != 1) {
-                throw new SQLException("Failed to insert company into database");
-            }
+        try {
+            insertCompanyStatement.setInt(1, company.id);
+            insertCompanyStatement.setString(2, company.name);
+            checkRowInserted(insertCompanyStatement.executeUpdate());
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
@@ -35,17 +59,24 @@ public final class SqliteDatabase implements JobDatabase {
 
     @Override
     public void removeCompany(Company company) {
-        throw new UnsupportedOperationException();
+        try {
+            deleteCompanyStatement.setInt(1, company.id);
+            checkRowDeleted(deleteCompanyStatement.executeUpdate());
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @Override
-    public List<Company> getCompanies() {
-        String getCompaniesSql = "SELECT name, id FROM companies";
+    public Collection<Company> getCompanies() {
+        String getCompaniesSql = "SELECT * FROM companies";
         try (Statement stmt = conn.createStatement()) {
             ArrayList<Company> companies = new ArrayList<>();
             ResultSet result = stmt.executeQuery(getCompaniesSql);
             while (result.next()) {
-                Company company = new Company(result.getString("name"), result.getInt("id"));
+                int id = result.getInt("id");
+                String name = result.getString("name");
+                Company company = new Company(id, name);
                 companies.add(company);
             }
             return companies;
@@ -56,17 +87,62 @@ public final class SqliteDatabase implements JobDatabase {
 
     @Override
     public void addJob(Job job) {
-        throw new UnsupportedOperationException();
+        try {
+            insertJobStatement.setInt(1, job.id);
+            insertJobStatement.setString(2, job.title);
+            insertJobStatement.setString(3, job.timePosted.toString());
+            insertJobStatement.setString(4, job.category.toString());
+            insertJobStatement.setInt(5, job.companyId);
+            checkRowInserted(insertJobStatement.executeUpdate());
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @Override
-    public List<Job> getJobs() {
-        throw new UnsupportedOperationException();
+    public Collection<Job> getJobs() {
+        String getJobsSql = "SELECT * FROM job";
+        try (Statement stmt = conn.createStatement()) {
+            ArrayList<Job> jobs = new ArrayList<>();
+            ResultSet result = stmt.executeQuery(getJobsSql);
+            while (result.next()) {
+                int id = result.getInt("id");
+                String title = result.getString("title");
+                Instant timePosted = Instant.parse(result.getString("timePosted"));
+                Category category = Category.valueOf(result.getString("category"));
+                int companyId = result.getInt("companyId");
+                Job job = new Job(id, title, timePosted, category, companyId);
+                jobs.add(job);
+            }
+            return jobs;
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @Override
     public void addUser(User user) {
-        throw new UnsupportedOperationException();
+        try {
+            insertUserStatement.setInt(1, user.id);
+            insertUserStatement.setString(2, user.name.first);
+            insertUserStatement.setString(3, user.name.initialOfFather);
+            insertUserStatement.setString(4, user.name.last);
+            checkRowInserted(insertUserStatement.executeUpdate());
+
+            if (user instanceof Candidate) {
+                insertCandidateStatement.setInt(1, user.id);
+                checkRowInserted(insertCandidateStatement.executeUpdate());
+            } else if (user instanceof Recruiter) {
+                Recruiter recruiter = (Recruiter) user;
+                insertRecruiterStatement.setInt(1, recruiter.id);
+                insertRecruiterStatement.setInt(2, recruiter.companyId);
+                checkRowInserted(insertRecruiterStatement.executeUpdate());
+            } else {
+                throw new UnsupportedOperationException();
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @Override
@@ -76,7 +152,13 @@ public final class SqliteDatabase implements JobDatabase {
 
     @Override
     public void addCV(CV cv) {
-        throw new UnsupportedOperationException();
+        try {
+            insertCVStatement.setInt(1, cv.id);
+            insertCVStatement.setInt(2, cv.candidateId);
+            insertCVStatement.setString(3, cv.description);
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @Override
@@ -86,7 +168,12 @@ public final class SqliteDatabase implements JobDatabase {
 
     @Override
     public void addApplication(Application application) {
-        throw new UnsupportedOperationException();
+        try {
+            insertApplicationStatement.setInt(1, application.jobId);
+            insertApplicationStatement.setInt(2, application.cvId);
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @Override
@@ -97,6 +184,18 @@ public final class SqliteDatabase implements JobDatabase {
     @Override
     public Collection<Application> getApplications(Job job) {
         throw new UnsupportedOperationException();
+    }
+
+    private static void checkRowInserted(int insertedRows) {
+        if (insertedRows != 1) {
+            throw new RuntimeException("Failed to insert into database");
+        }
+    }
+
+    private static void checkRowDeleted(int deletedRows) {
+        if (deletedRows != 1) {
+            throw new RuntimeException("Failed to delete row from database");
+        }
     }
 
     private void ensureTablesCreated() throws SQLException {
