@@ -1,34 +1,45 @@
 package jobs.model;
 
 import csv.CsvTypeFactory;
+import jobs.utils.IdAllocator;
 
 import java.util.Objects;
 
+/**
+ * An employer which posts jobs, and hires candidates through recruiters.
+ */
 public class Company implements Comparable<Company> {
-    public final String name;
     public final int id;
+    public final String name;
 
     public final static CsvTypeFactory<Company> FACTORY = new CsvTypeFactory<Company>() {
         @Override
         public String[] getColumnNames() {
-            return new String[]{"name", "id"};
+            return new String[]{"id", "name"};
         }
 
         @Override
         public String[] toStringArray(Company company) {
-            return new String[]{company.name, Integer.toString(company.id)};
+            return new String[]{Integer.toString(company.id), company.name};
         }
 
         @Override
         public Company fromStringArray(String[] data) {
-            return new Company(data[0], Integer.parseInt(data[1]));
+            int id = Integer.parseInt(data[0]);
+            String name = data[1];
+            return new Company(id, name);
         }
     };
 
-    public Company(String name, int id) {
-        Objects.requireNonNull(name);
-        this.name = name;
+    private final static IdAllocator companyIds = new IdAllocator(100000, 500000);
+
+    public Company(int id, String name) {
         this.id = id;
+        this.name = Objects.requireNonNull(name);
+    }
+
+    public Company(String name) {
+        this(companyIds.next(), name);
     }
 
     @Override

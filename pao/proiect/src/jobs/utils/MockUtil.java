@@ -84,9 +84,7 @@ public final class MockUtil {
         for (int i = 0; i < NUM_COMPANIES; ++i) {
             String name = COMPANY_NAMES[i];
 
-            int id = generateCompanyId(rng);
-
-            Company company = new Company(name, id);
+            Company company = new Company(name);
 
             companies.add(company);
             db.addCompany(company);
