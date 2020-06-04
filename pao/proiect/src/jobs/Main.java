@@ -27,11 +27,9 @@ public class Main {
             };
 
             // Clean up .csv and .db files
-            Predicate<Path> csvPredicate = fs.getPathMatcher("glob:*.csv")::matches;
-            Predicate<Path> dbPredicate = fs.getPathMatcher("glob:*.db")::matches;
-            Predicate<Path> fileExtPredicate = csvPredicate.or(dbPredicate);
-
-            Files.walk(Paths.get("."), 0).filter(fileExtPredicate).forEach(deleteFile);
+            Files.walk(Paths.get("."), 1)
+                    .filter(fs.getPathMatcher("glob:**.{csv,db}")::matches)
+                    .forEach(deleteFile);
         } catch (IOException e) {
             System.err.println("Unable to clean up data files");
             e.printStackTrace();
