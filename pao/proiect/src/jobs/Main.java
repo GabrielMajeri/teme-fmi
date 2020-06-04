@@ -37,10 +37,6 @@ public class Main {
         }
 
         for (JobDatabase db : loader) {
-            if (!db.getClass().getSimpleName().equals("InMemoryDatabase")) {
-                continue;
-            }
-
             MockUtil.fillDatabaseWithMockData(db, 7);
 
             new DatabaseTest(db).runAllTests();
