@@ -1,17 +1,13 @@
 package jobs;
 
 import jobs.db.JobDatabase;
-import jobs.utils.MockUtil;
 
-import java.io.File;
 import java.io.IOException;
 import java.nio.file.*;
 import java.util.ServiceLoader;
 import java.util.function.Consumer;
-import java.util.function.Function;
-import java.util.function.Predicate;
 
-public class Main {
+public class TestMain {
     public static void main(String[] args) {
         ServiceLoader<JobDatabase> loader = ServiceLoader.load(JobDatabase.class);
 
