@@ -12,7 +12,7 @@ public final class InMemoryDatabase implements JobDatabase {
     private final AbstractMap<Integer, User> users = new HashMap<>();
     private final AbstractMap<Integer, List<CV>> cvsByCandidate = new HashMap<>();
     private final AbstractMap<Integer, CV> cvsById = new HashMap<>();
-    private final AbstractMap<Integer, List<Application>> applicationsByJobId = new HashMap<>();
+    private final List<Application> applications = new ArrayList<>();
 
     @Override
     public void addCompany(Company company) {
@@ -79,6 +79,9 @@ public final class InMemoryDatabase implements JobDatabase {
 
     @Override
     public Collection<CV> getCVs(Candidate candidate) {
+        if (!cvsByCandidate.containsKey(candidate.id)) {
+            return new ArrayList<>();
+        }
         return cvsByCandidate.get(candidate.id);
     }
 
@@ -90,20 +93,17 @@ public final class InMemoryDatabase implements JobDatabase {
         if (!cvsById.containsKey(application.cvId)) {
             throw new IllegalArgumentException("application's CV not found");
         }
-        if (!applicationsByJobId.containsKey(application.jobId)) {
-            applicationsByJobId.put(application.jobId, new ArrayList<>());
-        }
-        applicationsByJobId.get(application.jobId).add(application);
+        applications.add(application);
     }
 
     @Override
     public void removeApplication(Application application) {
-        applicationsByJobId.remove(application.jobId);
+        applications.remove(application);
     }
 
     @Override
-    public Collection<Application> getApplications(Job job) {
-        return applicationsByJobId.get(job.id);
+    public Collection<Application> getApplications() {
+        return applications;
     }
 
     @Override

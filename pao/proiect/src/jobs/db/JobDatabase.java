@@ -20,5 +20,5 @@ public interface JobDatabase {
 
     void addApplication(Application application);
     void removeApplication(Application application);
-    Collection<Application> getApplications(Job job);
+    Collection<Application> getApplications();
 }

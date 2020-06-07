@@ -93,9 +93,9 @@ public class DatabaseAudit implements JobDatabase {
     }
 
     @Override
-    public Collection<Application> getApplications(Job job) {
+    public Collection<Application> getApplications() {
         logAction("getApplications");
-        return db.getApplications(job);
+        return db.getApplications();
     }
 
     private void logAction(String actionName) {

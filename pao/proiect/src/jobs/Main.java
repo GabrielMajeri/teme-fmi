@@ -37,9 +37,9 @@ public class Main {
         }
 
         for (JobDatabase db : loader) {
-            MockUtil.fillDatabaseWithMockData(db, 7);
-
+            System.out.println("Testing " + db.getClass().getSimpleName());
             new DatabaseTest(db).runAllTests();
         }
+        System.out.println("Finished tests");
     }
 }

@@ -103,8 +103,10 @@ public final class CsvDatabase implements JobDatabase {
     }
 
     @Override
-    public Collection<CV> getCVs(Candidate user) {
-        return read(CVS_FILE, CV.FACTORY);
+    public Collection<CV> getCVs(Candidate candidate) {
+        return read(CVS_FILE, CV.FACTORY).stream()
+                .filter(cv -> cv.candidateId == candidate.id)
+                .collect(Collectors.toList());
     }
 
     @Override
@@ -118,7 +120,7 @@ public final class CsvDatabase implements JobDatabase {
     }
 
     @Override
-    public Collection<Application> getApplications(Job job) {
+    public Collection<Application> getApplications() {
         return read(APPLICATIONS_FILE, Application.FACTORY);
     }
 }
