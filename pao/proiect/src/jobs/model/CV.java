@@ -1,5 +1,6 @@
 package jobs.model;
 
+import csv.CsvTypeFactory;
 import jobs.utils.IdAllocator;
 
 import java.util.Objects;
@@ -8,6 +9,29 @@ public class CV {
     public final int id;
     public final int candidateId;
     public final String description;
+
+    public final static CsvTypeFactory<CV> FACTORY = new CsvTypeFactory<CV>() {
+        @Override
+        public String[] getColumnNames() {
+            return new String[]{ "id", "candidateId", "description" };
+        }
+
+        @Override
+        public String[] toStringArray(CV cv) {
+            String id = Integer.toString(cv.id);
+            String candidateId = Integer.toString(cv.candidateId);
+            String description = cv.description;
+            return new String[]{ id, candidateId, description };
+        }
+
+        @Override
+        public CV fromStringArray(String[] data) {
+            int id = Integer.parseInt(data[0]);
+            int candidateId = Integer.parseInt(data[1]);
+            String description = data[2];
+            return new CV(id, candidateId, description);
+        }
+    };
 
     private final static IdAllocator cvIds = new IdAllocator(1, 30000);
 

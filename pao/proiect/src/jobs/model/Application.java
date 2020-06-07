@@ -1,10 +1,33 @@
 package jobs.model;
 
+import csv.CsvTypeFactory;
+
 import java.util.Objects;
 
 public class Application {
     public final int jobId;
     public final int cvId;
+
+    public final static CsvTypeFactory<Application> FACTORY = new CsvTypeFactory<Application>() {
+        @Override
+        public String[] getColumnNames() {
+            return new String[]{"jobId", "cvId"};
+        }
+
+        @Override
+        public String[] toStringArray(Application application) {
+            String jobId = Integer.toString(application.jobId);
+            String cvId = Integer.toString(application.cvId);
+            return new String[]{jobId, cvId};
+        }
+
+        @Override
+        public Application fromStringArray(String[] data) {
+            int jobId = Integer.parseInt(data[0]);
+            int cvId = Integer.parseInt(data[1]);
+            return new Application(jobId, cvId);
+        }
+    };
 
     public Application(int jobId, int cvId) {
         this.jobId = jobId;
