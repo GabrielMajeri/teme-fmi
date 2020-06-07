@@ -68,6 +68,13 @@ public final class CsvDatabase implements JobDatabase {
     }
 
     @Override
+    public Company getCompanyById(int id) {
+        return read(COMPANIES_FILE, Company.FACTORY).stream()
+                .filter(company -> company.id == id)
+                .findFirst().get();
+    }
+
+    @Override
     public void addJob(Job job) {
         update(JOBS_FILE, Job.FACTORY, jobs -> jobs.add(job));
     }

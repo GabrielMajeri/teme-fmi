@@ -45,6 +45,12 @@ public class DatabaseAudit implements JobDatabase {
     }
 
     @Override
+    public Company getCompanyById(int id) {
+        logAction("getCompanyById");
+        return db.getCompanyById(id);
+    }
+
+    @Override
     public void addJob(Job job) {
         logAction("addJob");
         db.addJob(job);

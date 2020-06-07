@@ -9,6 +9,8 @@ public interface JobDatabase {
     void removeCompany(Company company);
     Collection<Company> getCompanies();
 
+    Company getCompanyById(int id);
+
     void addJob(Job job);
     Collection<Job> getJobs();
 

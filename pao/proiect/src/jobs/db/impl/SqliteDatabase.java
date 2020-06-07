@@ -3,7 +3,6 @@ package jobs.db.impl;
 import jobs.db.JobDatabase;
 import jobs.model.*;
 
-import javax.xml.transform.Result;
 import java.sql.*;
 import java.time.Instant;
 import java.util.ArrayList;
@@ -15,6 +14,7 @@ public final class SqliteDatabase implements JobDatabase {
 
     private final PreparedStatement insertCompanyStatement;
     private final PreparedStatement deleteCompanyStatement;
+    private final PreparedStatement getCompanyByIdStatement;
 
     private final PreparedStatement insertJobStatement;
 
@@ -40,6 +40,7 @@ public final class SqliteDatabase implements JobDatabase {
 
         insertCompanyStatement = conn.prepareStatement("INSERT INTO companies (id, name) VALUES (?, ?)");
         deleteCompanyStatement = conn.prepareStatement("DELETE FROM companies WHERE id = ?");
+        getCompanyByIdStatement = conn.prepareStatement("SELECT * FROM companies WHERE id = ?");
 
         insertJobStatement = conn.prepareStatement("INSERT INTO jobs" +
                 "(id, title, timePosted, category, companyId) " +
@@ -56,6 +57,12 @@ public final class SqliteDatabase implements JobDatabase {
 
         insertApplicationStatement = conn.prepareStatement("INSERT INTO applications (jobId, cvId) VALUES (?, ?)");
         deleteApplicationStatement = conn.prepareStatement("DELETE FROM applications WHERE jobId = ? AND cvId = ?");
+    }
+
+    private static Company extractCompany(ResultSet result) throws SQLException {
+        int id = result.getInt("id");
+        String name = result.getString("name");
+        return new Company(id, name);
     }
 
     @Override
@@ -83,15 +90,23 @@ public final class SqliteDatabase implements JobDatabase {
     public Collection<Company> getCompanies() {
         String getCompaniesSql = "SELECT * FROM companies";
         try (Statement stmt = conn.createStatement()) {
-            ArrayList<Company> companies = new ArrayList<>();
-            ResultSet result = stmt.executeQuery(getCompaniesSql);
-            while (result.next()) {
-                int id = result.getInt("id");
-                String name = result.getString("name");
-                Company company = new Company(id, name);
-                companies.add(company);
+            ResultSet results = stmt.executeQuery(getCompaniesSql);
+            Collection<Company> companies = new ArrayList<>();
+            while (results.next()) {
+                companies.add(extractCompany(results));
             }
             return companies;
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Override
+    public Company getCompanyById(int id) {
+        try {
+            ResultSet results = getCompanyByIdStatement.executeQuery();
+            results.next();
+            return extractCompany(results);
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }

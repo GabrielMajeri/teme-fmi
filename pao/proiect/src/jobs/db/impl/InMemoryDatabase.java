@@ -1,13 +1,12 @@
 package jobs.db.impl;
 
-import jobs.model.*;
 import jobs.db.JobDatabase;
+import jobs.model.*;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 public final class InMemoryDatabase implements JobDatabase {
-    private final SortedMap<String, Company> companies = new TreeMap<>();
+    private final AbstractMap<Integer, Company> companiesById = new TreeMap<>();
     private final AbstractMap<Integer, Job> jobs = new HashMap<>();
     private final AbstractMap<Integer, User> users = new HashMap<>();
     private final AbstractMap<Integer, List<CV>> cvsByCandidate = new HashMap<>();
@@ -16,23 +15,28 @@ public final class InMemoryDatabase implements JobDatabase {
 
     @Override
     public void addCompany(Company company) {
-        if (companies.containsKey(company.name)) {
+        if (companiesById.containsKey(company.id)) {
             throw new IllegalArgumentException("cannot add company to DB twice");
         }
-        companies.put(company.name, company);
+        companiesById.put(company.id, company);
     }
 
     @Override
     public void removeCompany(Company company) {
-        if (!companies.containsKey(company.name)) {
+        if (!companiesById.containsKey(company.id)) {
             throw new IllegalArgumentException("cannot remove non-existing company");
         }
-        companies.remove(company.name);
+        companiesById.remove(company.id);
     }
 
     @Override
     public Collection<Company> getCompanies() {
-        return companies.values();
+        return companiesById.values();
+    }
+
+    @Override
+    public Company getCompanyById(int id) {
+        return companiesById.get(id);
     }
 
     @Override
@@ -104,14 +108,5 @@ public final class InMemoryDatabase implements JobDatabase {
     @Override
     public Collection<Application> getApplications() {
         return applications;
-    }
-
-    @Override
-    public String toString() {
-        return "InMemoryJobDatabase{" +
-                "companies=" + companies.values() + "," +
-                "jobs=" + jobs + "," +
-                "users=" + users +
-                '}';
     }
 }

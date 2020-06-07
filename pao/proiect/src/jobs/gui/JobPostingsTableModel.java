@@ -6,6 +6,7 @@ import jobs.model.Job;
 import javax.swing.table.AbstractTableModel;
 
 public class JobPostingsTableModel extends AbstractTableModel {
+    private final JobDatabase db;
     private final Job[] jobs;
 
     private final static String[] COLUMN_NAMES = {
@@ -16,6 +17,7 @@ public class JobPostingsTableModel extends AbstractTableModel {
     };
 
     public JobPostingsTableModel(JobDatabase db) {
+        this.db = db;
         this.jobs = db.getJobs().toArray(new Job[0]);
     }
 
@@ -44,7 +46,7 @@ public class JobPostingsTableModel extends AbstractTableModel {
             case 1:
                 return job.timePosted;
             case 2:
-                return job.companyId;
+                return db.getCompanyById(job.companyId).name;
             case 3:
                 return job.category;
             default:
