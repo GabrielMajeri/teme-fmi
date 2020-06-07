@@ -5,10 +5,17 @@ It is a data management system for a job searching platform.
 
 ## Modules
 
-- `jobs.db`: `JobDatabase` service as an abstract interface.
-  The various database implementations (in-memory, CSV files, SQL)
-  can be found in the `jobs.db.impl` package.
+The following is a high-level overfiew of the architecture:
 
-- `jobs.model`: data model implemented as Plain Old Java Objects.
+- `csv`: generic interfaces and classes for reading from/writing to CSV files.
 
-- `jobs.gui`: Swing graphical user interface for interacting with the database.
+- `jobs`: classes and interfaces specific to the problem.
+  - `db`: database services.
+  - `model`: data model implemented as Plain Old Java Objects.
+  - `gui`: Swing graphical user interface.
+  - `utils`: utility classes.
+
+## Entry points (main classes)
+
+- `jobs.TestMain`: runs tests on the database implementations.
+- `jobs.gui.MainWindow`: opens a Swing GUI for interacting with the database.
