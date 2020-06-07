@@ -33,12 +33,6 @@ public class DatabaseAudit implements JobDatabase {
     }
 
     @Override
-    public void removeCompany(Company company) {
-        logAction("removeCompany");
-        db.removeCompany(company);
-    }
-
-    @Override
     public Collection<Company> getCompanies() {
         logAction("getCompanies");
         return db.getCompanies();
@@ -48,6 +42,24 @@ public class DatabaseAudit implements JobDatabase {
     public Company getCompanyById(int id) {
         logAction("getCompanyById");
         return db.getCompanyById(id);
+    }
+
+    @Override
+    public void updateCompany(int id, String name) {
+        logAction("updateCompany");
+        db.updateCompany(id, name);
+    }
+
+    @Override
+    public Job getJobById(int id) {
+        logAction("getJobById");
+        return db.getJobById(id);
+    }
+
+    @Override
+    public void removeCompany(int companyId) {
+        logAction("removeCompany");
+        db.removeCompany(companyId);
     }
 
     @Override
@@ -81,9 +93,15 @@ public class DatabaseAudit implements JobDatabase {
     }
 
     @Override
-    public Collection<CV> getCVs(Candidate user) {
+    public Collection<CV> getCVs() {
         logAction("getCVs");
-        return db.getCVs(user);
+        return db.getCVs();
+    }
+
+    @Override
+    public CV getCVById(int id) {
+        logAction("getCVById");
+        return db.getCVById(id);
     }
 
     @Override

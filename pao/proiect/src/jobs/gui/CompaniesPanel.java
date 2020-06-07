@@ -1,45 +1,61 @@
 package jobs.gui;
 
 import jobs.db.JobDatabase;
+import jobs.model.Company;
 
 import javax.swing.*;
-import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
 import java.awt.*;
 
 public class CompaniesPanel extends JPanel {
-    private final JButton modifyButton, deleteButton;
-
     public CompaniesPanel(JobDatabase db) {
         setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
 
-        // Create a new panel for the data modification buttons, with Flow Layout
-        JPanel buttonsPanel = new JPanel(false);
-        buttonsPanel.add(new JButton("Add new"));
-        buttonsPanel.add(modifyButton = new JButton("Modify selected"));
-        buttonsPanel.add(deleteButton = new JButton("Delete selected"));
-
+        JButton addButton = new JButton("Add new");
+        JButton modifyButton = new JButton("Modify selected");
         modifyButton.setEnabled(false);
-        deleteButton.setEnabled(false);
 
         // Create a container for the table header and the table
         JPanel tablePanel = new JPanel();
 
         // Create a table to display the companies
-        JTable companiesTable = new JTable(new CompaniesTableModel(db));
+        CompaniesTableModel tableModel = new CompaniesTableModel(db);
+        JTable companiesTable = new JTable(tableModel);
         companiesTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-
-        companiesTable.getColumn(CompaniesTableModel.NAME_COLUMN).setMinWidth(200);
-        companiesTable.getColumn(CompaniesTableModel.ID_COLUMN).setMinWidth(80);
 
         companiesTable.getSelectionModel().addListSelectionListener(listSelectionEvent -> {
             int selectedRow = companiesTable.getSelectedRow();
-            if (selectedRow != -1) {
-                modifyButton.setEnabled(true);
-                deleteButton.setEnabled(true);
-            } else {
-                modifyButton.setEnabled(false);
-                deleteButton.setEnabled(false);
+            modifyButton.setEnabled(selectedRow != -1);
+        });
+
+        // Create a new panel for the data modification buttons, with Flow Layout
+        JPanel buttonsPanel = new JPanel(false);
+        buttonsPanel.add(addButton);
+        buttonsPanel.add(modifyButton);
+
+        addButton.addActionListener(actionEvent -> {
+            JTextField nameField = new JTextField();
+            JTextField idField = new JTextField();
+            Object[] message = {"Name:", nameField, "ID:", idField};
+            int option = JOptionPane.showConfirmDialog(
+                    this,
+                    message,
+                    "Add new company",
+                    JOptionPane.OK_CANCEL_OPTION);
+            if (option == JOptionPane.OK_OPTION) {
+                int id = Integer.parseInt(idField.getText());
+                String name = nameField.getText();
+                tableModel.addCompany(new Company(id, name));
+            }
+        });
+        modifyButton.addActionListener(actionEvent -> {
+            String newName = JOptionPane.showInputDialog(
+                    this,
+                    "Name",
+                    "Edit company name",
+                    JOptionPane.QUESTION_MESSAGE);
+            if (newName != null) {
+                int selectedRow = companiesTable.getSelectedRow();
+                tableModel.setCompanyName(selectedRow, newName);
             }
         });
 

@@ -23,7 +23,6 @@ public final class SqliteDatabase implements JobDatabase {
     private final PreparedStatement insertRecruiterStatement;
 
     private final PreparedStatement insertCVStatement;
-    private final PreparedStatement getCVStatement;
 
     private final PreparedStatement insertApplicationStatement;
     private final PreparedStatement deleteApplicationStatement;
@@ -53,7 +52,6 @@ public final class SqliteDatabase implements JobDatabase {
         insertRecruiterStatement = conn.prepareStatement("INSERT INTO recruiters (userId, companyId) VALUES (?, ?)");
 
         insertCVStatement = conn.prepareStatement("INSERT INTO cvs (id, userId, description) VALUES (?, ?, ?)");
-        getCVStatement = conn.prepareStatement("SELECT id, description FROM cvs WHERE userId = ?");
 
         insertApplicationStatement = conn.prepareStatement("INSERT INTO applications (jobId, cvId) VALUES (?, ?)");
         deleteApplicationStatement = conn.prepareStatement("DELETE FROM applications WHERE jobId = ? AND cvId = ?");
@@ -77,16 +75,6 @@ public final class SqliteDatabase implements JobDatabase {
     }
 
     @Override
-    public void removeCompany(Company company) {
-        try {
-            deleteCompanyStatement.setInt(1, company.id);
-            checkRowDeleted(deleteCompanyStatement.executeUpdate());
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    @Override
     public Collection<Company> getCompanies() {
         String getCompaniesSql = "SELECT * FROM companies";
         try (Statement stmt = conn.createStatement()) {
@@ -102,10 +90,23 @@ public final class SqliteDatabase implements JobDatabase {
     }
 
     @Override
+    public void removeCompany(int companyId) {
+        try {
+            deleteCompanyStatement.setInt(1, companyId);
+            checkRowDeleted(deleteCompanyStatement.executeUpdate());
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Override
     public Company getCompanyById(int id) {
         try {
+            getCompanyByIdStatement.setInt(1, id);
             ResultSet results = getCompanyByIdStatement.executeQuery();
-            results.next();
+            if (!results.next()) {
+                throw new RuntimeException("Unable to find company with ID " + id);
+            }
             return extractCompany(results);
         } catch (SQLException e) {
             throw new RuntimeException(e);
@@ -215,15 +216,16 @@ public final class SqliteDatabase implements JobDatabase {
     }
 
     @Override
-    public Collection<CV> getCVs(Candidate candidate) {
-        try {
-            getCVStatement.setInt(1, candidate.id);
-            ResultSet results = getCVStatement.executeQuery();
+    public Collection<CV> getCVs() {
+        String getCVsSql = "SELECT * FROM cvs";
+        try (Statement stmt = conn.createStatement()) {
+            ResultSet results = stmt.executeQuery(getCVsSql);
             ArrayList<CV> cvs = new ArrayList<>();
             while (results.next()) {
                 int id = results.getInt("id");
+                int candidateId = results.getInt("userId");
                 String description = results.getString("description");
-                CV cv = new CV(id, candidate.id, description);
+                CV cv = new CV(id, candidateId, description);
                 cvs.add(cv);
             }
             return cvs;

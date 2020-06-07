@@ -50,4 +50,12 @@ public class Application {
     public int hashCode() {
         return Objects.hash(jobId, cvId);
     }
+
+    @Override
+    public String toString() {
+        return "Application{" +
+                "jobId=" + jobId +
+                ", cvId=" + cvId +
+                '}';
+    }
 }

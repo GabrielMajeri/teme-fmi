@@ -8,9 +8,7 @@ import java.util.ServiceLoader;
 import java.util.function.Consumer;
 
 public class TestMain {
-    public static void main(String[] args) {
-        ServiceLoader<JobDatabase> loader = ServiceLoader.load(JobDatabase.class);
-
+    public static void cleanDatabaseFiles() {
         FileSystem fs = FileSystems.getDefault();
 
         try {
@@ -31,6 +29,12 @@ public class TestMain {
             e.printStackTrace();
             System.exit(1);
         }
+    }
+
+    public static void main(String[] args) {
+        ServiceLoader<JobDatabase> loader = ServiceLoader.load(JobDatabase.class);
+
+        cleanDatabaseFiles();
 
         for (JobDatabase db : loader) {
             System.out.println("Testing " + db.getClass().getSimpleName());

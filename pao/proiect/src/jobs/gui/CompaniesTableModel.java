@@ -6,15 +6,14 @@ import jobs.model.Company;
 import javax.swing.table.AbstractTableModel;
 
 public class CompaniesTableModel extends AbstractTableModel {
-    private final Company[] companies;
+    private final JobDatabase db;
+    private Company[] companies;
 
-    public final static String NAME_COLUMN = "Name";
-    public final static String ID_COLUMN = "ID";
-
-    private final static String[] COLUMN_NAMES = { NAME_COLUMN, ID_COLUMN };
+    private final static String[] COLUMN_NAMES = { "Name", "ID" };
 
     public CompaniesTableModel(JobDatabase db) {
-        this.companies = db.getCompanies().toArray(new Company[0]);
+        this.db = db;
+        refreshCompaniesList();
     }
 
     @Override
@@ -44,5 +43,22 @@ public class CompaniesTableModel extends AbstractTableModel {
             default:
                 return null;
         }
+    }
+
+    public void addCompany(Company company) {
+        db.addCompany(company);
+        refreshCompaniesList();
+        fireTableDataChanged();
+    }
+
+    public void setCompanyName(int row, String name) {
+        Company company = companies[row];
+        db.updateCompany(company.id, name);
+        refreshCompaniesList();
+        fireTableCellUpdated(row, 0);
+    }
+
+    private void refreshCompaniesList() {
+        companies = db.getCompanies().toArray(new Company[0]);
     }
 }

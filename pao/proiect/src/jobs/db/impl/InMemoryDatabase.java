@@ -22,16 +22,16 @@ public final class InMemoryDatabase implements JobDatabase {
     }
 
     @Override
-    public void removeCompany(Company company) {
-        if (!companiesById.containsKey(company.id)) {
-            throw new IllegalArgumentException("cannot remove non-existing company");
-        }
-        companiesById.remove(company.id);
+    public Collection<Company> getCompanies() {
+        return companiesById.values();
     }
 
     @Override
-    public Collection<Company> getCompanies() {
-        return companiesById.values();
+    public void removeCompany(int companyId) {
+        if (!companiesById.containsKey(companyId)) {
+            throw new IllegalArgumentException("cannot remove non-existing company");
+        }
+        companiesById.remove(companyId);
     }
 
     @Override
@@ -82,11 +82,18 @@ public final class InMemoryDatabase implements JobDatabase {
     }
 
     @Override
-    public Collection<CV> getCVs(Candidate candidate) {
-        if (!cvsByCandidate.containsKey(candidate.id)) {
-            return new ArrayList<>();
-        }
-        return cvsByCandidate.get(candidate.id);
+    public Collection<CV> getCVs() {
+        return cvsById.values();
+    }
+
+    @Override
+    public CV getCVById(int id) {
+        return cvsById.get(id);
+    }
+
+    @Override
+    public Job getJobById(int id) {
+        return jobs.get(id);
     }
 
     @Override

@@ -13,7 +13,6 @@ public class DatabaseTest {
 
     private final Company company1 = new Company(1, "Test Corp.");
     private final Company company2 = new Company(100, "Test Too");
-    private final Company company3 = new Company(500, "To Be Deleted");
 
     private final Recruiter recruiter1 = new Recruiter(-100, new Name("First", "Recruiter"), 100);
     private final Recruiter recruiter2 = new Recruiter(-102, new Name("Second", "Recruiter"), 100);
@@ -50,17 +49,11 @@ public class DatabaseTest {
     private void testCompanies() {
         db.addCompany(company2);
         db.addCompany(company1);
-        db.addCompany(company3);
 
         Collection<Company> companies = db.getCompanies();
 
         assertContains(companies, company1);
         assertContains(companies, company2);
-        assertContains(companies, company3);
-
-        db.removeCompany(company3);
-
-        assertNotContains(db.getCompanies(), company3);
     }
 
     private void testRecruiters() {
@@ -92,14 +85,14 @@ public class DatabaseTest {
         db.addCV(cv2);
         db.addCV(cv3);
 
-        Collection<CV> cvs1 = db.getCVs(candidate1);
+        Collection<CV> cvs1 = db.getCVsByCandidate(candidate1);
         assertContains(cvs1, cv1);
         assertContains(cvs1, cv3);
 
-        Collection<CV> cvs2 = db.getCVs(candidate2);
+        Collection<CV> cvs2 = db.getCVsByCandidate(candidate2);
         assertEmpty(cvs2);
 
-        Collection<CV> cvs3 = db.getCVs(candidate3);
+        Collection<CV> cvs3 = db.getCVsByCandidate(candidate3);
         assertContains(cvs3, cv2);
     }
 

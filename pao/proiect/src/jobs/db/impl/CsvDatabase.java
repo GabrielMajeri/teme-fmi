@@ -58,13 +58,14 @@ public final class CsvDatabase implements JobDatabase {
     }
 
     @Override
-    public void removeCompany(Company company) {
-        update(COMPANIES_FILE, Company.FACTORY, companies -> companies.remove(company));
+    public Collection<Company> getCompanies() {
+        return read(COMPANIES_FILE, Company.FACTORY);
     }
 
     @Override
-    public Collection<Company> getCompanies() {
-        return read(COMPANIES_FILE, Company.FACTORY);
+    public void removeCompany(int companyId) {
+        update(COMPANIES_FILE, Company.FACTORY,
+                companies -> companies.removeIf(company -> company.id == companyId));
     }
 
     @Override
@@ -110,10 +111,8 @@ public final class CsvDatabase implements JobDatabase {
     }
 
     @Override
-    public Collection<CV> getCVs(Candidate candidate) {
-        return read(CVS_FILE, CV.FACTORY).stream()
-                .filter(cv -> cv.candidateId == candidate.id)
-                .collect(Collectors.toList());
+    public Collection<CV> getCVs() {
+        return read(CVS_FILE, CV.FACTORY);
     }
 
     @Override

@@ -142,9 +142,6 @@ public final class MockUtil {
         }
     }
 
-    private static int generateCompanyId(Random rng) {
-        return 1_000_000 + rng.nextInt(500_000);
-    }
     private static Name generateUserName(Random rng) {
         String firstName = FIRST_NAMES[rng.nextInt(FIRST_NAMES.length)];
         String initialOfFather = INITIALS[rng.nextInt(INITIALS.length)];
