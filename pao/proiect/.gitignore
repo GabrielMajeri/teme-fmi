@@ -1,3 +1,10 @@
 /audit.txt
 /*.csv
 /*.db
+
+# Store some project-specific settings in Git
+# See https://intellij-support.jetbrains.com/hc/en-us/articles/206544839
+!proiect.iml
+!.idea
+.idea/tasks.xml
+.idea/workspace.xml
