@@ -13,7 +13,19 @@ import java.util.function.Consumer;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+/**
+ * Database implementation which stores data in CSV files.
+ */
 public final class CsvDatabase implements JobDatabase {
+    private final static String COMPANIES_FILE = "companies.csv";
+    private final static String JOBS_FILE = "jobs.csv";
+    private final static String CANDIDATES_FILE = "candidates.csv";
+    private final static String RECRUITERS_FILE = "recruiters.csv";
+    private final static String CVS_FILE = "cvs.csv";
+    private final static String APPLICATIONS_FILE = "applications.csv";
+    public CsvDatabase() {
+    }
+
     private static <T> Collection<T> read(String path, CsvTypeFactory<T> factory) {
         try (FileReader fileReader = new FileReader(path);
              BufferedReader bufferedReader = new BufferedReader(fileReader)) {
@@ -42,15 +54,6 @@ public final class CsvDatabase implements JobDatabase {
         callback.accept(objects);
         write(path, factory, objects);
     }
-
-    public CsvDatabase() {}
-
-    private final static String COMPANIES_FILE = "companies.csv";
-    private final static String JOBS_FILE = "jobs.csv";
-    private final static String CANDIDATES_FILE = "candidates.csv";
-    private final static String RECRUITERS_FILE = "recruiters.csv";
-    private final static String CVS_FILE = "cvs.csv";
-    private final static String APPLICATIONS_FILE = "applications.csv";
 
     @Override
     public void addCompany(Company company) {
@@ -88,10 +91,10 @@ public final class CsvDatabase implements JobDatabase {
     @Override
     public void addUser(User user) {
         if (user instanceof Candidate) {
-            Candidate candidate = (Candidate)user;
+            Candidate candidate = (Candidate) user;
             update(CANDIDATES_FILE, Candidate.FACTORY, candidates -> candidates.add(candidate));
         } else if (user instanceof Recruiter) {
-            Recruiter recruiter = (Recruiter)user;
+            Recruiter recruiter = (Recruiter) user;
             update(RECRUITERS_FILE, Recruiter.FACTORY, recruiters -> recruiters.add(recruiter));
         } else {
             throw new UnsupportedOperationException("unknown user type");

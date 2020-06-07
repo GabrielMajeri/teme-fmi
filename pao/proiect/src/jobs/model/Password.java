@@ -7,23 +7,13 @@ import java.security.NoSuchAlgorithmException;
 import java.util.Random;
 
 public class Password {
+    private final static int SALT_LENGTH_BYTES = 32;
     public final String saltedPassword;
     public final String salt;
-
-    private final static int SALT_LENGTH_BYTES = 32;
 
     public Password(String plainText, Random rng) {
         this.salt = generateRandomSalt(rng);
         this.saltedPassword = hashPassword(plainText + salt);
-    }
-
-    /**
-     * Checks if a given password is correct for this user.
-     * @param plainText the input password, in plain text
-     * @return whether the given password is correct
-     */
-    public boolean checkPassword(String plainText) {
-        return hashPassword(plainText + salt).equals(saltedPassword);
     }
 
     private static String generateRandomSalt(Random rng) {
@@ -42,5 +32,15 @@ public class Password {
             throw new RuntimeException("Your system does not support " +
                     "the required cryptographic hashing function.");
         }
+    }
+
+    /**
+     * Checks if a given password is correct for this user.
+     *
+     * @param plainText the input password, in plain text
+     * @return whether the given password is correct
+     */
+    public boolean checkPassword(String plainText) {
+        return hashPassword(plainText + salt).equals(saltedPassword);
     }
 }

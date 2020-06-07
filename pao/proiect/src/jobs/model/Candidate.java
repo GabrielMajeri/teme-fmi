@@ -10,14 +10,14 @@ public final class Candidate extends User {
     public final static CsvTypeFactory<Candidate> FACTORY = new CsvTypeFactory<Candidate>() {
         @Override
         public String[] getColumnNames() {
-            Stream<String> columns = Arrays.stream(new String[]{ "id" });
+            Stream<String> columns = Arrays.stream(new String[]{"id"});
             Stream<String> nameColumns = Arrays.stream(Name.FACTORY.getColumnNames());
             return Stream.concat(columns, nameColumns).toArray(String[]::new);
         }
 
         @Override
         public String[] toStringArray(Candidate candidate) {
-            Stream<String> id = Arrays.stream(new String[]{ Integer.toString(candidate.id) });
+            Stream<String> id = Arrays.stream(new String[]{Integer.toString(candidate.id)});
             Stream<String> name = Arrays.stream(Name.FACTORY.toStringArray(candidate.name));
             return Stream.concat(id, name).toArray(String[]::new);
         }

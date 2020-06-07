@@ -8,9 +8,6 @@ import jobs.utils.IdAllocator;
  * An employer which posts jobs, and hires candidates through recruiters.
  */
 public class Company implements Comparable<Company> {
-    public final int id;
-    public final String name;
-
     public final static CsvTypeFactory<Company> FACTORY = new CsvTypeFactory<Company>() {
         @Override
         public String[] getColumnNames() {
@@ -29,8 +26,9 @@ public class Company implements Comparable<Company> {
             return new Company(id, name);
         }
     };
-
     private final static IdAllocator companyIds = new IdAllocator(100000, 500000);
+    public final int id;
+    public final String name;
 
     public Company(int id, String name) {
         this.id = id;

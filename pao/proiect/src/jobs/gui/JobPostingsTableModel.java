@@ -5,16 +5,18 @@ import jobs.model.Job;
 
 import javax.swing.table.AbstractTableModel;
 
+/**
+ * Table model implementation for job postings.
+ */
 public class JobPostingsTableModel extends AbstractTableModel {
-    private final JobDatabase db;
-    private final Job[] jobs;
-
     private final static String[] COLUMN_NAMES = {
             "Category",
             "Job title",
             "Company",
             "Time posted",
     };
+    private final JobDatabase db;
+    private final Job[] jobs;
 
     public JobPostingsTableModel(JobDatabase db) {
         this.db = db;

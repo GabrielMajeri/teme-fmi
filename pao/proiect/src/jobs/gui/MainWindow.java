@@ -1,17 +1,20 @@
 package jobs.gui;
 
-import jobs.TestMain;
-import jobs.db.impl.SqliteDatabase;
-import jobs.utils.MockUtil;
 import jobs.db.DatabaseAudit;
 import jobs.db.JobDatabase;
 import jobs.db.impl.InMemoryDatabase;
+import jobs.db.impl.SqliteDatabase;
+import jobs.tests.TestMain;
+import jobs.utils.MockUtil;
 
+import javax.swing.*;
 import java.awt.*;
 import java.io.IOException;
 import java.sql.SQLException;
-import javax.swing.*;
 
+/**
+ * Top-level container for application GUI.
+ */
 public class MainWindow extends JFrame {
     public MainWindow(JobDatabase db) {
         super("Job Platform Manager");

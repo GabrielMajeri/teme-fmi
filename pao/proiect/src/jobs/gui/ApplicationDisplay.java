@@ -1,10 +1,16 @@
 package jobs.gui;
 
 import jobs.db.JobDatabase;
-import jobs.model.*;
+import jobs.model.Application;
+import jobs.model.CV;
+import jobs.model.Job;
+import jobs.model.User;
 
 import javax.swing.*;
 
+/**
+ * Panel displaying info about an application.
+ */
 public class ApplicationDisplay extends JPanel {
     private final JobDatabase db;
     private final JLabel jobTitle = new JLabel();

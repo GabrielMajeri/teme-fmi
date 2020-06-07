@@ -5,6 +5,9 @@ import jobs.db.JobDatabase;
 import javax.swing.*;
 import java.awt.*;
 
+/**
+ * Panel that displays all the available job postings in a table.
+ */
 public class JobPostingsPanel extends JPanel {
     public JobPostingsPanel(JobDatabase db) {
         setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));

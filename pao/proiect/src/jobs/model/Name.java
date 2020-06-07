@@ -6,19 +6,15 @@ import csv.CsvUtils;
 import java.util.Objects;
 
 public final class Name {
-    public final String first;
-    public final String initialOfFather;
-    public final String last;
-
     public final static CsvTypeFactory<Name> FACTORY = new CsvTypeFactory<Name>() {
         @Override
         public String[] getColumnNames() {
-            return new String[] { "first", "initial", "last" };
+            return new String[]{"first", "initial", "last"};
         }
 
         @Override
         public String[] toStringArray(Name name) {
-            return new String[] { name.first, name.initialOfFather, name.last };
+            return new String[]{name.first, name.initialOfFather, name.last};
         }
 
         @Override
@@ -26,6 +22,9 @@ public final class Name {
             return new Name(data[0], data[1], data[2]);
         }
     };
+    public final String first;
+    public final String initialOfFather;
+    public final String last;
 
     public Name(String first, String last) {
         this(first, "", last);

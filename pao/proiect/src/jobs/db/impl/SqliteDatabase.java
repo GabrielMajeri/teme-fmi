@@ -8,6 +8,9 @@ import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Collection;
 
+/**
+ * Database implementation that stores items in SQLite tables.
+ */
 public final class SqliteDatabase implements JobDatabase {
     private final static String DATABASE_FILE = "jobs.db";
     private final Connection conn = DriverManager.getConnection("jdbc:sqlite:" + DATABASE_FILE);
@@ -26,13 +29,6 @@ public final class SqliteDatabase implements JobDatabase {
 
     private final PreparedStatement insertApplicationStatement;
     private final PreparedStatement deleteApplicationStatement;
-
-    private static Name getName(ResultSet result) throws SQLException {
-        String first = result.getString("firstName");
-        String initial = result.getString("initial");
-        String last = result.getString("lastName");
-        return new Name(first, initial, last);
-    }
 
     public SqliteDatabase() throws SQLException {
         ensureTablesCreated();
@@ -57,10 +53,29 @@ public final class SqliteDatabase implements JobDatabase {
         deleteApplicationStatement = conn.prepareStatement("DELETE FROM applications WHERE jobId = ? AND cvId = ?");
     }
 
+    private static Name getName(ResultSet result) throws SQLException {
+        String first = result.getString("firstName");
+        String initial = result.getString("initial");
+        String last = result.getString("lastName");
+        return new Name(first, initial, last);
+    }
+
     private static Company extractCompany(ResultSet result) throws SQLException {
         int id = result.getInt("id");
         String name = result.getString("name");
         return new Company(id, name);
+    }
+
+    private static void checkRowInserted(int insertedRows) {
+        if (insertedRows != 1) {
+            throw new RuntimeException("Failed to insert into database");
+        }
+    }
+
+    private static void checkRowDeleted(int deletedRows) {
+        if (deletedRows != 1) {
+            throw new RuntimeException("Failed to delete row from database");
+        }
     }
 
     @Override
@@ -271,18 +286,6 @@ public final class SqliteDatabase implements JobDatabase {
             return applications;
         } catch (SQLException e) {
             throw new RuntimeException(e);
-        }
-    }
-
-    private static void checkRowInserted(int insertedRows) {
-        if (insertedRows != 1) {
-            throw new RuntimeException("Failed to insert into database");
-        }
-    }
-
-    private static void checkRowDeleted(int deletedRows) {
-        if (deletedRows != 1) {
-            throw new RuntimeException("Failed to delete row from database");
         }
     }
 

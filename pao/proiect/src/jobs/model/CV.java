@@ -5,14 +5,10 @@ import csv.CsvUtils;
 import jobs.utils.IdAllocator;
 
 public class CV {
-    public final int id;
-    public final int candidateId;
-    public final String description;
-
     public final static CsvTypeFactory<CV> FACTORY = new CsvTypeFactory<CV>() {
         @Override
         public String[] getColumnNames() {
-            return new String[]{ "id", "candidateId", "description" };
+            return new String[]{"id", "candidateId", "description"};
         }
 
         @Override
@@ -20,7 +16,7 @@ public class CV {
             String id = Integer.toString(cv.id);
             String candidateId = Integer.toString(cv.candidateId);
             String description = cv.description;
-            return new String[]{ id, candidateId, description };
+            return new String[]{id, candidateId, description};
         }
 
         @Override
@@ -31,8 +27,10 @@ public class CV {
             return new CV(id, candidateId, description);
         }
     };
-
     private final static IdAllocator cvIds = new IdAllocator(1, 30000);
+    public final int id;
+    public final int candidateId;
+    public final String description;
 
     public CV(int id, int candidateId, String description) {
         this.id = id;

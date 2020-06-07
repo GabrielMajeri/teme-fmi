@@ -5,9 +5,6 @@ import csv.CsvTypeFactory;
 import java.util.Objects;
 
 public class Application {
-    public final int jobId;
-    public final int cvId;
-
     public final static CsvTypeFactory<Application> FACTORY = new CsvTypeFactory<Application>() {
         @Override
         public String[] getColumnNames() {
@@ -28,6 +25,8 @@ public class Application {
             return new Application(jobId, cvId);
         }
     };
+    public final int jobId;
+    public final int cvId;
 
     public Application(int jobId, int cvId) {
         this.jobId = jobId;

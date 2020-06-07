@@ -13,9 +13,10 @@ The following is a high-level overfiew of the architecture:
   - `db`: database services.
   - `model`: data model implemented as Plain Old Java Objects.
   - `gui`: Swing graphical user interface.
+  - `tests`: unit and integration tests.
   - `utils`: utility classes.
 
 ## Entry points (main classes)
 
-- `jobs.TestMain`: runs tests on the database implementations.
+- `jobs.tests.TestMain`: runs tests on the database implementations.
 - `jobs.gui.MainWindow`: opens a Swing GUI for interacting with the database.

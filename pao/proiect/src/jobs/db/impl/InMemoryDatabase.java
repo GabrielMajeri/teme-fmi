@@ -5,12 +5,15 @@ import jobs.model.*;
 
 import java.util.*;
 
+/**
+ * Database implementation that stores items in Java collections.
+ */
 public final class InMemoryDatabase implements JobDatabase {
-    private final AbstractMap<Integer, Company> companiesById = new TreeMap<>();
-    private final AbstractMap<Integer, Job> jobs = new HashMap<>();
-    private final AbstractMap<Integer, User> users = new HashMap<>();
-    private final AbstractMap<Integer, List<CV>> cvsByCandidate = new HashMap<>();
-    private final AbstractMap<Integer, CV> cvsById = new HashMap<>();
+    private final Map<Integer, Company> companiesById = new TreeMap<>();
+    private final Map<Integer, Job> jobs = new HashMap<>();
+    private final Map<Integer, User> users = new HashMap<>();
+    private final Map<Integer, List<CV>> cvsByCandidate = new HashMap<>();
+    private final Map<Integer, CV> cvsById = new HashMap<>();
     private final List<Application> applications = new ArrayList<>();
 
     @Override

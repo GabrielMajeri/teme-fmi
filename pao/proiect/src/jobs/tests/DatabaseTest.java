@@ -1,4 +1,4 @@
-package jobs;
+package jobs.tests;
 
 import jobs.db.JobDatabase;
 import jobs.model.*;

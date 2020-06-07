@@ -11,7 +11,7 @@ public interface CsvTypeFactory<T> {
 
     /**
      * Serializes the object's state to an array of strings.
-     *
+     * <p>
      * The strings will be written out to a file, quoted and separated by commas.
      *
      * @return array of strings containing the object's current state
@@ -20,7 +20,7 @@ public interface CsvTypeFactory<T> {
 
     /**
      * Updates the object's values from an array of strings.
-     *
+     * <p>
      * The strings are read from a comma-separated file, and are
      * in the same order as they were given by toStringArray.
      *

@@ -2,7 +2,6 @@ package csv;
 
 import java.io.BufferedWriter;
 import java.io.IOException;
-import java.util.Arrays;
 import java.util.Collection;
 
 public class CsvWriter<T> {
@@ -13,7 +12,7 @@ public class CsvWriter<T> {
     /**
      * Constructs a new CSV file writer.
      *
-     * @param writer destination of CSV file
+     * @param writer  destination of CSV file
      * @param factory factory describing type metadata
      * @throws IOException if there was any error with writing the object to file
      */

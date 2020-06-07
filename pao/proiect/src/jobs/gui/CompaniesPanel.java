@@ -6,6 +6,9 @@ import jobs.model.Company;
 import javax.swing.*;
 import java.awt.*;
 
+/**
+ * Panel that displays the list of companies, and allows editing it.
+ */
 public class CompaniesPanel extends JPanel {
     public CompaniesPanel(JobDatabase db) {
         setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));

@@ -1,8 +1,8 @@
 package jobs.utils;
 
 public class IdAllocator {
-    private int counter;
     private final int maxId;
+    private int counter;
 
     public IdAllocator(int start, int maxNumIds) {
         this.counter = start;

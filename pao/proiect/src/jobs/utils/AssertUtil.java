@@ -3,6 +3,9 @@ package jobs.utils;
 import java.util.Collection;
 import java.util.function.Supplier;
 
+/**
+ * Utility class for test assertions.
+ */
 public class AssertUtil {
     private AssertUtil() {
         throw new AssertionError();

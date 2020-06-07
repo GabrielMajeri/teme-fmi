@@ -6,6 +6,10 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 
+/**
+ * Generic CSV file reader.
+ * @param <T> type of data to be read from disk.
+ */
 public class CsvReader<T> {
     private final BufferedReader reader;
     private final CsvTypeFactory<T> factory;

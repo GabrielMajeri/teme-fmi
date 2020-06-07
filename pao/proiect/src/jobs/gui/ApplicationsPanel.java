@@ -12,11 +12,11 @@ import java.util.List;
 public class ApplicationsPanel extends JPanel {
     private final JobDatabase db;
     private final List<Company> companies;
-    private int currentCompany;
     private final List<Application> applications;
-    private int currentApplication;
     private final JButton previousButton, nextButton, deleteButton;
     private final ApplicationDisplay applicationDisplay;
+    private int currentCompany;
+    private int currentApplication;
 
     public ApplicationsPanel(JobDatabase db) {
         this.db = db;

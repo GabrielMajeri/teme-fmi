@@ -5,11 +5,13 @@ import jobs.model.Company;
 
 import javax.swing.table.AbstractTableModel;
 
+/**
+ * Table model for companies list.
+ */
 public class CompaniesTableModel extends AbstractTableModel {
+    private final static String[] COLUMN_NAMES = {"Name", "ID"};
     private final JobDatabase db;
     private Company[] companies;
-
-    private final static String[] COLUMN_NAMES = { "Name", "ID" };
 
     public CompaniesTableModel(JobDatabase db) {
         this.db = db;
