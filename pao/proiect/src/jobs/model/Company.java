@@ -1,9 +1,8 @@
 package jobs.model;
 
 import csv.CsvTypeFactory;
+import csv.CsvUtils;
 import jobs.utils.IdAllocator;
-
-import java.util.Objects;
 
 /**
  * An employer which posts jobs, and hires candidates through recruiters.
@@ -35,7 +34,7 @@ public class Company implements Comparable<Company> {
 
     public Company(int id, String name) {
         this.id = id;
-        this.name = Objects.requireNonNull(name);
+        this.name = CsvUtils.requireNoComma(name);
     }
 
     public Company(String name) {

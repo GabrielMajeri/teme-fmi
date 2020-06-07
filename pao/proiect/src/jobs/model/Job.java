@@ -1,6 +1,7 @@
 package jobs.model;
 
 import csv.CsvTypeFactory;
+import csv.CsvUtils;
 import jobs.utils.IdAllocator;
 
 import java.time.Instant;
@@ -61,14 +62,14 @@ public class Job {
 
     public Job(int id, String title, Instant timePosted, Category category, int companyId) {
         this.id = id;
-        this.title = Objects.requireNonNull(title);
+        this.title = CsvUtils.requireNoComma(title);
         this.timePosted = Objects.requireNonNull(timePosted);
         this.category = Objects.requireNonNull(category);
         this.companyId = companyId;
     }
 
     public Job(String title, Category category, Company company) {
-        this(jobIds.next(), title, Instant.now(), category, Objects.requireNonNull(company).id);
+        this(jobIds.next(), title, Instant.now(), category, company.id);
     }
 
     @Override

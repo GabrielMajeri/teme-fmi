@@ -1,6 +1,7 @@
 package jobs.model;
 
 import csv.CsvTypeFactory;
+import csv.CsvUtils;
 
 import java.util.Objects;
 
@@ -31,13 +32,9 @@ public final class Name {
     }
 
     public Name(String first, String initialOfFather, String last) {
-        Objects.requireNonNull(first);
-        Objects.requireNonNull(initialOfFather);
-        Objects.requireNonNull(last);
-
-        this.first = first;
-        this.initialOfFather = initialOfFather;
-        this.last = last;
+        this.first = CsvUtils.requireNoComma(first);
+        this.initialOfFather = CsvUtils.requireNoComma(initialOfFather);
+        this.last = CsvUtils.requireNoComma(last);
     }
 
     public boolean hasInitialOfFather() {

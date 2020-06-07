@@ -2,6 +2,7 @@ package csv;
 
 import java.io.BufferedWriter;
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.Collection;
 
 public class CsvWriter<T> {

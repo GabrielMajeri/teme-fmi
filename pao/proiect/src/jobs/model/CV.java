@@ -1,9 +1,8 @@
 package jobs.model;
 
 import csv.CsvTypeFactory;
+import csv.CsvUtils;
 import jobs.utils.IdAllocator;
-
-import java.util.Objects;
 
 public class CV {
     public final int id;
@@ -38,11 +37,11 @@ public class CV {
     public CV(int id, int candidateId, String description) {
         this.id = id;
         this.candidateId = candidateId;
-        this.description = Objects.requireNonNull(description);
+        this.description = CsvUtils.requireNoComma(description);
     }
 
     public CV(Candidate candidate, String description) {
-        this(cvIds.next(), Objects.requireNonNull(candidate).id, description);
+        this(cvIds.next(), candidate.id, description);
     }
 
     @Override
@@ -56,7 +55,7 @@ public class CV {
 
     @Override
     public int hashCode() {
-        return Objects.hash(candidateId, description);
+        return candidateId;
     }
 
     @Override
