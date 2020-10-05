@@ -8,10 +8,12 @@ la [Facultatea de Matematică și Informatică](http://fmi.unibuc.ro/ro/),
 
 - [asd](asd): Algoritmi și Structuri de Date (în mare parte în C)
 - [bd](bd): Baze de Date (în Oracle SQL)
+- [daw](daw): Dezvoltarea Aplicațiilor Web (în C#/ASP.NET)
 - [geocomp](geocomp): Geometrie Computațională (în Python)
 - [ia](ia): Inteligență Artificială (în Python)
 - [lfa](lfa): Limbaje Formale și Automate Finite (în Python)
 - [pao](pao): Programare Avansată pe Obiecte (în Java)
+- [pd](pd): Programare Declarativă (în Haskell)
 - [poo](poo): Programare Orientată pe Obiecte (în C++)
 - [pp](pp): Programare Procedurală (în C)
 - [pl](pl): Programare Logică (în Prolog)
