@@ -4,6 +4,9 @@ Bazat pe tutorialul din curs, dar pentru Mac OS / Linux.
 
 ## Rulare
 
+Instalați .NET Core SDK de pe [site-ul oficial](https://dotnet.microsoft.com/download).
+
+Apoi rulați:
 ```bash
 dotnet run
 ```
