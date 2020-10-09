@@ -49,8 +49,11 @@ print(b)
 print(c)
 
 
-# Afișez rezultatul
+## Afișez rezultatul
+# Creez un nou plot cu rezoluție mare
 fig, ax = plt.subplots(1, dpi=200)
+
+# Pun un titlu
 plt.title('Metoda Bisecției')
 
 # Configurez axele
@@ -58,13 +61,19 @@ ax.spines['bottom'].set_position('zero')
 ax.spines['top'].set_color('none')
 ax.spines['right'].set_color('none')
 
+# Generez punctele
+x = np.linspace(start=0, stop=5, num=1000)
 
-x = np.linspace(0, 5, 1000)
+# Desenez graficul funcției
 plt.plot(x, f(x), '-.')
+
+# Desenez soluțiile
 plt.scatter([a, b, c], [0, 0, 0], c='red')
 
+# Afișez legenda
 plt.legend(['f(x)', 'x_num'])
 
+# Etichetez axele
 plt.xlabel('x')
 plt.ylabel('y')
 
