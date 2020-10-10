@@ -116,8 +116,138 @@ SELECT job_id, COUNT(1) AS employee_count
 FROM employees
 GROUP BY job_id;
 
+-- 20
+SELECT
+    department_name,
+    location_id,
+    COUNT(1) AS num_employees,
+    AVG(salary) AS avg_salary
+FROM employees
+INNER JOIN departments
+USING (department_id)
+GROUP BY department_name, location_id;
+
+-- 21
+SELECT employee_id, first_name, last_name, salary
+FROM employees
+WHERE salary >= (SELECT AVG(salary) FROM employees)
+ORDER BY salary DESC;
+
+-- 22
+SELECT MIN(avg_salary)
+FROM (
+    SELECT AVG(salary) AS avg_salary
+    FROM employees
+    GROUP BY job_id
+);
+
+-- 23
+WITH avg_salaries AS (
+    SELECT job_id, AVG(salary) AS avg_salary
+    FROM employees
+    GROUP BY job_id
+    ORDER BY avg_salary ASC
+)
+SELECT job_id, avg_salary
+FROM avg_salaries
+WHERE rownum = 1;
+
+-- 24
+WITH dept_info AS (
+    SELECT department_id, department_name, COUNT(1) AS employee_count
+    FROM employees
+    INNER JOIN departments
+    USING (department_id)
+    GROUP BY department_id, department_name
+)
+SELECT *
+FROM dept_info
+WHERE employee_count < 4;
+
+WITH dept_info AS (
+    SELECT department_id, department_name, COUNT(1) AS employee_count
+    FROM employees
+    INNER JOIN departments
+    USING (department_id)
+    GROUP BY department_id, department_name
+)
+SELECT *
+FROM dept_info
+WHERE employee_count = (SELECT MAX(employee_count) FROM dept_info);
+
 -- 25
 SELECT department_id, COUNT(1) AS num_employees
 FROM employees
 GROUP BY department_id
 HAVING COUNT(1) >= 15;
+
+-- 26
+WITH hire_dates AS (
+    SELECT hire_date, COUNT(1) AS num_hired
+    FROM employees
+    GROUP BY hire_date
+)
+SELECT employee_id, first_name, last_name, hire_date
+FROM employees
+WHERE hire_date = (
+    SELECT hire_date
+    FROM hire_dates
+    WHERE num_hired = (
+        SELECT MAX(num_hired)
+        FROM hire_dates
+    )
+);
+
+-- 27
+WITH min_salaries AS (
+    SELECT department_id, MIN(salary) AS min_salary
+    FROM employees
+    GROUP BY department_id
+)
+SELECT first_name, last_name, salary, e.department_id
+FROM employees e
+INNER JOIN min_salaries
+ON salary = min_salary
+WHERE e.department_id IS NOT NULL;
+
+-- 28
+WITH salaries AS (
+    SELECT *
+    FROM employees
+    ORDER BY salary DESC
+)
+SELECT first_name, last_name, salary
+FROM salaries
+WHERE rownum <= 10;
+
+-- 29
+SELECT department_id, department_name, SUM(salary) AS salary_sum
+FROM employees
+INNER JOIN departments
+USING (department_id)
+GROUP BY department_id, department_name;
+
+-- 30
+WITH avg_salaries AS (
+    SELECT department_id, AVG(salary) AS avg_salary
+    FROM employees
+    GROUP BY department_id
+)
+SELECT
+    first_name, last_name,
+    e.department_id, e.salary,
+    ROUND(avg_salary, 2) AS department_avg_salary
+FROM employees e
+INNER JOIN avg_salaries a
+ON e.department_id = a.department_id AND e.salary >= a.avg_salary;
+
+-- 31
+WITH min_salaries AS (
+    SELECT department_id, MIN(salary) AS min_salary
+    FROM employees
+    GROUP BY department_id
+)
+SELECT first_name, last_name, salary
+FROM employees e
+INNER JOIN min_salaries m
+ON e.department_id = m.department_id AND e.salary = m.min_salary;
