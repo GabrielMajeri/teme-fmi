@@ -1,0 +1,18 @@
+@model Route1Model
+
+<p>
+Șirul dat este <i>@Model.Input</i>
+</p>
+<p>
+Subșirul dat este <i>@Model.Substring</i>
+</p>
+
+@* Aici verific dacă al doilea parametru este subșir pentru primul *@
+@if (Model.Input.Contains(Model.Substring))
+{
+    <p>Șirul dat îl conține pe cel căutat</p>
+}
+else
+{
+    <p>Șirul dat nu-l conține pe cel căutat</p>
+}

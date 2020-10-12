@@ -1,0 +1,26 @@
+@model Route1Model
+
+@if (Model.Substring == null)
+{
+    // Dacă nu am primit al doilea parametru
+    <p>Nu ați introdus un subșir care să fie căutat</p>
+}
+else
+{
+    // Dacă am ambii parametrii
+    <p>
+    Șirul dat este <i>@Model.Input</i>
+    </p>
+    <p>
+    Subșirul dat este <i>@Model.Substring</i>
+    </p>
+
+    if (Model.Input.Contains(Model.Substring))
+    {
+        <p>Șirul dat îl conține pe cel căutat</p>
+    }
+    else
+    {
+        <p>Șirul dat nu-l conține pe cel căutat</p>
+    }
+}
