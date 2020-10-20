@@ -1,0 +1,14 @@
+@{
+    ViewData["Title"] = "Cărți";
+}
+
+@model IQueryable<Book>
+
+<p>Apăsați pe orice carte pentru a vedea detalii.</p>
+
+<ul>
+@foreach (var book in Model)
+{
+    <li><a href="/book/@book.BookId">@book.Title</a></li>
+}
+</ul>

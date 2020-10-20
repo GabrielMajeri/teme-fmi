@@ -1,0 +1,16 @@
+@{
+    ViewData["Title"] = Model.Title;
+}
+
+@model Book
+
+<h2>@Model.Title</h2>
+<h3>de @Model.Author</h3>
+@if (Model.Summary != null)
+{
+    <p><strong>Rezumat:</strong> @Model.Summary</p>
+}
+else
+{
+    <p>Nu avem un rezumat al acestei cărți.</p>
+}
