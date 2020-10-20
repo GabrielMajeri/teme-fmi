@@ -58,13 +58,7 @@ numerePrimeCiur :: Int -> [Int]
 numerePrimeCiur n = ciurRec [2..n]
     where
         ciurRec [] = []
-        ciurRec l =
-            let
-                primul:restul = l
-                seDivideCuPrimul x = x `mod` primul == 0
-            in
-                primul : ciurRec (filter (not . seDivideCuPrimul) restul)
-
+        ciurRec (x:xs) = x : (ciurRec $ filter (\n -> n `rem` x /= 0) xs)
 
 ordonataNat :: [Int] -> Bool
 ordonataNat [] = True
