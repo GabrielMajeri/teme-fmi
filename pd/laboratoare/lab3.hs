@@ -60,11 +60,16 @@ numerePrimeCiur n = ciurRec [2..n]
         ciurRec [] = []
         ciurRec (x:xs) = x : (ciurRec $ filter (\n -> n `rem` x /= 0) xs)
 
+-- Verifică că o listă de numere este sortată natural.
+--
+-- Compară fiecare două numere consecutive și se asigură că se respectă
+-- x0 < x1 < x2 < ... < xn
 ordonataNat :: [Int] -> Bool
 ordonataNat [] = True
 ordonataNat [_] = True
 ordonataNat l = and [a < b | (a, b) <- zip l (tail l)]
 
+-- La fel ca mai sus, dar compară recursiv elementele consecutive.
 ordonataNat1 :: [Int] -> Bool
 ordonataNat1 [] = True
 ordonataNat1 [_] = True
@@ -74,20 +79,26 @@ ordonataNat1 (x:xs) =
     in
         x < y && ordonataNat1 xs
 
+-- La fel ca mai sus, dar compară folosind relația de ordine dată.
 ordonata :: [a] -> (a -> a -> Bool) -> Bool
+ordonata [] _ = True
 ordonata l rel = and [rel a b | (a, b) <- zip l (tail l)]
 
 (*<*) :: (Integer, Integer) -> (Integer, Integer) -> Bool
 (a, b) *<* (c, d) = a < c && b > d
 
 
+-- Compune o funcție cu o listă de funcții
 compuneList :: (b -> c) -> [(a -> b)] -> [(a -> c)]
 compuneList f lf = map (f .) lf
 
+-- Aplică o listă de funcții pe aceeași valoare
 aplicaList :: a -> [(a -> b)] -> [b]
 aplicaList valoare lista = map (\f -> f valoare) lista
 
 
+-- Folosim zip pentru a obține o listă de perechi de pereche și element,
+-- apoi o transformăm într-o listă de tiplete
 myzip3' :: [a] -> [b] -> [c] -> [(a, b, c)]
 myzip3' a b c = map despacheteaza elemente
     where
