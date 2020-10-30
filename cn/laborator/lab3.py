@@ -28,7 +28,7 @@ for i in range(N - 1, -1, -1):
 
     x[i] = (C[i] - coefs @ values) / U[i, i]
 
-    print("Pasul", i, ":",
+    print("Pasul", N - i, ":",
           C[i], "-", coefs, "@", values, ")",
           "/", U[i, i])
 
