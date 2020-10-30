@@ -18,7 +18,7 @@ def bisection_search(f, a, b, epsilon=1e-5):
     x_num = (a + b) / 2
 
     # Numărul necesar de iterații
-    num_iterations = math.floor(1 + math.log((b - a) / epsilon))
+    num_iterations = math.floor(math.log2((b - a) / epsilon) - 1) + 1
 
     # Aplicăm algoritmul
     for step in range(num_iterations):
