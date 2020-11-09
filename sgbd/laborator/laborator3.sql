@@ -38,13 +38,13 @@ END;
 -- 2
 SELECT all_days.book_date, NVL(days_with_rentals.num, 0) AS num
 FROM (
-    -- Generate a list of all days with bookings
+    -- Toate zilele cu închirieri
     SELECT TO_DATE(book_date) AS book_date, COUNT(1) AS num
     FROM rental
     GROUP BY book_date
 ) days_with_rentals
 RIGHT JOIN (
-    -- Generate all the days in october
+    -- Toate zilele din octombrie
     SELECT TO_DATE(TRUNC (last_day('01-OCT-2020') - ROWNUM)) AS book_date
     FROM DUAL CONNECT BY ROWNUM < 31
 ) all_days
@@ -80,14 +80,13 @@ USING (data)
 ORDER BY data;
 
 -- 3
-UNDEFINE nume;
 DECLARE
     searched_member NUMBER;
     num_movies NUMBER;
 BEGIN
     SELECT member_id INTO searched_member
     FROM member
-    WHERE first_name = &name;
+    WHERE first_name = &nume;
 
     SELECT COUNT(*) INTO num_movies
     FROM title
@@ -109,7 +108,6 @@ END;
 
 
 -- 4
-UNDEFINE nume;
 DECLARE
     searched_member NUMBER;
     num_movies NUMBER;
@@ -118,7 +116,7 @@ DECLARE
 BEGIN
     SELECT member_id INTO searched_member
     FROM member
-    WHERE first_name = &name;
+    WHERE first_name = &nume;
 
     SELECT COUNT(*) INTO num_movies
     FROM title
@@ -151,7 +149,10 @@ EXCEPTION
 END;
 /
 
+
 -- 5
+DROP TABLE member_with_discount;
+
 CREATE TABLE member_with_discount AS (
     SELECT * FROM member
 );
@@ -159,7 +160,6 @@ CREATE TABLE member_with_discount AS (
 ALTER TABLE member_with_discount
 ADD discount NUMBER DEFAULT NULL;
 
-UNDEFINE cod_membru;
 DECLARE
     searched_member NUMBER;
     num_movies NUMBER;
