@@ -64,3 +64,38 @@ print("L @ U = ")
 print(L @ U)
 print("P @ A = ")
 print(P @ A)
+print()
+
+
+b = np.array([[1, 2, 3]], dtype=np.float64).T
+print("Rezolv pentru b = ", b.T)
+
+# Permut numerele din vector
+b = P @ b
+
+
+y = np.zeros(N)
+
+# Merg de la prima linie în jos,
+# și rezolv pe rând ecuațiile prin substituție
+for i in range(0, N):
+    coefs = L[i, :i + 1]
+    values = y[:i + 1]
+
+    y[i] = (b[i] - coefs @ values) / L[i, i]
+
+print("Obțin y = ", y)
+
+
+x = np.zeros(N)
+
+# Merg de la ultima linie în sus,
+# și rezolv pe rând ecuațiile prin substituție
+for i in range(N - 1, -1, -1):
+    coefs = U[i, i + 1:]
+    values = x[i + 1:]
+
+    x[i] = (y[i] - coefs @ values) / U[i, i]
+
+print("Obțin x = ", x)
+print("Verificare: A @ x = ", A @ x)
