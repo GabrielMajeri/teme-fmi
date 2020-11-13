@@ -1,0 +1,37 @@
+# Acesta este un comentariu
+
+C4 4
+P 32
+C4 4
+P 32
+
+G4 4
+P 32
+G4 4
+P 32
+
+A4 4
+P 32
+A4 4
+P 32
+
+G4 4
+P 4
+
+F4 4
+P 32
+F4 4
+P 32
+
+E4 4
+P 32
+E4 4
+P 32
+
+D4 4
+P 32
+D4 4
+P 32
+
+
+C4 4
