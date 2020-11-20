@@ -115,52 +115,52 @@ def compute_determinant(A):
         det *= M[i][i]
     return det
 
-
-## Datele de intrare
-# Matricea coeficienților
-A = np.array([
-    [2, -1, -2],
-    [4, 2, 0],
-    [0, -2, -1]
-], dtype=float)
-
-# Matricea termenilor liberi
-b = np.array([
-    [-1],
-    [6],
-    [-3]
-], dtype=float)
-
-A = np.array([
-    [1, 2, 3],
-    [4, 5, 6],
-    [7, 8, 10]
-], dtype=float)
-b = np.array([
-    [4],
-    [4],
-    [7]
-], dtype=float)
-
-
-det = compute_determinant(A)
-print("Determinant:", det)
-
-x = solve_system(A, b, pivot="full")
-print("Soluția:", x)
-
-
-print()
-for k in range(1, 20):
-    C = 10.0 ** (-k)
-    print("C:", C)
+if __name__ == '__main__':
+    ## Datele de intrare
+    # Matricea coeficienților
     A = np.array([
-        [1, C],
-        [1, 1],
-    ])
+        [2, -1, -2],
+        [4, 2, 0],
+        [0, -2, -1]
+    ], dtype=float)
+
+    # Matricea termenilor liberi
     b = np.array([
-        [C],
-        [2],
-    ])
+        [-1],
+        [6],
+        [-3]
+    ], dtype=float)
+
+    A = np.array([
+        [1, 2, 3],
+        [4, 5, 6],
+        [7, 8, 10]
+    ], dtype=float)
+    b = np.array([
+        [4],
+        [4],
+        [7]
+    ], dtype=float)
+
+
+    det = compute_determinant(A)
+    print("Determinant:", det)
+
     x = solve_system(A, b, pivot="full")
     print("Soluția:", x)
+
+
+    print()
+    for k in range(1, 20):
+        C = 10.0 ** (-k)
+        print("C:", C)
+        A = np.array([
+            [1, C],
+            [1, 1],
+        ])
+        b = np.array([
+            [C],
+            [2],
+        ])
+        x = solve_system(A, b, pivot="full")
+        print("Soluția:", x)
