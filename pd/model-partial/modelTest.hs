@@ -1,3 +1,5 @@
+--- Subiectul 1: recursie, funcții elementare
+
 -- Funcție care verifică dacă caracterul dat este sfârșit de propoziție
 sfChr :: Char -> Bool
 sfChr c =
@@ -12,6 +14,8 @@ nrProp (x : xs) = nrProp xs + if sfChr x then 1 else 0
 
 test_nrProp = nrProp "Exemplu! Ana are: mere, pere. Câte fructe are Ana?"
 
+
+--- Subiectul 2: funcții de nivel înalt
 
 -- Verifică că toate liniile de lungime N din matrice au toate numerele strict pozitive
 liniiN :: [[Int]] -> Int -> Bool
@@ -30,9 +34,12 @@ test_liniiN_2 :: Bool
 test_liniiN_2 = liniiN [[1, -2], [3, 5, 2], [1, 4, 0]] 3 == False
 
 
+--- Subiectul 3: tipuri de date
+-- Listă de coordonate
 data Punct = Pt [Int]
   deriving (Show)
 
+-- Arbore binar
 data Arb = Vid | F Int | N Arb Arb
   deriving (Show)
 
