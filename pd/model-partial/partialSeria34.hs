@@ -12,6 +12,23 @@ elimDuplicCons (a:b:c) =
         -- de la al doilea caracter
         a : elimDuplicCons (b : c)
 
+-- Găsește cel mai lung prefix comun a două șiruri primite ca parametru.
+-- Doar descrieri de liste și funcții din categoriile A și B.
+celMaiLungPrefixComun :: String -> String -> String
+celMaiLungPrefixComun s1 s2 =
+    let
+        -- Parcurg în paralel șirurile
+        perechiDeLitere = zip s1 s2
+
+        -- Cât timp literele luate sunt egale
+        perechiPrefixComun = takeWhile litereEgale perechiDeLitere
+            where litereEgale (a, b) = a == b
+
+        -- Extrag din fiecare pereche de litere identice prima literă
+        prefixComun = [a | (a, _) <- perechiPrefixComun]
+    in
+        prefixComun
+
 
 -- Pentru două list date, calculează suma produselor de forma x_i^2 * y_i^2,
 -- cu x_i din x și y_i din y.
