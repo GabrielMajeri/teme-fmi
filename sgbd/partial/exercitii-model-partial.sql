@@ -2,7 +2,6 @@ SET VERIFY OFF;
 
 
 ---- 1
-
 -- Definesc tipurile de date pe care le returnez.
 CREATE OR REPLACE TYPE t_angajat IS OBJECT (
     cod NUMBER,
@@ -26,7 +25,7 @@ BEGIN
     INTO v_nr_max_joburi
     FROM job_history
     GROUP BY employee_id;
-    
+
     -- Colectez angajații care au avut nr. maxim
     SELECT t_angajat(e.employee_id, e.last_name, e.job_id)
     BULK COLLECT INTO angajati
@@ -43,7 +42,7 @@ DECLARE
 BEGIN
     -- Apelez procedura
     p1(angajati);
-    
+
     -- Afișez rezultatul
     FOR i IN angajati.FIRST..angajati.LAST LOOP
         DBMS_OUTPUT.PUT_LINE('Angajatul #' || angajati(i).cod ||
@@ -67,7 +66,7 @@ BEGIN
     -- Calculez recursiv toți subalternii
     START WITH employee_id = cod_manager
     CONNECT BY PRIOR employee_id = manager_id;
-    
+
     RETURN v_numar_subalterni;
 END;
 /
@@ -95,7 +94,7 @@ BEGIN
     INTO v_data_angajare
     FROM employees
     WHERE employee_id = cod_angajat;
-    
+
     -- Caut următorul angajat.
     SELECT employee_id
     INTO cod_angajat
@@ -142,7 +141,7 @@ WHERE ROWNUM <= 1;
 
 -- Creez o copie a tabelului de angajați.
 DROP TABLE emp;
-CREATE TABLE emp AS (SELECT * FROM employees); 
+CREATE TABLE emp AS (SELECT * FROM employees);
 
 ALTER TABLE emp
 ADD next_sef NUMBER;
@@ -168,5 +167,89 @@ BEGIN
         DBMS_OUTPUT.PUT_LINE('Viitorul sef al lui ' || m.manager_id ||
             ' este ' || gaseste_urmatorul_sef(m.manager_id));
     END LOOP;
+END;
+/
+
+
+---- 5
+
+CREATE OR REPLACE FUNCTION ang_proiecte (
+    data_start DATE,
+    data_sfarsit DATE
+) RETURN NUMBER
+IS
+    TYPE t_lista_angajati IS TABLE OF employees.employee_id%TYPE;
+    v_angajati t_lista_angajati;
+BEGIN
+    SELECT employee_id
+    BULK COLLECT INTO v_angajati
+    FROM works_on
+    WHERE start_date >= data_start AND end_date <= data_sfarsit;
+
+    -- Dacă se cere lista de angajați, trebuie să declarăm
+    -- un tip de date stocat pentru lista de ID-uri de angajați,
+    -- și să returnăm tot vectorul.
+    RETURN v_angajati.COUNT;
+END;
+/
+
+BEGIN
+    DBMS_OUTPUT.PUT_LINE('Nr. angajati care au lucrat pe proiecte: ' ||
+        ang_proiecte(DATE '2006-01-01', DATE '2007-01-01')
+    );
+END;
+/
+
+
+---- 6
+-- Creez o copie a tabelului `employees`.
+DROP TABLE emp;
+CREATE TABLE emp AS (SELECT * FROM employees);
+/
+
+
+CREATE OR REPLACE PROCEDURE p6 (
+    procent IN NUMBER,
+    nr_mariti OUT NUMBER,
+    nr_micsorati OUT NUMBER
+) IS
+BEGIN
+    nr_mariti := 0;
+    nr_micsorati := 0;
+    FOR d IN (
+        SELECT department_id, COUNT(1) AS num_ang
+        FROM emp
+        GROUP BY department_id
+    )
+    LOOP
+        IF d.num_ang >= 5 THEN
+            UPDATE emp
+            SET salary = salary * (1 + procent/100.0)
+            WHERE department_id = d.department_id;
+
+            nr_mariti := nr_mariti + d.num_ang;
+        ELSE
+            UPDATE emp
+            SET salary = salary * (1 - procent/100.0)
+            WHERE department_id = d.department_id;
+
+            nr_micsorati := nr_micsorati + d.num_ang;
+        END IF;
+    END LOOP;
+END;
+/
+
+-- Testez procedura
+DECLARE
+    v_nr_mariti NUMBER;
+    v_nr_micsorati NUMBER;
+BEGIN
+    p6(10, v_nr_mariti, v_nr_micsorati);
+
+    DBMS_OUTPUT.PUT_LINE('Am marit salariul la ' ||
+        v_nr_mariti || ' angajati');
+
+    DBMS_OUTPUT.PUT_LINE('Am micsorat salariul la ' ||
+        v_nr_micsorati || ' angajati');
 END;
 /
