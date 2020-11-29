@@ -25,7 +25,7 @@ def compute_upper_triangular(A, b, partial_pivot=False, full_pivot=False):
             M[[k, index]] = M[[index, k]]
         elif full_pivot:
             submatrix = M[k:, k:N - 1]
-            index = np.unravel_index(np.argmax(submatrix), submatrix.shape)
+            index = np.unravel_index(np.argmax(np.abs(submatrix)), submatrix.shape)
 
             # Obțin indicii în matricea mare
             index = (index[0] + k, index[1] + k)
