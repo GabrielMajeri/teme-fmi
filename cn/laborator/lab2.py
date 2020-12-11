@@ -2,6 +2,8 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 
+## Metoda Newton-Rhapson
+
 def newton_rhapson(f, df, x0, epsilon=1e-5):
     """Găsește o soluție a funcției f cu derivata df, aplicând
     metoda lui Newton, pornind din punctul x0.

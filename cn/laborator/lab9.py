@@ -2,6 +2,8 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 
+## Interpolare polinomială
+
 # Definesc funcția
 def f(x):
     return np.cos(2 * x) - 2 * np.sin(3 * x)

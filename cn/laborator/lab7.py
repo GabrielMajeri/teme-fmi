@@ -6,6 +6,9 @@ from mpl_toolkits import mplot3d
 from lab5 import solve_system
 
 
+## Determinarea punctului de minim a unei funcții convexe
+
+
 def grid_discret(A, b):
     """
     Construieste un grid discret si evaleaza f in fiecare punct al gridului

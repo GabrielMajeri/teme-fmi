@@ -2,6 +2,8 @@ import numpy as np
 from sys import exit
 
 
+## Rezolvarea unui sistem prin metoda Gauss
+
 ## Datele de intrare
 # Matricea coeficienților
 A = np.array([

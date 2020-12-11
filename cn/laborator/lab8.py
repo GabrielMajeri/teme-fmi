@@ -1,6 +1,8 @@
 import numpy as np
 
 
+## Metoda coborârii pe gradient
+
 def l2_norm(x):
     "Calculează norma L2 pentru vectorul `x`"
     return np.linalg.norm(x, ord=2)

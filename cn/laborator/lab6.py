@@ -2,6 +2,8 @@ import numpy as np
 import scipy.linalg as la
 
 
+## Descompunere LU
+
 # Matricea dată la intrare
 A = np.array([
     [2, -1, -2],

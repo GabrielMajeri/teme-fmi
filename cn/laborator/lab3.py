@@ -2,6 +2,8 @@ import numpy as np
 from sys import exit
 
 
+## Rezolvarea unui sistem cu substituția descendentă
+
 # Datele de intrare
 U = np.array([[2, -1, -2], [0, 4, 4], [0, 0, 1]], dtype=float)
 

@@ -2,6 +2,8 @@ import numpy as np
 import matplotlib.pyplot as plt
 import math
 
+## Metoda bisecției
+
 def bisection_search(f, a, b, epsilon=1e-5):
     """Găsește rădăcina funcției `f` pe intervalul `[a, b]`
     cu precizia `epsilon`.

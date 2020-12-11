@@ -2,6 +2,8 @@ import numpy as np
 from sys import exit
 
 
+## Metoda Gauss cu pivotare totală
+
 def compute_upper_triangular(A, b, partial_pivot=False, full_pivot=False):
     """Aduce un sistem la forma superior triunghiulară
     folosind Gauss cu/fără pivotare totală/parțială.
