@@ -39,7 +39,7 @@ def polynomial_vector(v):
 
 # Afișez funcția
 xs = np.linspace(left, right, 5000)
-plt.plot(xs, f(xs), left, right, linestyle='-', label='funcția f')
+plt.plot(xs, f(xs), linestyle='-', label='funcția f')
 
 # Afișez polii interpolării
 plt.scatter(x, y, c='red')
