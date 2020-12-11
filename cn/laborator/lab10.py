@@ -28,10 +28,10 @@ if not use_chebyshev:
 else:
     # Polii Chebyshev
     def chebyshev(k):
-        x = np.cos(np.pi * ((N + 1 - k) / N))
+        x = np.cos(np.pi * ((N - k) / N))
         return (left + right)/2 + ((right - left)/2) * x
 
-    x = np.array([chebyshev(k) for k in range(1, N + 2)])
+    x = np.array([chebyshev(k) for k in range(N + 1)])
 
 y = f(x)
 
