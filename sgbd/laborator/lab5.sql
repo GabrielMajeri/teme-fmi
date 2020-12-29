@@ -77,6 +77,27 @@ IS
         prenume_manager emp.first_name%TYPE,
         nume_manager emp.last_name%TYPE
     );
+
+    -- Întoarce numărul de subalterni direcți sau indirecți ai unui angajat.
+    FUNCTION nr_subalterni(
+        prenume emp.first_name%TYPE,
+        nume emp.last_name%TYPE
+    ) RETURN NUMBER;
+
+    -- Cursor care returnează toți angajații care lucrează pe un anumit job.
+    CURSOR angajati_job (id_job jobs.job_id%TYPE)
+    RETURN emp%ROWTYPE
+    IS
+    SELECT * FROM emp
+    WHERE job_id = id_job;
+
+    -- Cursor care returnează toate joburile din companie.
+    CURSOR toate_joburile
+    RETURN jobs%ROWTYPE
+    IS
+    SELECT * FROM jobs;
+
+    PROCEDURE afiseaza_angajati_per_job;
 END;
 /
 
@@ -253,6 +274,44 @@ IS
             hire_date = SYSDATE
         WHERE employee_id = v_ang.employee_id;
     END;
+
+    FUNCTION nr_subalterni(
+        prenume emp.first_name%TYPE,
+        nume emp.last_name%TYPE
+    ) RETURN NUMBER
+    IS
+        v_num NUMBER;
+    BEGIN
+        SELECT COUNT(*) INTO v_num
+        FROM employees
+        START WITH employee_id = gaseste_angajat(prenume, nume)
+        CONNECT BY PRIOR employee_id = manager_id;
+
+        RETURN v_num;
+    END;
+
+    PROCEDURE afiseaza_angajati_per_job
+    IS
+        v_nume_job jobs.job_title%TYPE;
+        v_nume_ang NVARCHAR2(500);
+        a_mai_avut_jobul NUMBER;
+    BEGIN
+        FOR job IN toate_joburile LOOP
+            DBMS_OUTPUT.PUT_LINE('Jobul ' || job.job_title || ':');
+
+            FOR emp IN angajati_job(job.job_id) LOOP
+                v_nume_ang := emp.first_name || ' ' || emp.last_name;
+
+                SELECT COUNT(*) INTO a_mai_avut_jobul
+                FROM job_hist
+                WHERE (employee_id = emp.employee_id) AND
+                        (job_id = job.job_id);
+
+                DBMS_OUTPUT.PUT_LINE('  ' || v_nume_ang ||
+                    ' - ' || a_mai_avut_jobul);
+            END LOOP;
+        END LOOP;
+    END;
 END;
 /
 
@@ -283,3 +342,13 @@ WHERE employee_id >= 1000;
 -- Șterg angajații creați.
 DELETE FROM emp
 WHERE employee_id >= 1000;
+
+-- Vezi câți subalterni direcți și indirecți are Steven King.
+SELECT pachet_companie.nr_subalterni('Steven', 'King')
+FROM dual;
+
+-- Testez procedura definită pentru subpunctul h)
+BEGIN
+    pachet_companie.afiseaza_angajati_per_job;
+END;
+/
