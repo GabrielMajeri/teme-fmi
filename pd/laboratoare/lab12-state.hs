@@ -1,39 +1,61 @@
 import Control.Monad
 import Data.Maybe
 
---- Monada Identity
-newtype Identity a = Identity {runIdentity :: a}
+--- Monada IntState
+newtype IntState a = IntState { runIntState :: Integer -> (a, Integer) }
 
--- Afișează valoarea conținută în monada identitate
-instance Show a => Show (Identity a) where
-  show = show . runIdentity
+-- Afișează valoarea conținută în monadă
+instance Show a => Show (IntState a) where
+  show state =
+      let (value, steps) = runIntState state 0
+      in "Value: " ++ show value ++ "; Count: " ++ show steps
 
-instance Monad Identity where
+instance Monad IntState where
   -- Creez o nouă valoare din monadă folosind direct constructorul
-  return = Identity
-  -- Pur și simplu aplic funcția pe valoarea conținută
-  (Identity x) >>= f = f x
+  return value = IntState $ \state -> (value, state)
+  -- Aplic două transformări de stare, una după alta
+  (IntState ma) >>= k = IntState $ \state ->
+      let
+        (value, newState) = ma state
+        (IntState f) = k value
+        (newValue, finalState) = f newState
+      in
+        (newValue, finalState)
 
 -- În versiunile mai noi de Haskell trebuie să definesc și instanțe ale acestor clase:
-instance Functor Identity where
+instance Functor IntState where
   fmap = liftM
-instance Applicative Identity where
+instance Applicative IntState where
   pure = return
   (<*>) = ap
 
 --- Limbajul și Interpretorul
 
 -- Prescurtare pentru monada folosită
-type M = Identity
+type M = IntState
 
 showM :: Show a => M a -> String
 showM = show
+
+-- Aplică funcția dată pe starea curentă, modificând-o
+modify :: (Integer -> Integer) -> IntState ()
+modify f = IntState $ \state -> ((), f state)
+
+-- Crește cu 1 starea curentă
+tickS :: IntState ()
+tickS = do
+  modify (+1)
+
+-- Returnează valoarea curentă a numărului de pași
+get :: IntState Integer
+get = IntState $ \state -> (state, state)
 
 type Name = String
 
 data Term
   = Var Name
   | Con Integer
+  | Count
   | Term :+: Term
   | Lam Name Term
   | App Term Term
@@ -67,13 +89,20 @@ interp :: Term -> Environment -> M Value
 -- Încercăm să returnăm valoarea pentru variabila dată.
 -- Dacă nu există, returnăm `Wrong`
 interp (Var name) env = return $ fromMaybe Wrong (lookup name env)
+
 -- Returnăm valoarea pentru constanta dată
 interp (Con i) _ = return $ Num i
+
+-- Returnăm valoarea curentă a numărului de pași
+interp Count env = IntState $ \state -> (Num state, state)
+
 -- Evaluăm suma a doi termeni
 interp (t1 :+: t2) env = do
   -- Evaluăm cei doi termeni
   v1 <- interp t1 env
   v2 <- interp t2 env
+  -- Creștem numărul de pași efectuați
+  tickS
   -- Calculăm suma valorilor lor
   add v1 v2
 
@@ -88,6 +117,8 @@ interp (App t1 t2) env = do
   -- Le evaluăm valorile
   v1 <- interp t1 env
   v2 <- interp t2 env
+  -- Creștem numărul de pași efectuați
+  tickS
   -- Aplicăm primul termen cu al doilea
   apply v1 v2
 
@@ -111,9 +142,9 @@ pgm1 =
     (Lam "x" ((Var "x") :+: (Var "x")))
     ((Con 10) :+: (Con 11))
 
--- Ar trebui să dea eroare
+-- Ar trebui să afișeze "Value: 4; Count: 2"
 pgm2 :: Term
-pgm2 = App (Con 2) (Con 3)
+pgm2 = (Con 1 :+: Con 2) :+: Count
 
 -- test pgm
 -- test pgm1

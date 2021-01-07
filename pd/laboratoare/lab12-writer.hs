@@ -1,39 +1,47 @@
 import Control.Monad
 import Data.Maybe
 
---- Monada Identity
-newtype Identity a = Identity {runIdentity :: a}
+--- Monada StringWriter
+newtype StringWriter a = StringWriter { runStringWriter :: (a, String) }
 
--- Afișează valoarea conținută în monada identitate
-instance Show a => Show (Identity a) where
-  show = show . runIdentity
+-- Afișează valoarea conținută în monadă
+instance Show a => Show (StringWriter a) where
+  show x =
+      let (value, message) = runStringWriter x
+      in "Output: " ++ message ++ "Value: " ++ show value
 
-instance Monad Identity where
+instance Monad StringWriter where
   -- Creez o nouă valoare din monadă folosind direct constructorul
-  return = Identity
-  -- Pur și simplu aplic funcția pe valoarea conținută
-  (Identity x) >>= f = f x
+  return value = StringWriter (value, "")
+  -- Aplic funcția și concatenez output-urile
+  (StringWriter (value, message)) >>= f =
+      let (newValue, newMessage) = runStringWriter $ f value
+      in StringWriter (newValue, message ++ newMessage)
 
 -- În versiunile mai noi de Haskell trebuie să definesc și instanțe ale acestor clase:
-instance Functor Identity where
+instance Functor StringWriter where
   fmap = liftM
-instance Applicative Identity where
+instance Applicative StringWriter where
   pure = return
   (<*>) = ap
 
 --- Limbajul și Interpretorul
 
 -- Prescurtare pentru monada folosită
-type M = Identity
+type M = StringWriter
 
 showM :: Show a => M a -> String
 showM = show
+
+tell :: String -> StringWriter ()
+tell message = StringWriter ((), message)
 
 type Name = String
 
 data Term
   = Var Name
   | Con Integer
+  | Out Term
   | Term :+: Term
   | Lam Name Term
   | App Term Term
@@ -67,8 +75,18 @@ interp :: Term -> Environment -> M Value
 -- Încercăm să returnăm valoarea pentru variabila dată.
 -- Dacă nu există, returnăm `Wrong`
 interp (Var name) env = return $ fromMaybe Wrong (lookup name env)
+
 -- Returnăm valoarea pentru constanta dată
 interp (Con i) _ = return $ Num i
+
+interp (Out t) env = do
+    -- Evaluez termenul
+    v <- interp t env
+    -- Îi afișez valoare
+    tell $ show v ++ "; "
+    -- Returnez
+    return v
+
 -- Evaluăm suma a doi termeni
 interp (t1 :+: t2) env = do
   -- Evaluăm cei doi termeni
@@ -111,9 +129,9 @@ pgm1 =
     (Lam "x" ((Var "x") :+: (Var "x")))
     ((Con 10) :+: (Con 11))
 
--- Ar trebui să dea eroare
+-- Ar trebui să afișeze "Output: 41; 1; Value: 42"
 pgm2 :: Term
-pgm2 = App (Con 2) (Con 3)
+pgm2 = Out (Con 41) :+: Out (Con 1)
 
 -- test pgm
 -- test pgm1

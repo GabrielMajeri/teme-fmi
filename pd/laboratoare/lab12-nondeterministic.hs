@@ -1,30 +1,8 @@
-import Control.Monad
-import Data.Maybe
-
---- Monada Identity
-newtype Identity a = Identity {runIdentity :: a}
-
--- Afișează valoarea conținută în monada identitate
-instance Show a => Show (Identity a) where
-  show = show . runIdentity
-
-instance Monad Identity where
-  -- Creez o nouă valoare din monadă folosind direct constructorul
-  return = Identity
-  -- Pur și simplu aplic funcția pe valoarea conținută
-  (Identity x) >>= f = f x
-
--- În versiunile mai noi de Haskell trebuie să definesc și instanțe ale acestor clase:
-instance Functor Identity where
-  fmap = liftM
-instance Applicative Identity where
-  pure = return
-  (<*>) = ap
-
 --- Limbajul și Interpretorul
 
 -- Prescurtare pentru monada folosită
-type M = Identity
+import Data.Maybe
+type M a = [a]
 
 showM :: Show a => M a -> String
 showM = show
@@ -34,6 +12,8 @@ type Name = String
 data Term
   = Var Name
   | Con Integer
+  | Fail
+  | Amb Term Term
   | Term :+: Term
   | Lam Name Term
   | App Term Term
@@ -65,10 +45,19 @@ type Environment = [(Name, Value)]
 
 interp :: Term -> Environment -> M Value
 -- Încercăm să returnăm valoarea pentru variabila dată.
--- Dacă nu există, returnăm `Wrong`
+-- Dacă nu există, returnăm `Nothing`
 interp (Var name) env = return $ fromMaybe Wrong (lookup name env)
+
 -- Returnăm valoarea pentru constanta dată
 interp (Con i) _ = return $ Num i
+
+-- Fail nu returnează nicio valoare
+interp Fail _ = []
+
+interp (Amb t1 t2) env =
+    -- Evaluez ambele ramuri, și reunesc rezultatele
+    interp t1 env ++ interp t2 env
+
 -- Evaluăm suma a doi termeni
 interp (t1 :+: t2) env = do
   -- Evaluăm cei doi termeni
@@ -94,15 +83,10 @@ interp (App t1 t2) env = do
 test :: Term -> String
 test t = showM $ interp t []
 
--- Ar trebui să afișeze 7
+-- Ar trebui să afișeze [2, 4]
 pgm :: Term
 pgm =
-  App (Lam "y" (
-    App (App
-          (Lam "f" (Lam "y" (App (Var "f") (Var "y"))))
-          (Lam "x" (Var "x" :+: Var "y")))
-    (Con 3))
-  ) (Con 4)
+  (App (Lam "x" (Var "x" :+: Var "x")) (Amb (Con 1) (Con 2)))
 
 -- Ar trebui să afișeze 42
 pgm1 :: Term

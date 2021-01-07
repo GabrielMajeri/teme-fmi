@@ -1,30 +1,7 @@
-import Control.Monad
-import Data.Maybe
-
---- Monada Identity
-newtype Identity a = Identity {runIdentity :: a}
-
--- Afișează valoarea conținută în monada identitate
-instance Show a => Show (Identity a) where
-  show = show . runIdentity
-
-instance Monad Identity where
-  -- Creez o nouă valoare din monadă folosind direct constructorul
-  return = Identity
-  -- Pur și simplu aplic funcția pe valoarea conținută
-  (Identity x) >>= f = f x
-
--- În versiunile mai noi de Haskell trebuie să definesc și instanțe ale acestor clase:
-instance Functor Identity where
-  fmap = liftM
-instance Applicative Identity where
-  pure = return
-  (<*>) = ap
-
 --- Limbajul și Interpretorul
 
 -- Prescurtare pentru monada folosită
-type M = Identity
+type M = Either String
 
 showM :: Show a => M a -> String
 showM = show
@@ -42,31 +19,32 @@ data Term
 data Value
   = Num Integer
   | Fun (Value -> M Value)
-  | Wrong
 
 instance Show Value where
   show (Num x) = show x
   show (Fun _) = "<function>"
-  show Wrong = "<wrong>"
 
 -- Calculează rezultatul adunării a două valori.
 -- Funcționează doar pentru numere.
 add :: Value -> Value -> M Value
 add (Num a) (Num b) = return $ Num (a + b)
-add _ _ = return Wrong
+add v1 v2 = Left $ "should be numbers: " ++ show v1 ++ " " ++ show v2
 
 -- Calculează rezultatul aplicării unei funcții la o valoare.
 -- Primul parametru trebuie să fie funcție.
 apply :: Value -> Value -> M Value
 apply (Fun f) v = f v
-apply _ _ = return Wrong
+apply v1 v2 = Left $ "should be function: " ++ show v1
 
 type Environment = [(Name, Value)]
 
 interp :: Term -> Environment -> M Value
 -- Încercăm să returnăm valoarea pentru variabila dată.
--- Dacă nu există, returnăm `Wrong`
-interp (Var name) env = return $ fromMaybe Wrong (lookup name env)
+-- Dacă nu există, returnăm `Nothing`
+interp (Var name) env = maybeToEither ("variable not found: " ++ name) (lookup name env)
+    where
+        maybeToEither _ (Just value) = Right value
+        maybeToEither error _ = Left error
 -- Returnăm valoarea pentru constanta dată
 interp (Con i) _ = return $ Num i
 -- Evaluăm suma a doi termeni
