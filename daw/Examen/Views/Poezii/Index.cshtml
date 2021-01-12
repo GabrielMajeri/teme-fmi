@@ -1,0 +1,17 @@
+@model IReadOnlyCollection<Poezie>
+@{
+    ViewData["Title"] = "Poezii";
+}
+
+<h1>Poezii</h1>
+
+<div>
+    <a asp-action="Create" class="btn btn-link">Creează o poezie nouă</a>
+</div>
+
+<div>
+    @foreach (var poezie in Model)
+    {
+        <partial name="_Poezie" for="@poezie" />
+    }
+</div>

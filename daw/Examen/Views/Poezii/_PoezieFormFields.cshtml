@@ -1,0 +1,31 @@
+@model EditPoezieViewModel
+
+<div class="form-group">
+    <label asp-for="Poezie.Titlu"></label>
+    <input asp-for="Poezie.Titlu" type="text" class="form-control" />
+    <span asp-validation-for="Poezie.Titlu"></span>
+</div>
+
+<div class="form-group">
+    <label asp-for="Poezie.Autor"></label>
+    <input asp-for="Poezie.Autor" type="text" class="form-control" />
+    <span asp-validation-for="Poezie.Autor"></span>
+</div>
+
+<div class="form-group">
+    <label asp-for="Poezie.NrStrofe"></label>
+    <input asp-for="Poezie.NrStrofe" type="number" class="form-control" />
+    <span asp-validation-for="Poezie.NrStrofe"></span>
+</div>
+
+<div class="form-group">
+    <label asp-for="Poezie.VolumId"></label>
+    <select asp-for="Poezie.VolumId" asp-items="Model.Volume">
+    </select>
+    <span asp-validation-for="Poezie.VolumId"></span>
+</div>
+
+<div asp-validation-summary="ModelOnly">
+</div>
+
+<input type="submit" value="Trimite" class="btn btn-primary" />

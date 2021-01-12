@@ -17,22 +17,21 @@ namespace Examen
 
         public IConfiguration Configuration { get; }
 
-        // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddControllersWithViews();
-
             services.AddDbContext<AppDbContext>(options =>
             {
-                var dbConnection = Configuration.GetConnectionString("Database");
-                options.UseSqlServer(dbConnection);
+                options.UseSqlite("Data Source=database.db");
             });
+            services.AddTransient<DatabaseInitializer>();
+
+            services.AddControllersWithViews();
         }
 
-        // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, AppDbContext context)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env,
+            DatabaseInitializer dbInit)
         {
-            context.Seed();
+            dbInit.Seed();
 
             if (env.IsDevelopment())
             {
@@ -49,13 +48,11 @@ namespace Examen
 
             app.UseRouting();
 
-            app.UseAuthorization();
-
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllerRoute(
                     name: "default",
-                    pattern: "{controller=Home}/{action=Index}/{id?}");
+                    pattern: "{controller=Poezii}/{action=Index}/{id?}");
             });
         }
     }

@@ -1,0 +1,14 @@
+@model Poezie
+
+<div class="card">
+    <div class="card-body">
+        <h2 class="card-title">@Model.Titlu</h2>
+        <h3 class="card-subtitle mb-5 text-muted">de @Model.Autor</h3>
+        <p>Număr de strofe: @Model.NrStrofe</p>
+        <p>Volum: @Model.Volum.Denumire</p>
+        <p>
+            <a asp-controller="Poezii" asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-warning">Editează</a>
+            <a asp-controller="Poezii" asp-action="Delete" asp-route-id="@Model.Id" class="btn btn-danger">Șterge</a>
+        </p>
+    </div>
+</div>

@@ -1,0 +1,23 @@
+@model IReadOnlyCollection<Poezie>
+
+<form method="POST" asp-action="Search">
+    <div class="form-group">
+        <label>Titlu:</label>
+        <input type="text" name="titleSubstr" class="form-control">
+    </div>
+    <div class="form-group">
+        <label>Volum:</label>
+        <input type="text" name="volumeSubstr" class="form-control">
+    </div>
+    <input type="submit" value="Caută" class="btn btn-primary"/>
+</form>
+
+<div>
+@if (Model != null)
+{
+    @foreach (var poezie in Model)
+    {
+        <partial name="_Poezie" for="@poezie" />
+    }
+}
+</div>

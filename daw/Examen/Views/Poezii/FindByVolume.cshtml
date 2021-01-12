@@ -1,0 +1,6 @@
+@model IReadOnlyCollection<Poezie>
+
+@foreach (var poezie in Model)
+{
+    <partial name="_Poezie" for="@poezie" />
+}
