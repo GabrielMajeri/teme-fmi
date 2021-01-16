@@ -1,22 +1,28 @@
+-- Returnează lista de divizori ai unui număr.
 factori :: Int -> [Int]
 factori n = [ d | d <- [1..n], n `mod` d == 0 ]
 
+-- Verifică dacă un număr este prim.
 prim :: Int -> Bool
 prim n = factori n == [1, n]
 
+-- Returnează lista numerelor prime mai mici decât `n`.
 numerePrime :: Int -> [Int]
 numerePrime n = [ p | p <- [2..n], prim p ]
 
+-- Unește trei liste, și produce o singură listă de triplete.
 myzip3 :: [a] -> [b] -> [c] -> [(a, b, c)]
 myzip3 [] _ _ = []
 myzip3 _ [] _ = []
 myzip3 _ _ [] = []
-myzip3 (x:xs) (y:ys) (z:zs) = (x, y, z):(myzip3 xs ys zs)
+myzip3 (x:xs) (y:ys) (z:zs) = (x, y, z) : myzip3 xs ys zs
 
 
+-- Returnează o listă cu primele elemente dintr-o listă de perechi.
 firstEl :: [(a, b)] -> [a]
 firstEl = map fst
 
+-- Face suma elementelor fiecărei liste dintr-o listă de liste.
 sumList :: [[Int]] -> [Int]
 sumList = map sum
 
@@ -32,9 +38,12 @@ prel2 = map prelucreaza
 containsChar :: Char -> [String] -> [String]
 containsChar char = filter (elem char)
 
+-- Alege doar numerele impare dintr-o listă, și returnează pătratele acestora.
 patrateImpare :: [Int] -> [Int]
 patrateImpare = map (^2) . filter odd
 
+-- Alege doar numerele de pe poziții impare dintr-o listă,
+-- și returnează pătratele acestora.
 patratePozitiiImpare :: [Int] -> [Int]
 patratePozitiiImpare = map ((^2) . snd) . filter (odd . fst) . zip [0..]
 
@@ -54,6 +63,8 @@ myfilter :: (a -> Bool) -> [a] -> [a]
 myfilter f a = [x | x <- a, f(x)]
 
 
+-- Găsește numerele prime mai mici decât `n`,
+-- folosind ciurul lui Erathostene.
 numerePrimeCiur :: Int -> [Int]
 numerePrimeCiur n = ciurRec [2..n]
     where
