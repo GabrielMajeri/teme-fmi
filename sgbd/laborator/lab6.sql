@@ -87,21 +87,51 @@ END;
 
 
 ---- 4
+-- Creez un tabel în care să rețin câți angajați am în fiecare departament
+DROP TABLE num_emps;
+CREATE TABLE num_emps AS (
+    SELECT department_id, COUNT(1) AS num_emp
+    FROM emp
+    GROUP BY department_id
+);
+
+-- Creez un trigger care (re)inițializează tabelul auxiliar
+-- la fiecare insert sau update.
+CREATE OR REPLACE TRIGGER ex4_init
+BEFORE INSERT OR UPDATE ON emp
+BEGIN
+    -- Șterg datele vechi
+    DELETE FROM num_emps;
+
+    -- Inserez valorile actuale
+    INSERT INTO num_emps (department_id, num_emp)
+    SELECT department_id, COUNT(1)
+    FROM emp
+    GROUP BY department_id;
+END;
+/
+
+
 CREATE OR REPLACE TRIGGER ex4
-BEFORE INSERT ON emp
+BEFORE INSERT OR UPDATE ON emp
 FOR EACH ROW
 DECLARE
-    -- Numărul de angajați din departamentul în care s-ar insera
     v_num_ang NUMBER;
 BEGIN
-    SELECT COUNT(1)
-    INTO v_num_ang
-    FROM emp
-    WHERE :NEW.department_id = department_id;
+    -- Văd câți angajați am în acest moment în departament
+    SELECT num_emp INTO v_num_ang
+    FROM num_emps
+    WHERE department_id = :NEW.department_id;
 
+    -- Dacă depășesc limita
     IF v_num_ang >= 45 THEN
         RAISE_APPLICATION_ERROR(-20000, 'Prea multi angajati');
     END IF;
+
+    -- Contorizăm și acest angajat
+    UPDATE num_emps
+    SET num_emp = num_emp + 1
+    WHERE department_id = :NEW.department_id;
 END;
 /
 
@@ -112,8 +142,109 @@ GROUP BY department_id
 HAVING COUNT(*) >= 45;
 
 -- Nu o să mă lase: prea mulți angajați
-INSERT INTO emp (employee_id, department_id)
-VALUES (1234, 50);
+INSERT ALL
+    INTO emp (employee_id, department_id)
+    VALUES (1234, 50)
+    INTO emp (employee_id, department_id)
+    VALUES (1235, 50)
+SELECT 1 FROM dual;
+
+-- Testez un insert multiplu
+INSERT INTO emp
+SELECT * FROM employees WHERE department_id = 50;
+ROLLBACK;
+
+
+---- 5
+DROP TABLE emp_test;
+
+CREATE TABLE emp_test AS (
+    SELECT employee_id, last_name, first_name, department_id
+    FROM employees
+);
+
+ALTER TABLE emp_test
+ADD CONSTRAINT emp_test_pk PRIMARY KEY (employee_id);
+
+CREATE TABLE dept_test AS (
+    SELECT department_id, department_name
+    FROM departments
+);
+
+ALTER TABLE dept_test
+ADD CONSTRAINT dept_test_pk PRIMARY KEY (department_id);
+
+-- Comenzi de  afișare
+SELECT * FROM emp_test;
+SELECT * FROM dept_test;
+
+CREATE OR REPLACE TRIGGER ex5_stergere
+AFTER DELETE ON dept_test
+FOR EACH ROW
+BEGIN
+    -- Șterg angajații care erau în acest departament
+    DELETE FROM emp_test
+    WHERE department_id = :OLD.department_id;
+END;
+/
+
+CREATE OR REPLACE TRIGGER ex5_modificare
+AFTER UPDATE ON dept_test
+FOR EACH ROW
+BEGIN
+    -- Modific angajații care erau deja în departament.
+    UPDATE emp_test
+    SET department_id = :NEW.department_id
+    WHERE department_id = :OLD.department_id;
+END;
+/
+
+-- Scenarii posibile
+ALTER TABLE emp_test
+DROP CONSTRAINT emp_test_dept_fk;
+
+ALTER TABLE emp_test
+ADD CONSTRAINT emp_test_dept_fk
+    FOREIGN KEY (department_id)
+    REFERENCES dept_test(department_id);
+
+ALTER TABLE emp_test
+ADD CONSTRAINT emp_test_dept_fk
+    FOREIGN KEY (department_id)
+    REFERENCES dept_test(department_id)
+    ON DELETE CASCADE;
+
+ALTER TABLE emp_test
+ADD CONSTRAINT emp_test_dept_fk
+    FOREIGN KEY (department_id)
+    REFERENCES dept_test(department_id)
+    ON DELETE SET NULL;
+
+
+---- 6
+-- (Re)creez tabelul în care să rețin erorile.
+DROP TABLE database_errors;
+CREATE TABLE database_errors (
+    user_id NVARCHAR2(100),
+    nume_bd NVARCHAR2(100),
+    erori NVARCHAR2(2000),
+    data DATE
+);
+
+-- Adaug trigger-ul care salvează erorile.
+-- Nu funcționează deoarece nu am destule permisiuni
+CREATE OR REPLACE TRIGGER ex6
+AFTER SERVERERROR
+ON DATABASE
+BEGIN
+    INSERT INTO database_errors
+    VALUES (
+        SYS.LOGIN_USER,
+        SYS.DATABASE_NAME,
+        DBMS.FORMAT_ERROR_STACK,
+        SYSDATE
+    );
+END;
 
 
 ---- Extra
@@ -122,6 +253,7 @@ VALUES (1234, 50);
 -- angajat, salariul se încadrează între minimul úi maximul salariior corespunzătoare job-ului
 -- respectiv. Se vor exclude angajatii AD_PRES.
 
+-- Tabel auxiliar în care rețin valorile minime și maxime ale salariilor per fiecare job.
 CREATE TABLE emp_min_max AS (
     SELECT
         job_id,
@@ -166,29 +298,3 @@ WHERE job_id = (SELECT job_id FROM emp WHERE employee_id = 120);
 UPDATE emp
 SET salary = 5801
 WHERE employee_id = 120;
-
-
----- 6
--- (Re)creez tabelul în care să rețin erorile.
-DROP TABLE database_errors;
-CREATE TABLE database_errors (
-    user_id NVARCHAR2(100),
-    nume_bd NVARCHAR2(100),
-    erori NVARCHAR2(2000),
-    data DATE
-);
-
--- Adaug trigger-ul care salvează erorile.
--- Nu funcționează deoarece nu am destule permisiuni
-CREATE OR REPLACE TRIGGER ex6
-AFTER SERVERERROR
-ON DATABASE
-BEGIN
-    INSERT INTO database_errors
-    VALUES (
-        SYS.LOGIN_USER,
-        SYS.DATABASE_NAME,
-        DBMS.FORMAT_ERROR_STACK,
-        SYSDATE
-    );
-END;
