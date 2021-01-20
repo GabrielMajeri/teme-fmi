@@ -1,0 +1,37 @@
+ Definim tipul arborilor ternari cu informații numere intregi  (doar) pe frunze.
+
+    data Arb = Leaf Integer | Node Arb Arb Arb
+
+Dat fiind un arbore, codul unui  drum de la radăcină la o  frunza este  secvența de valori Direction care se obtine considerand L pentru muchiile care duc la stânga, R pentru cele care duc la dreapta si M pentru cele din mijloc:
+
+data Direction = L | M | R   deriving Show
+
+type LeafCode = [Direction]
+
+De exemplu, daca
+
+tree = Node
+
+          (Node (Leaf 1) (Leaf 3) (Leaf 4))
+
+          (Node (Leaf 1) (Leaf 2) (Leaf 4))
+
+          (Leaf 4)
+
+atunci codurile asociate lui 4 sunt [L,R], [M,R], [R].
+
+Să se scrie functia  leafCodes care, dat fiind un arbore si o valoare de tip Integer, întoarece  lista codurilor drumurilor la  frunzele cu valoarea data folosind  monada Writer () pentru a acumula rezultatul.
+
+data Writer a = Writer { output :: [LeafCode], value :: a }
+
+leafCodes :: Arb -> Integer -> Writer ()
+
+> output $ leafCodes tree 4
+
+[[L,R],[M,R],[R]]
+
+Programul trebuie sa contina definitia completa a monadei  Writer ().
+
+Hint: puteti folosi o functie auxiliara care retine intr-un parametru drumul parcurs pana la un anumit moment
+
+Rezolvarea exercitiului se va scrie in caseta text.
