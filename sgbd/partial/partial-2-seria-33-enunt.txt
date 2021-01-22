@@ -1,0 +1,9 @@
+1. Pe un tabel din schema de examen definiti un trigger cu ajutorul caruia
+sa implementati comportamentul on delete update.
+
+(observatii: trebuie sa apara explicit pe ce tabel si care este comportamentul dorit;
+1p din barem este alocat pentru manipularea liniilor cu ajutorul optiunii forall)
+
+
+2. Trigger prin care o prezentare trebuie sa aiba cel putin de 5 vestimentatii.
+
