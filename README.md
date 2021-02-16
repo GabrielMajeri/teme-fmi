@@ -44,3 +44,7 @@ la [Facultatea de Matematică și Informatică](http://fmi.unibuc.ro/ro/),
 - [daw](daw): Dezvoltarea Aplicațiilor Web (în C#/ASP.NET)
 - [pd](pd): Programare Declarativă (în Haskell)
 - [sgbd](sgbd): Sisteme de Gestiune a Bazelor de Date (în Oracle SQL)
+
+#### Semestrul 2
+
+- [to](to): Tehnici de Optimizare (exerciții rezolvate în Python)
