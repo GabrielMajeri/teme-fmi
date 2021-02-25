@@ -48,3 +48,4 @@ la [Facultatea de Matematică și Informatică](http://fmi.unibuc.ro/ro/),
 #### Semestrul 2
 
 - [to](to): Tehnici de Optimizare (exerciții rezolvate în Python)
+- [ts](ts): Tehnici de Simulare (teme rezolvate în Python)
