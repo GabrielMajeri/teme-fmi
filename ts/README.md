@@ -1,3 +1,3 @@
 # Tehnici de Simulare
 
-- [Determinarea valorii lui `e`](<Tema 1.ipynb>)
+- [Strategii de blackjack evaluate cu metoda Monte Carlo](<Tema 1.ipynb>)
