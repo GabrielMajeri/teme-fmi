@@ -13,23 +13,14 @@ FLOAT {DIGIT}+"."{DIGIT}*
 VARIABLE_IDENTIFIER [[:lower:]][[:alnum:]]*
 
 CONSTANT_IDENTIFIER [[:upper:]][[:alnum:]]*
-TYPE_IDENTIFIER {CONSTANT_IDENTIFIER}
-
-TYPE_VARIABLE {VARIABLE_IDENTIFIER}
-TYPE_VARIABLES ({TYPE_VARIABLE}{WHITESPACE}*)*
-
-TYPE_NAME {VARIABLE_IDENTIFIER}|{TYPE_IDENTIFIER}|"("{WHITESPACE}*{TYPE_IDENTIFIER}{TYPE_VARIABLES}")"
-
-TYPE_CONSTRUCTOR {CONSTANT_IDENTIFIER}({WHITESPACE}*{TYPE_NAME})*
-TYPE_CONSTRUCTORS {TYPE_CONSTRUCTOR}({WHITESPACE}*"|"{WHITESPACE}*{TYPE_CONSTRUCTOR})*
-
-WHITESPACE [[:space:]]*
 
 VARIABLE_TYPE_OPERATOR "::"
 
-EXPRESSION .*
-
 %%
+
+"type"|"newtype"|"data" {
+    printf("Keyword %s\n", yytext);
+}
 
 {VARIABLE_IDENTIFIER} {
     printf("Variable: %s\n", yytext);
@@ -51,6 +42,14 @@ deriving {
     printf("Closing paranthesis\n");
 }
 
+"[" {
+    printf("Opening bracket\n");
+}
+
+"]" {
+    printf("Closing bracket\n");
+}
+
 "," {
     printf("Comma\n");
 }
@@ -63,11 +62,7 @@ deriving {
     printf("Double: %lf\n", strtod(yytext, NULL));
 }
 
-"type"|"newtype"|"data" {
-    printf("Keyword %s\n", yytext);
-}
-
-"="|"+"|"-"|"*"|"/"|"|" {
+["="|"+"|"-"|"*"|"^"|"/"|"|"|"."|"<"|">"]+ {
     printf("Operator %s\n", yytext);
 }
 
@@ -87,6 +82,14 @@ deriving {
     /* Ignore whitespace */
 }
 
+"--".+ {
+    printf("Comment\n");
+}
+
+"{-"(\n|.)+"-}" {
+    printf("Multiline comment\n");
+}
+
 %%
 
 int main(int argc, char** argv)
@@ -100,5 +103,3 @@ int main(int argc, char** argv)
 
     return 0;
 }
-
-/* "="{WHITESPACE}{TYPE_IDENTIFIER} */
