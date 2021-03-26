@@ -1,0 +1,60 @@
+// Require a modern version of Bison
+%require "3.5"
+
+// Generate C++ code
+%language "c++"
+
+// Use a type-save variant data structure for storing values
+%define api.value.type variant
+
+// Generate the various `make_<TOKEN>` functions
+%define api.token.constructor
+
+%{
+    #include "common.hpp"
+    YY_DECL;
+%}
+
+%%
+
+result:
+    list  {
+        std::cout << "List is: ";
+        for (const auto& s : $1) {
+            std::cout << s << ' ';
+        }
+        std::cout << '\n';
+    }
+;
+
+%nterm <std::vector<std::string>> list;
+list:
+  %empty     { /* Generates an empty string list */ }
+| list item  { $$ = $1; $$.push_back ($2); }
+;
+
+%nterm <std::string> item;
+%token <std::string> TEXT;
+%token <int> NUMBER;
+
+item:
+  TEXT
+| NUMBER  { $$ = std::to_string ($1); }
+;
+
+%%
+
+namespace yy
+{
+    // Report an error to the user.
+    void parser::error(const std::string& message)
+    {
+        std::cerr << message << '\n';
+    }
+}
+
+int main ()
+{
+    yy::parser java_parser;
+    return java_parser();
+}

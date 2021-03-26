@@ -1,0 +1,29 @@
+/** Lexical analyser for Java */
+
+/* Disable unneeded features */
+%option noyywrap nounput noinput batch
+
+/* Enable debug mode */
+%option debug
+
+%{
+    // Include the common interface
+    #include "common.hpp"
+
+    // Include the parser's function definitions
+    #include "java-parser.hpp"
+%}
+
+BLANK [[:space:]]
+
+DIGIT [0-9]
+
+INTEGER {DIGIT}+
+
+%%
+
+{INTEGER} return yy::parser::make_NUMBER(std::stoi(yytext));
+
+<<EOF>> return yy::parser::make_YYEOF();
+
+%%
