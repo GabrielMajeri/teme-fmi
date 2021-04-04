@@ -10,37 +10,186 @@
 // Generate the various `make_<TOKEN>` functions
 %define api.token.constructor
 
-%{
+// Include the common interfaces in the generated header
+%code requires {
     #include "common.hpp"
+}
+
+// Declare the `yylex` method, which will be defined in the lexer
+%code {
     YY_DECL;
-%}
+}
 
 %%
 
-result:
-    list  {
-        std::cout << "List is: ";
-        for (const auto& s : $1) {
-            std::cout << s << ' ';
-        }
-        std::cout << '\n';
-    }
-;
+%token CLASS_KEYWORD;
 
-%nterm <std::vector<std::string>> list;
-list:
-  %empty     { /* Generates an empty string list */ }
-| list item  { $$ = $1; $$.push_back ($2); }
-;
+%token PUBLIC_KEYWORD;
+%token PROTECTED_KEYWORD;
+%token PRIVATE_KEYWORD;
 
-%nterm <std::string> item;
-%token <std::string> TEXT;
+%token FINAL_KEYWORD;
+%token STATIC_KEYWORD;
+
+%token RETURN_KEYWORD;
+
+%token OPEN_PARENS;
+%token CLOSE_PARENS;
+%token OPEN_BRACKET;
+%token CLOSE_BRACKET;
+%token OPEN_SQUARE_BRACKET;
+%token CLOSE_SQUARE_BRACKET;
+%token EQUALS;
+%token COMMA;
+%token SEMICOLON;
+%token DOT;
+
+%token <std::string> IDENTIFIER;
 %token <int> NUMBER;
+%token <std::string> STRING;
 
-item:
-  TEXT
-| NUMBER  { $$ = std::to_string ($1); }
-;
+class_definition:
+    access_modifier CLASS_KEYWORD IDENTIFIER
+    OPEN_BRACKET class_body CLOSE_BRACKET
+    {
+        std::cout << "Defining class " << $3 << '\n';
+    }
+
+%nterm class_body;
+class_body:
+    definitions
+
+definitions:
+    %empty | definition definitions
+
+definition:
+    class_variable_definition | method_definition
+
+class_variable_definition:
+    access_modifier mutability_modifier storage_modifier type_identifier name optional_initializer SEMICOLON
+    {
+        std::cout << "Defining variable " << $5 << '\n';
+    }
+
+method_definition:
+    access_modifier mutability_modifier storage_modifier type_identifier name
+    OPEN_PARENS method_arguments CLOSE_PARENS
+    OPEN_BRACKET method_body CLOSE_BRACKET
+    {
+        std::cout << "Defining method " << $5 << '\n';
+    }
+
+method_arguments:
+    %empty
+    | argument
+    | argument COMMA method_arguments
+
+argument:
+    type_identifier IDENTIFIER
+
+method_body:
+    statements
+
+statements:
+    %empty | statement statements
+
+statement:
+    variable_declaration
+    | assignment
+    | method_call SEMICOLON
+    | return_statement
+
+variable_declaration:
+    type_identifier name optional_initializer SEMICOLON
+    {
+        std::cout << "Defining variable " << $2 << '\n';
+    }
+
+assignment:
+    name initializer SEMICOLON
+
+method_call:
+    method_reference
+    OPEN_PARENS actual_parameters CLOSE_PARENS
+    {
+        std::cout << "Calling method " << $1 << '\n';
+    }
+
+return_statement:
+    RETURN_KEYWORD SEMICOLON
+    | RETURN_KEYWORD expression SEMICOLON
+
+actual_parameters:
+    %empty
+    | value
+    | value COMMA actual_parameters
+
+value:
+    name | expression
+
+expression:
+    literal
+    | method_call
+
+%nterm <std::string> method_reference;
+method_reference:
+    name
+    { $$ = $1; }
+    | name DOT method_reference
+    { $$ = $1 + "." + $3; }
+
+%nterm <AccessModifier> access_modifier;
+access_modifier:
+    %empty
+    { $$ = AccessModifier::DEFAULT; }
+    | PUBLIC_KEYWORD
+    { $$ = AccessModifier::PUBLIC; }
+    | PROTECTED_KEYWORD
+    { $$ = AccessModifier::PROTECTED; }
+    | PRIVATE_KEYWORD
+    { $$ = AccessModifier::PRIVATE; }
+
+%nterm <MutabilityModifier> mutability_modifier;
+mutability_modifier:
+    %empty
+    { $$ = MutabilityModifier::MUTABLE; }
+    | FINAL_KEYWORD
+    { $$ = MutabilityModifier::FINAL; }
+
+%nterm <StorageModifier> storage_modifier;
+storage_modifier:
+    %empty
+    { $$ = StorageModifier::INSTANCE; }
+    | STATIC_KEYWORD
+    { $$ = StorageModifier::STATIC; }
+
+type_identifier:
+    IDENTIFIER
+    {
+        std::cout << "Referencing object type " << $1 << '\n';
+    }
+    | IDENTIFIER OPEN_SQUARE_BRACKET CLOSE_SQUARE_BRACKET
+    {
+        std::cout << "Referencing array type " << $1 << "[]" << '\n';
+    }
+
+%nterm <std::string> name;
+name:
+    IDENTIFIER
+
+optional_initializer:
+    %empty | initializer
+
+initializer:
+    EQUALS literal
+    {
+        std::cout << "Initializing to " << $2 << '\n';
+    }
+
+%nterm <std::string> literal;
+literal:
+    STRING | NUMBER
+    { $$ = std::to_string($1); }
 
 %%
 
@@ -53,8 +202,13 @@ namespace yy
     }
 }
 
-int main ()
+int main(int argc, char* argv[])
 {
+    if (argc > 1)
+    {
+        freopen(argv[1], "r", stdin);
+    }
+
     yy::parser java_parser;
     return java_parser();
 }

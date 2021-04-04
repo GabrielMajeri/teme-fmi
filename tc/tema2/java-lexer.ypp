@@ -4,7 +4,7 @@
 %option noyywrap nounput noinput batch
 
 /* Enable debug mode */
-%option debug
+/* %option debug */
 
 %{
     // Include the common interface
@@ -20,9 +20,48 @@ DIGIT [0-9]
 
 INTEGER {DIGIT}+
 
+IDENTIFIER [[:alpha:]]([[:alnum:]]|_)*
+
+/* Define an exclusive mode for the multi line comment */
+%x COMMENT
+
 %%
 
+"//".+ /* Ignore single line comment */
+
+<INITIAL>"/*" BEGIN(COMMENT);
+<COMMENT>"*/" BEGIN(INITIAL);
+<COMMENT>.|"\n" /* Ignore comment contents */
+
+class return yy::parser::make_CLASS_KEYWORD();
+
+public return yy::parser::make_PUBLIC_KEYWORD();
+protected return yy::parser::make_PROTECTED_KEYWORD();
+private return yy::parser::make_PRIVATE_KEYWORD();
+
+final return yy::parser::make_FINAL_KEYWORD();
+static return yy::parser::make_STATIC_KEYWORD();
+
+return return yy::parser::make_RETURN_KEYWORD();
+
+"(" return yy::parser::make_OPEN_PARENS();
+")" return yy::parser::make_CLOSE_PARENS();
+"[" return yy::parser::make_OPEN_SQUARE_BRACKET();
+"]" return yy::parser::make_CLOSE_SQUARE_BRACKET();
+"{" return yy::parser::make_OPEN_BRACKET();
+"}" return yy::parser::make_CLOSE_BRACKET();
+"=" return yy::parser::make_EQUALS();
+"," return yy::parser::make_COMMA();
+";" return yy::parser::make_SEMICOLON();
+"." return yy::parser::make_DOT();
+
 {INTEGER} return yy::parser::make_NUMBER(std::stoi(yytext));
+
+\".+\" return yy::parser::make_STRING(yytext);
+
+{IDENTIFIER} return yy::parser::make_IDENTIFIER(yytext);
+
+[[:space:]] /* Ignore whitespace */
 
 <<EOF>> return yy::parser::make_YYEOF();
 
