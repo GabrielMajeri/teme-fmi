@@ -42,6 +42,8 @@ private return yy::parser::make_PRIVATE_KEYWORD();
 final return yy::parser::make_FINAL_KEYWORD();
 static return yy::parser::make_STATIC_KEYWORD();
 
+if return yy::parser::make_IF_KEYWORD();
+while return yy::parser::make_WHILE_KEYWORD();
 return return yy::parser::make_RETURN_KEYWORD();
 
 "(" return yy::parser::make_OPEN_PARENS();
@@ -54,6 +56,10 @@ return return yy::parser::make_RETURN_KEYWORD();
 "," return yy::parser::make_COMMA();
 ";" return yy::parser::make_SEMICOLON();
 "." return yy::parser::make_DOT();
+"+" return yy::parser::make_PLUS();
+"-" return yy::parser::make_MINUS();
+"<" return yy::parser::make_LESS_THAN();
+">" return yy::parser::make_GREATER_THAN();
 
 {INTEGER} return yy::parser::make_NUMBER(std::stoi(yytext));
 

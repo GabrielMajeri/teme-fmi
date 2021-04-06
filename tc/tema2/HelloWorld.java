@@ -7,9 +7,16 @@ class HelloWorld {
 
         String myString = "Test";
         int x = 5;
-        System.out.println(myString);
+        if (x > 3) {
+            System.out.println(myString);
+        }
 
         System.out.println(HelperClass.compute(convert(x)));
+
+        while (x < 10) {
+            x = x + 1;
+            System.out.println("Hello!");
+        }
     }
 
     // This is a private static method

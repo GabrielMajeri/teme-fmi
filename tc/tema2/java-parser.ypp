@@ -31,6 +31,8 @@
 %token FINAL_KEYWORD;
 %token STATIC_KEYWORD;
 
+%token IF_KEYWORD;
+%token WHILE_KEYWORD;
 %token RETURN_KEYWORD;
 
 %token OPEN_PARENS;
@@ -43,6 +45,12 @@
 %token COMMA;
 %token SEMICOLON;
 %token DOT;
+%token PLUS;
+%token MINUS;
+%token LESS_THAN;
+%token GREATER_THAN;
+
+%left PLUS MINUS;
 
 %token <std::string> IDENTIFIER;
 %token <int> NUMBER;
@@ -97,7 +105,27 @@ statement:
     variable_declaration
     | assignment
     | method_call SEMICOLON
+    | if_statement
+    | while_statement
     | return_statement
+
+if_statement:
+    IF_KEYWORD condition block
+    {
+        std::cout << "if block\n";
+    }
+
+while_statement:
+    WHILE_KEYWORD condition block
+    {
+        std::cout << "while block\n";
+    }
+
+condition:
+    OPEN_PARENS expression CLOSE_PARENS
+
+block:
+    OPEN_BRACKET statements CLOSE_BRACKET
 
 variable_declaration:
     type_identifier name optional_initializer SEMICOLON
@@ -107,6 +135,9 @@ variable_declaration:
 
 assignment:
     name initializer SEMICOLON
+    {
+        std::cout << "Assigning to variable " << $1 << '\n';
+    }
 
 method_call:
     method_reference
@@ -127,9 +158,17 @@ actual_parameters:
 value:
     name | expression
 
+%nterm expression;
 expression:
-    literal
+    expression binary_operator expression
     | method_call
+    | name
+    | literal
+
+%nterm binary_operator;
+binary_operator:
+    PLUS | MINUS
+    | LESS_THAN | GREATER_THAN | EQUALS
 
 %nterm <std::string> method_reference;
 method_reference:
@@ -181,10 +220,7 @@ optional_initializer:
     %empty | initializer
 
 initializer:
-    EQUALS literal
-    {
-        std::cout << "Initializing to " << $2 << '\n';
-    }
+    EQUALS expression
 
 %nterm <std::string> literal;
 literal:
