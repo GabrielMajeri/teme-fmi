@@ -50,6 +50,8 @@
 %token LESS_THAN;
 %token GREATER_THAN;
 
+// Operator precedence
+%left LESS_THAN GREATER_THAN;
 %left PLUS MINUS;
 
 %token <std::string> IDENTIFIER;
@@ -160,15 +162,13 @@ value:
 
 %nterm expression;
 expression:
-    expression binary_operator expression
+    expression PLUS expression
+    | expression MINUS expression
+    | expression LESS_THAN expression
+    | expression GREATER_THAN expression
     | method_call
     | name
     | literal
-
-%nterm binary_operator;
-binary_operator:
-    PLUS | MINUS
-    | LESS_THAN | GREATER_THAN | EQUALS
 
 %nterm <std::string> method_reference;
 method_reference:
