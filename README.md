@@ -47,6 +47,7 @@ la [Facultatea de Matematică și Informatică](http://fmi.unibuc.ro/ro/),
 
 #### Semestrul 2
 
+- [cs](cs): Criptografie și Securitate (temă rezolvată în Go)
 - [tc](tc): Tehnici de Compilare (exerciții rezolvate în C)
 - [to](to): Tehnici de Optimizare (exerciții rezolvate în Python)
 - [ts](ts): Tehnici de Simulare (teme rezolvate în Python)
