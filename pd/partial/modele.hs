@@ -1,5 +1,29 @@
-import Data.List (isPrefixOf)
 import Control.Monad (liftM, ap)
+import Data.Char (isUpper)
+import Data.List (isPrefixOf)
+
+-- Funcție care primește un string și verifică
+-- dacă toate vocalele din șir sunt literă mare.
+esteVocala :: Char -> Bool
+esteVocala ch = ch `elem` "aeiouAEIOU"
+
+verifVocaleMari :: String -> Bool
+verifVocaleMari sir = foldr (&&) True [isUpper ch | ch <- sir, esteVocala ch]
+
+--- Funcție care primește trei liste `x`, `y`, `z` și verifică dacă lista `z`
+-- conține toate sumele de forma (x_i + y_i)
+verifListe :: [Int] -> [Int] -> [Int] -> Bool
+verifListe x y z =
+    all (`elem` z) sume
+    where sume = [a + b | a <- x, b <- y]
+
+-- Funcție care elimină aparițiile multiple consecutive dintr-o listă de numere
+elimDup :: [Int] -> [Int]
+elimDup [] = []
+elimDup [x] = [x]
+elimDup (x:y:xs) =
+    if x == y then elimDup (y:xs)
+    else x:elimDup (y:xs)
 
 -- Funcție care verifică că o listă dată este palindrom
 verifPalindrom :: Eq a => [a] -> Bool
